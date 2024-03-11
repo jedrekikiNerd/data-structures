@@ -28,6 +28,8 @@
 class MenuItemInterface {
 public:
     std::string label;
+    MenuItemInterface() : label("") {} // Constructor when no label
+    MenuItemInterface(std::string label) : label(label) {} // Constructor when label specified
     virtual int clicked() = 0; //clicked function that gives our button a functionality
     virtual ~MenuItemInterface() {} // Virtual destructor to make sure all subclasses have their destructors run
 };
@@ -45,12 +47,11 @@ class MenuItemFunction : public MenuItemInterface
 
     public:
         // Name of item
-        std::string label;
         
         // Conctructor for empty object
-        MenuItemFunction() : label(""), func(nullptr){}
+        MenuItemFunction() : MenuItemInterface(), func(nullptr){}
         // Constructor when label and ptr to function are specified
-        MenuItemFunction(std::string label, std::function<int()> func) : label(label), func(func){}
+        MenuItemFunction(std::string label, std::function<int()> func) : MenuItemInterface(label), func(func){}
 
         // Clicked function - we should run it when someone presses enter while having this item selected
         int clicked() 
@@ -170,12 +171,12 @@ class MenuItemSwitcher : public MenuItemInterface
 
     public:
         // Name of item
-        std::string label;
+        //std::string label;
         
         // Conctructor for empty object
-        MenuItemSwitcher() : label(""), menu_to_switch(nullptr){}
+        MenuItemSwitcher() : MenuItemInterface(), menu_to_switch(nullptr){}
         // Constructor when label and menu object are specified
-        MenuItemSwitcher(std::string label, Menu *menu) : label(label), menu_to_switch(menu){}
+        MenuItemSwitcher(std::string label, Menu *menu) : MenuItemInterface(label), menu_to_switch(menu){}
 
         // Clicked function - we should run it when someone presses enter while having this item selected
         int clicked() 
@@ -191,6 +192,8 @@ class MenuItemSwitcher : public MenuItemInterface
         }
 };
 
+
+// Body of add_item Menu method
 void Menu::add_item(std::string label, Menu menu)
 {
     if (items_number < MAX_ITEMS)
