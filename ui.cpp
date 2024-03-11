@@ -19,14 +19,28 @@
 #define MY_KEY_ENTER 10
 
 
+
 /**
- * Class that represents each item in menu. It stores label and function that should be called when element is selected and ENTER key is pressed.
+ * Inteface of MenuItems
+ * Has clicked() function that should be overwritten to functionality our MenuItem object will provide.
  * 
  */
-class MenuItem 
+class MenuItemInterface {
+public:
+    std::string label;
+    virtual int clicked() = 0; //clicked function that gives our button a functionality
+    virtual ~MenuItemInterface() {} // Virtual destructor to make sure all subclasses have their destructors run
+};
+
+
+/**
+ * Class that represents menu button that should run given function. It stores label and function that should be called when element is selected and ENTER key is pressed.
+ * 
+ */
+class MenuItemFunction : public MenuItemInterface
 {
     private:
-        // Function we call when element is clicked
+        // Function we call when element is clicked (ptr to it)
         std::function<int()> func;
 
     public:
@@ -34,9 +48,9 @@ class MenuItem
         std::string label;
         
         // Conctructor for empty object
-        MenuItem() : label(""), func(nullptr){}
-        // Constructor when label and ptr to function is specified
-        MenuItem(std::string label, std::function<int()> func) : label(label), func(func){}
+        MenuItemFunction() : label(""), func(nullptr){}
+        // Constructor when label and ptr to function are specified
+        MenuItemFunction(std::string label, std::function<int()> func) : label(label), func(func){}
 
         // Clicked function - we should run it when someone presses enter while having this item selected
         int clicked() 
@@ -52,6 +66,7 @@ class MenuItem
         }
 };
 
+
 /**
  * Class representing single menu. It stores items with labels and callable function - look at MenuItem, it also stores which element is selected.
  * 
@@ -62,17 +77,17 @@ class Menu
         static const int MAX_ITEMS = 10; // Max menu elements
 
     public:
-        MenuItem items[MAX_ITEMS];
+        MenuItemInterface *items[MAX_ITEMS];
         int items_number;
         int selected_option;
         Menu() : items_number(0), selected_option(0) {}
 
-        // Add element to menu
+        // Add element (that runs standalone function) to menu
         void add_item(std::string label, std::function<int()> func) 
         {
             if (items_number<MAX_ITEMS)
             {
-                items[items_number] = MenuItem(label, func);
+                items[items_number] = new MenuItemFunction(label, func);
                 items_number++;
             }
             else
@@ -81,10 +96,13 @@ class Menu
             }
         }
 
+        // Add element (that switches menu) to menu - forward declaration to prevent conflicts
+        void add_item(std::string label, Menu menu);
+
         // Call clicked function in selected element
         int handle_click()
         {
-            int result = items[selected_option].clicked();
+            int result = items[selected_option]->clicked();
             return result;
         }
 
@@ -102,7 +120,7 @@ class Menu
                     // Add background to selected option
                     if (item_index == selected_option)
                         attron(A_REVERSE);
-                    mvprintw(item_index+1, 1, items[item_index].label.c_str());
+                    mvprintw(item_index+1, 1, items[item_index]->label.c_str());
                     attroff(A_REVERSE);
                 }
                 // refresh displays new elements
@@ -140,6 +158,53 @@ class Menu
 };
 
 
+/**
+ * Class that represents menu button that should run other menu. It stores label and menu that should be activated when selected.
+ * 
+ */
+class MenuItemSwitcher : public MenuItemInterface
+{
+    private:
+        // Function we call when element is clicked (ptr to it)
+        Menu *menu_to_switch;
+
+    public:
+        // Name of item
+        std::string label;
+        
+        // Conctructor for empty object
+        MenuItemSwitcher() : label(""), menu_to_switch(nullptr){}
+        // Constructor when label and menu object are specified
+        MenuItemSwitcher(std::string label, Menu *menu) : label(label), menu_to_switch(menu){}
+
+        // Clicked function - we should run it when someone presses enter while having this item selected
+        int clicked() 
+        {
+            // Do not call func if it's null!
+            if (menu_to_switch != nullptr) 
+            {
+                menu_to_switch->display_menu();
+                return 3;
+            }
+            // 2 is exit status meaning menu_to_switch is nullptr
+            return 2;
+        }
+};
+
+void Menu::add_item(std::string label, Menu menu)
+{
+    if (items_number < MAX_ITEMS)
+    {
+        items[items_number] = new MenuItemSwitcher(label, &menu);
+        items_number++;
+    }
+    else
+    {
+        throw "MAX_ITEMS in menu exceeded!";
+    }
+}
+
+
 int main() 
 {
     // Init PDCurses and wait for user before jumping to main menu
@@ -153,7 +218,7 @@ int main()
     Menu test1;
     test1.add_item("Opcja 2-1", nullptr);
     test1.add_item("Exit", exit_action);
-    main_menu.add_item("Opcja 1-1", nullptr);
+    main_menu.add_item("Opcja 1-1", test1);
     main_menu.add_item("Exit", exit_action);
     main_menu.display_menu();
     
