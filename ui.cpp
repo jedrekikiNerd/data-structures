@@ -3,7 +3,7 @@
  * @author Jędrzej Boruczkowski
  * @brief Code in this file is responsible for user interface (we use curses.h)
  * @version 0.1
- * @date 2024-03-09
+ * @date 2024-03-11
  * 
  * @copyright Copyright (c) 2024
  * 

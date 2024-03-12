@@ -34,7 +34,7 @@ int main() {
     for (int i = 0; i < liczbaProbek; i++) {
         temp = temp + temp3;
         // Zapis do pliku po przecinku
-        plik << temp << ",";
+        plik << temp << endl;
 
     }
 
