@@ -9,7 +9,7 @@
 int exit_action();
 
 /**
- * Returns 3 - this will be handled and interpreted as launching new menu
+ * Returns 3 - this will be handled and interpreted as launching new menu, not used anymore
  * 
  * @return int 
  */

@@ -8,6 +8,7 @@
 using namespace std;
 namespace fs = std::filesystem;
 
+<<<<<<< HEAD
 //clearing the folder before adding files
 void removeFilesInFolder(const string& folderName) {
     for (const auto& entry : fs::directory_iterator(folderName)) {
@@ -19,6 +20,11 @@ void removeFilesInFolder(const string& folderName) {
 
 int generator(int number_samples, int sample_skip, int file_number) {
     // Initialization of the pseudorandom number generator
+=======
+
+int generator() {
+    // Inicjalizacja generatora liczb pseudolosowych
+>>>>>>> f281ce333acef48171811ff955a387a5b966a7c2
     srand(time(0));
 
     int temp, temp2, temp3, temp4;
@@ -53,5 +59,26 @@ int generator(int number_samples, int sample_skip, int file_number) {
         
         plik.close();
     }
+<<<<<<< HEAD
+=======
+
+    if ((temp + (rand() % 10)) % 2 == 0) {
+        temp2 = rand() % temp;
+        temp = -2147483647 + (temp2 * liczba);
+    }
+
+    for (int i = 0; i < liczbaProbek; i++) {
+        temp = temp + temp3;
+        // Zapis do pliku po przecinku
+        plik << temp << endl;
+
+    }
+
+    // Zamknięcie pliku
+    plik.close();
+
+    cout << "Dane zapisane do pliku 'wyniki.txt'." << endl;
+
+>>>>>>> f281ce333acef48171811ff955a387a5b966a7c2
     return 0;
 }
