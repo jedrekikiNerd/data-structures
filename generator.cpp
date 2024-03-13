@@ -5,7 +5,8 @@
 
 using namespace std;
 
-int main() {
+
+int generator() {
     // Inicjalizacja generatora liczb pseudolosowych
     srand(time(0));
 
