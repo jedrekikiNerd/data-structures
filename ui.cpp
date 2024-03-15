@@ -78,9 +78,15 @@ int Menu::display_menu()
             // Add background to selected option
             if (item_index == selected_option)
                 attron(A_REVERSE);
-            mvprintw(item_index+1, 1, items[item_index]->label.c_str());
+            mvprintw(item_index+LINES/2-items_number, COLS/2-10, items[item_index]->label.c_str());
             attroff(A_REVERSE);
         }
+        attron(A_ITALIC);
+        attron(COLOR_PAIR(2));
+        mvprintw(LINES-2, COLS/2-26, "Przeglądarka Własnych Implementacji Struktur Danych");
+        mvprintw(LINES-1, COLS/2-19, "by Jędrzej Boruczkowski & Filip Zioło");
+        attroff(A_ITALIC);
+        attroff(COLOR_PAIR(2));
         // refresh displays new elements
         refresh();
 

@@ -27,7 +27,7 @@ public:
         clear();
     }
 
-    void add_front();
+    void add_front(Type value);
     void add_back();
     void add_at();
 
