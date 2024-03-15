@@ -2,18 +2,12 @@
 #define GENERATOR_H
 
 /**
- * Returns 1 - this will be handled by menu and interpreted as call for menu exit
+ * Runs generator and returns 0 if operation is successful, should be mapped to ui item
  * 
  * @return int 
  */
-int exit_action();
+int ui_run_generator();
 
-/**
- * Returns 3 - this will be handled and interpreted as launching new menu
- * 
- * @return int 
- */
-int launch_menu_action();
-
+int generator(int number_samples, int sample_skip, int file_number);
 
 #endif

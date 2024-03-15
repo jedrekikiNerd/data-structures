@@ -4,11 +4,12 @@
 #include <ctime>
 #include <string>
 #include <filesystem>
+#include "ui_actions.h"
+#include "generator.h"
 
 using namespace std;
 namespace fs = std::filesystem;
 
-<<<<<<< HEAD
 //clearing the folder before adding files
 void removeFilesInFolder(const string& folderName) {
     for (const auto& entry : fs::directory_iterator(folderName)) {
@@ -20,11 +21,6 @@ void removeFilesInFolder(const string& folderName) {
 
 int generator(int number_samples, int sample_skip, int file_number) {
     // Initialization of the pseudorandom number generator
-=======
-
-int generator() {
-    // Inicjalizacja generatora liczb pseudolosowych
->>>>>>> f281ce333acef48171811ff955a387a5b966a7c2
     srand(time(0));
 
     int temp, temp2, temp3, temp4;
@@ -59,26 +55,16 @@ int generator() {
         
         plik.close();
     }
-<<<<<<< HEAD
-=======
+    return 0;
+}
 
-    if ((temp + (rand() % 10)) % 2 == 0) {
-        temp2 = rand() % temp;
-        temp = -2147483647 + (temp2 * liczba);
-    }
 
-    for (int i = 0; i < liczbaProbek; i++) {
-        temp = temp + temp3;
-        // Zapis do pliku po przecinku
-        plik << temp << endl;
-
-    }
-
-    // Zamknięcie pliku
-    plik.close();
-
-    cout << "Dane zapisane do pliku 'wyniki.txt'." << endl;
-
->>>>>>> f281ce333acef48171811ff955a387a5b966a7c2
+// Function prepared for connecting to UI - calls genertor with arguments from user input
+int ui_run_generator()
+{
+    int number_files = user_input_action("Podaj ile próbek danych chcesz otrzymać: ");
+    int first_sample_size = user_input_action("Podaj ilość danych do wylosowania: ");
+    int sample_increment = user_input_action("Podaj o ile zwiększać dane: ");
+    generator(first_sample_size, sample_increment, number_files);
     return 0;
 }

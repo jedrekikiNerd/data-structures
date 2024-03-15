@@ -1,5 +1,7 @@
-#ifndef UI_ACTIONs_H
+#ifndef UI_ACTIONS_H
 #define UI_ACTIONS_H
+
+#include <iostream>
 
 /**
  * Returns 1 - this will be handled by menu and interpreted as call for menu exit
@@ -14,6 +16,13 @@ int exit_action();
  * @return int 
  */
 int launch_menu_action();
+
+/**
+ * Returns user input as int number
+ * 
+ * @return int 
+ */
+int user_input_action(std::string input_field_label);
 
 
 #endif
