@@ -4,7 +4,7 @@
 template <typename Type>
 class DynamicArray
 {private:
-    int *arr;
+    Type *arr;
     int capacity;
     int size;
 
@@ -12,14 +12,14 @@ public:
     DynamicArray() {
         capacity = 1;
         size = 0;
-        arr = new int[capacity];
+        arr = new Type[capacity];
     }
 
      ~DynamicArray() {
         delete[] arr;
     }
 
-    void push_back() {};
+    void push_back(Type value) {};
 
     int& operator[](int index) {
         return arr[index];
