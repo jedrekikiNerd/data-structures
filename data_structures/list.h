@@ -28,20 +28,20 @@ public:
     }
 
     void add_front(Type value);
-    void add_back();
-    void add_at();
+    void add_back(Type value);
+    void add_at(Type value, int position);
 
     void remove_front();
     void remove_back();
-    void remove_at();
+    void remove_at(int position);
     void clear();
 
-    void first_element();
-    void last_element();
-    void first_value();
-    void last_value();
+    Type first_value();
+    Type last_value();
+    Type value_at(int position);
+
     void size();
-    void find();
+    int find(Type value);
 
 };
 
@@ -75,7 +75,7 @@ public:
     void last_element();
     void first_value();
     void last_value();
-    void size();
+    int size();
     void find();
 
 };

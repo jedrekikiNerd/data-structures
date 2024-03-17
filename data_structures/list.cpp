@@ -1,6 +1,7 @@
 #include "list.h"
 #include <iostream>
 
+// Adds element where head ptr is pointing
 template <typename Type>
 void LinkedListH<Type>::add_front(Type value)
 {
@@ -9,12 +10,13 @@ void LinkedListH<Type>::add_front(Type value)
         head = new_node;
     else
     {
-        new_node->next_element = head->next_element;
+        new_node->next_element = head;
         head = new_node;
     }
     size++;
 }
 
+// Adds element to the tail of the list
 template <typename Type>
 void LinkedListH<Type>::add_back(Type value)
 {
@@ -23,7 +25,7 @@ void LinkedListH<Type>::add_back(Type value)
         head = new_node;
     else
     {
-        Node<Type>* last_node = &head;
+        Node<Type>* last_node = head;
         while(last_node->next_element != nullptr)
         {
             last_node = last_node->next_element;
@@ -33,55 +35,166 @@ void LinkedListH<Type>::add_back(Type value)
     size++;
 }
 
+// Adds element on specified index starting counting from head
 template <typename Type>
 void LinkedListH<Type>::add_at(Type value, int position)
 {
-    Node<Type>* new_node = new Node<Type>(value);
     if (position >= size or position < 0)
         std::cerr << "Position exceeds size!";
     else
     {
-        Node<Type>* currrent_node = head;
-        for(int i=0; i<position; i++)
+        Node<Type>* new_node = new Node<Type>(value);
+        
+        if (position == 0)
         {
-            // TODO: finish
+            new_node->next_element = head;
+            head = new_node;
+            size++;
+            return;
         }
+
+        Node<Type>* currrent_node = head;
+        for(int i=1; i<position; i++)
+        {
+            currrent_node = currrent_node->next_element;
+        }
+        new_node->next_element = currrent_node->next_element;
+        currrent_node->next_element = new_node;
+        size++;
     }
-    size++;
 }
 
+// Removes first element - based on head pointer
 template <typename Type>
-void remove_front();
+void LinkedListH<Type>::remove_front()
+{
+    if (head != nullptr) 
+    {
+        Node<Type>* temp = head;
+        head = head->next_element;
+        delete temp;
+        size--;
+    }
+}
+
+
+// Removes last element - needs to iterate from head to tail
+template <typename Type>
+void LinkedListH<Type>::remove_back()
+{
+    if (head != nullptr)
+    {
+        if (head->next_element == nullptr)
+        {
+            delete head;
+            head = nullptr;
+        }
+        else
+        {
+            Node<Type>* prev_last_node = head;
+            // We have to reach last element - 1 in order to change pointers and then delete last one
+            while(prev_last_node->next_element->next_element != nullptr)
+            {
+                prev_last_node = prev_last_node->next_element;
+            }
+            // We delete last element and set nullptr for prev_last
+            delete prev_last_node->next_element;
+            prev_last_node->next_element = nullptr;
+        }
+        size--;
+    }
+}
+
+// Removes element at specified position counting from head (0)
+template <typename Type>
+void LinkedListH<Type>::remove_at(int position)
+{
+    if (position >= size or position < 0)
+        std::cerr << "Position exceeds size!";
+    else
+    {
+        if (position == 0)
+        {
+            Node<Type>* temp = head;
+            head = head->next_element;
+            delete temp;
+            size--;
+        }
+
+        Node<Type>* currrent_node = head;
+        for(int i=1; i<position; i++)
+        {
+            currrent_node = currrent_node->next_element;
+        }
+        Node<Type>* temp = currrent_node->next_element;
+        currrent_node->next_element = currrent_node->next_element->next_element;
+        delete temp;
+        size--;
+    }
+}
+
+// Clears all nodes stored by this list, useful for deconstructing to free all memory
+template <typename Type>
+void LinkedListH<Type>::clear()
+{
+    while(head)
+        this->remove_front();
+}
+
+// Returns first value (head value)
+template <typename Type>
+Type LinkedListH<Type>::first_value()
+{
+    return head->value;
+}
+
+// Returns last value (tail value)
+template <typename Type>
+Type LinkedListH<Type>::last_value()
+{
+    Node<Type>* last_node = head;
+    while(last_node->next_element != nullptr)
+    {
+        last_node = last_node->next_element;
+    }
+    return last_node->value;
+}
+
 
 template <typename Type>
-void remove_back();
+Type LinkedListH<Type>::value_at(int position)
+{
+    if (position >= size or position < 0)
+        std::cerr << "Position exceeds size!";
+        return nullptr;
+    else
+    {
+        Node<Type>* current_node = head;
+        for(int i=0; i<position; i++)
+            current_node=current_node->next_element;
+        return current_node->value;
+    }
+}
 
+// Returns size of list
 template <typename Type>
-void remove_at();
+int size()
+{
+    return size;
+}
 
+// Returns position of element
 template <typename Type>
-void clear();
-
-template <typename Type>
-void first_element();
-
-template <typename Type>
-void last_element();
-
-template <typename Type>
-void first_value();
-
-template <typename Type>
-void last_value();
-
-template <typename Type>
-void size();
-
-template <typename Type>
-void find();
-
-template <typename Type>
-void get_at();
-
-template <typename Type>
-void print();
+int LinkedListH<Type>::find(Type value)
+{
+    Node<Type>* current_node = head;
+    int i = 0;
+    while(current_node->next_element != nullptr)
+    {
+        if (current_node->value == value)
+            return i;
+        i++;
+        current_node = current_node->next_element;
+    }
+    return -1;
+}
