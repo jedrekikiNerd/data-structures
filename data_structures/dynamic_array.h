@@ -21,6 +21,8 @@ public:
 
     void push_back(Type value) {};
 
+    void push_front(Type value) {};
+
     int& operator[](int index) {
         return arr[index];
     }
@@ -28,4 +30,6 @@ public:
     int getSize() const {}
 
     int getCapacity() const {}
+
+    int getElement(int index) const {}
 };
