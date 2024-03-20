@@ -19,17 +19,22 @@ public:
         delete[] arr;
     }
 
-    void push_back(Type value) {};
+    void add_back(Type value) {};
+    void add_front(Type value) {};
+    void add_at(Type value,int index) {};
 
-    void push_front(Type value) {};
-
+    void pop_front() {};
+    void remove_back() {};
+    void remove_at(int index) {};
+    void clear() {};
+    
     int& operator[](int index) {
         return arr[index];
-    }
+    };
 
-    int getSize() const {}
+    int size() const {};
 
-    int getCapacity() const {}
+    int getCapacity() const {};
 
-    int getElement(int index) const {}
+    int getElement(int index) const {};
 };

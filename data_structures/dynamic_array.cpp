@@ -1,9 +1,9 @@
-#include "dynamic_array.hpp"
+#include "dynamic_array.h"
 #include <iostream>
 
 
 template <typename Type>
-void DynamicArray<Type>::push_back(Type value) {
+void DynamicArray<Type>::add_back(Type value) {
     if (size >= capacity) {
         // If the array is full, double its size
         int newCapacity = capacity * 2;
@@ -21,7 +21,7 @@ void DynamicArray<Type>::push_back(Type value) {
 }
 
 template <typename Type>
-void DynamicArray<Type>::push_front(Type value) {
+void DynamicArray<Type>::add_front(Type value) {
     if (size >= capacity) {
         // If the array is full, double its size
         int newCapacity = capacity * 2;
@@ -43,7 +43,7 @@ void DynamicArray<Type>::push_front(Type value) {
 }
 
 template <typename Type>
-void DynamicArray<Type>::push_at(Type value,int index) {
+void DynamicArray<Type>::add_at(Type value,int index) {
     if (index >= 0 && index <= size){
         if (size >= capacity) {
             // If the array is full, double its size
@@ -76,7 +76,7 @@ void DynamicArray<Type>::push_at(Type value,int index) {
 
 
 template <typename Type>
-void DynamicArray<Type>::pop_front(){
+void DynamicArray<Type>::remove_front(){
     if (size > 0){
         if(size-1 <= capacity/2 && capacity > 1 ){
             int newCapacity = capacity /2;
@@ -97,6 +97,59 @@ void DynamicArray<Type>::pop_front(){
 }
 
 
+template <typename Type>
+void DynamicArray<Type>::remove_back(){
+    if (size > 0){
+        if(size - 1 <= capacity / 2 && capacity > 1){
+            int newCapacity = capacity / 2;
+            Type *tempArr = new int[newCapacity];
+            for ( int i =0; i < size - 1; i++){
+                tempArr[i] = arr[i];
+            }
+            delete[] arr;
+            arr = tempArr;
+            capacity = newCapacity;
+        }
+        size--;
+    }
+}
+
+template <typename Type>
+void DynamicArray<Type>::remove_at(int index){
+    if (size > 0 && index >= 0 && index <= size){
+        if (size - 1 <= capacity / 2 && capacity > 1){
+            int newCapacity = capacity / 2;
+            Type *tempArr = new int[newCapacity];
+
+            for (int i = 0; i < index; i++){
+                tempArr[i] = arr[i]
+            }
+
+            for (int i = index; i < size - 1; i++){
+                tempArr[i] = arr[i+1]
+            }
+            delete[] arr;
+            arr = tempArr;
+            capacity = newCapacity;
+        } else{
+            for (int i = index; i < size - 1;i++){
+               arr[i] = arr[i+1]
+            } 
+        }
+        size--;
+    }else{
+        return 1;
+    }
+}
+
+
+template <typename Type>
+void DynamicArray<Type>::clear(){
+    for(int i=0; i <= size ;i++){
+        delete[i] arr;
+    }
+}
+
 
 template <typename Type>
 int& DynamicArray<Type>::operator[](int index) {
@@ -105,7 +158,7 @@ int& DynamicArray<Type>::operator[](int index) {
 
 
 template <typename Type>
-int DynamicArray<Type>::getSize() const {
+int DynamicArray<Type>::size() const {
     return size;
 }
 
