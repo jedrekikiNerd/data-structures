@@ -4,6 +4,7 @@
 #include <ctime>
 #include <string>
 #include <filesystem>
+#include <random>
 #include "ui_actions.h"
 #include "generator.h"
 
@@ -22,9 +23,9 @@ void removeFilesInFolder(const string& folderName) {
 int generator(int number_samples, int sample_skip, int file_number) {
     // Initialization of the pseudorandom number generator
     srand(time(0));
+    default_random_engine generator;
+    uniform_int_distribution<int> distribution(-2147483648,2147483648);
 
-    int temp, temp2, temp3, temp4;
-    int liczba = rand() % 4;
      string folder_name = "generated_data";
 
     removeFilesInFolder(folder_name);
@@ -36,21 +37,13 @@ int generator(int number_samples, int sample_skip, int file_number) {
             return 1;
         }
 
-        temp = 2147483647 / number_samples;
-        temp3 = temp / 4;
-
-        // Generating data for each file
-        if ((temp + (rand() % 10)) % 2 == 0) {
-            temp2 = rand() % temp;
-          temp = -((temp) + (temp2 * liczba));
-        }
-
+        //Generate random numbers 
         for (int i = 0; i < number_samples; i++) {
-            temp4 = temp + i * temp3;
-            plik << temp4 << endl;
+            int temp = distribution(generator);
+            plik << temp << endl;
         }
         
-        // increasing the number of samples for the next file
+        // Increasing the number of samples for the next file
         number_samples += sample_skip;
         
         plik.close();
