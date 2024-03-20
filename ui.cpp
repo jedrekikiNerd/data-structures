@@ -178,8 +178,6 @@ void Menu::add_item(std::string label, Menu *menu)
 
 
 template <typename Type>
-MenuDt<Type>::MenuDt() : Menu(), dt(nullptr){}
-template <typename Type>
 MenuDt<Type>::MenuDt(IDataStructure<Type> *ptr_to_dt) : Menu(), dt(ptr_to_dt) {}
 
 template <typename Type>

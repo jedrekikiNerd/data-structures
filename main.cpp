@@ -3,21 +3,10 @@
 #include "ui.h"
 #include "generator.h"
 #include "ui_actions.h"
+#include "data_structures/I_data_structure.h"
 
 
-Menu* setup_structures_menu()
-{
-    Menu *structures_menu = new Menu();
-    structures_menu->add_item("Struktura1", nullptr);
-    structures_menu->add_item("Struktura2", nullptr);
-    structures_menu->add_item("Struktura3", nullptr);
-    structures_menu->add_item("Wróć do menu głównego", exit_action);
-
-    return structures_menu;
-}
-
-/*
-Menu* setup_list_menu()
+MenuDt<int>* setup_list_menu()
 {
     MenuDt<int> *list_menu = new MenuDt<int>();
     list_menu->add_item("Dodaj1", nullptr);
@@ -27,7 +16,20 @@ Menu* setup_list_menu()
 
     return list_menu;
 }
-*/
+
+
+
+Menu* setup_structures_menu()
+{
+    Menu *structures_menu = new Menu();
+    structures_menu->add_item("ListaH", setup_list_menu());
+    structures_menu->add_item("Struktura2", nullptr);
+    structures_menu->add_item("Struktura3", nullptr);
+    structures_menu->add_item("Wróć do menu głównego", exit_action);
+
+    return structures_menu;
+}
+
 
 Menu* set_up_ui()
 {
@@ -59,7 +61,6 @@ Menu* set_up_ui()
 int main()
 {
     Menu *main_menu = set_up_ui();
-    MenuDt<int> test;
     main_menu->display_menu();
 
     return 0;

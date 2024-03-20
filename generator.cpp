@@ -24,7 +24,7 @@ int generator(int number_samples, int sample_skip, int file_number) {
     // Initialization of the pseudorandom number generator
     srand(time(0));
     default_random_engine generator;
-    uniform_int_distribution<int> distribution(-2147483648,2147483648);
+    uniform_int_distribution<int> distribution(-2147483647,2147483647);
 
      string folder_name = "generated_data";
 

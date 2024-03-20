@@ -89,7 +89,7 @@ class MenuDt : public Menu
         IDataStructure<Type> *dt;
 
     public:
-        MenuDt();
+        MenuDt() : Menu(), dt(nullptr){}
         MenuDt(IDataStructure<Type> *ptr_to_dt);
         void add_item_dt(std::string label, std::function<int()> func());
 };
