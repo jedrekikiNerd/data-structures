@@ -1,3 +1,6 @@
+#include <iostream>
+#include "I_data_structure.h"
+
 /**
  * Node class for single container used by basic list
  * It contains pointer to next container and stores value of type read from template
@@ -13,8 +16,12 @@ class Node
 };
 
 
+/**
+ * LinkedListH class that represents a list data structure with methodes
+ * 
+ */
 template <typename Type>
-class LinkedListH
+class LinkedListH : IDataStructure
 {
 private:
     Node<Type>* head;
@@ -42,40 +49,6 @@ public:
 
     void size();
     int find(Type value);
-
-};
-
-
-template <typename Type>
-class LinkedListHT
-{
-private:
-    Node<Type>* head;
-    Node<Type>* tail;
-    int size;
-
-
-public:
-    LinkedListHT() : head(nullptr), tail(nullptr), size(0) {}
-
-    ~LinkedListHT() {
-        clear();
-    }
-
-    void add_front();
-    void add_back();
-    void add_at();
-
-    void remove_front();
-    void remove_back();
-    void remove_at();
-    void clear();
-
-    void first_element();
-    void last_element();
-    void first_value();
-    void last_value();
-    int size();
-    void find();
+    std::string get_as_string();
 
 };

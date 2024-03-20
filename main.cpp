@@ -16,6 +16,18 @@ Menu* setup_structures_menu()
     return structures_menu;
 }
 
+/*
+Menu* setup_list_menu()
+{
+    MenuDt<int> *list_menu = new MenuDt<int>();
+    list_menu->add_item("Dodaj1", nullptr);
+    list_menu->add_item("Usun1", nullptr);
+    list_menu->add_item("Wyswietl", nullptr);
+    list_menu->add_item("Wróć do menu głównego", exit_action);
+
+    return list_menu;
+}
+*/
 
 Menu* set_up_ui()
 {
@@ -47,6 +59,7 @@ Menu* set_up_ui()
 int main()
 {
     Menu *main_menu = set_up_ui();
+    MenuDt<int> test;
     main_menu->display_menu();
 
     return 0;

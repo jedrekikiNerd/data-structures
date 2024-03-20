@@ -17,6 +17,7 @@
 #include <functional>
 #include "ui_actions.h"
 #include "ui.h"
+#include "data_structures/I_data_structure.h"
 
 #define MY_KEY_EXIT 27
 #define MY_KEY_ENTER 10
@@ -34,6 +35,27 @@ int MenuItemFunction::clicked()
     if (func != nullptr) 
     {
         int result = func();
+        return result;
+    }
+    // 2 is exit status meaning func is nullptr
+    return 2;
+}
+
+
+// Constructors of MenuItemDTFunction
+template <typename Type>
+MenuItemDTFunction<Type>::MenuItemDTFunction() : MenuItemInterface(), func(nullptr), dt(nullptr){}
+template <typename Type>
+MenuItemDTFunction<Type>::MenuItemDTFunction(std::string label, std::function<int()> func, IDataStructure<Type> *dt) : MenuItemInterface(), func(nullptr), dt(nullptr){}
+
+// Clicked function - we should run it when someone presses enter while having this item selected
+template <typename Type>
+int MenuItemDTFunction<Type>::clicked() 
+{
+    // Do not call func if it's null!
+    if (func != nullptr) 
+    {
+        int result = func(dt);
         return result;
     }
     // 2 is exit status meaning func is nullptr
@@ -152,4 +174,24 @@ void Menu::add_item(std::string label, Menu *menu)
     {
         throw "MAX_ITEMS in menu exceeded!";
     }
+}
+
+
+template <typename Type>
+MenuDt<Type>::MenuDt() : Menu(), dt(nullptr){}
+template <typename Type>
+MenuDt<Type>::MenuDt(IDataStructure<Type> *ptr_to_dt) : Menu(), dt(ptr_to_dt) {}
+
+template <typename Type>
+void MenuDt<Type>::add_item_dt(std::string label, std::function<int()> func())
+{
+    if (items_number<MAX_ITEMS)
+    {
+        items[items_number] = new MenuItemDTFunction<Type>(label, func, dt);
+        items_number++;
+    }
+    else
+    {
+        throw "MAX_ITEMS in menu exceeded!";
+    } 
 }

@@ -2,6 +2,7 @@
 #define UI_H
 #include <iostream>
 #include <functional>
+#include "data_structures/I_data_structure.h"
 
 
 /**
@@ -37,12 +38,32 @@ class MenuItemFunction : public MenuItemInterface
 
 
 /**
- * Class representing single menu. It stores items with labels and callable function - look at MenuItem, it also stores which element is selected.
+ * Class that represents menu button that should run given function and pass pointer to IDataStructure as argument. It stores label and function that should be called when element is selected and ENTER key is pressed.
+ * 
+ */
+template <typename Type>
+class MenuItemDTFunction : public MenuItemInterface
+{
+    private:
+        // Function we call when element is clicked (ptr to it)
+        std::function<int()> func;
+        IDataStructure<Type> *dt;
+
+    public:
+
+        MenuItemDTFunction();
+        MenuItemDTFunction(std::string label, std::function<int()> func, IDataStructure<Type> *dt);
+        int clicked();
+};
+
+
+/**
+ * Class representing single menu. It stores items with labels and callable functions and datastructure - look at MenuItem, it also stores which element is selected.
  * 
  **/
 class Menu
 {
-    private:
+    protected:
         static const int MAX_ITEMS = 10;
 
     public:
@@ -54,6 +75,23 @@ class Menu
         void add_item(std::string label, Menu *menu);
         int handle_click();
         int display_menu();
+};
+
+
+/**
+ * Class representing menu that interacts with datastructure. It stores data structure of given type and can have menu items that call functions that edit given datastructure
+ * 
+ **/
+template <typename Type>
+class MenuDt : public Menu
+{
+    private:
+        IDataStructure<Type> *dt;
+
+    public:
+        MenuDt();
+        MenuDt(IDataStructure<Type> *ptr_to_dt);
+        void add_item_dt(std::string label, std::function<int()> func());
 };
 
 

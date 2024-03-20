@@ -1,5 +1,6 @@
 #include "list.h"
 #include <iostream>
+#include <type_traits>
 
 // Adds element where head ptr is pointing
 template <typename Type>
@@ -197,4 +198,23 @@ int LinkedListH<Type>::find(Type value)
         current_node = current_node->next_element;
     }
     return -1;
+}
+
+// Returns string representation of data inside list
+template <typename Type>
+std::string LinkedListH<Type>::get_as_string()
+{
+    std::string output = "List[";
+    Node<Type>* current_node = head;
+    if (std::is_integral_v<Type> != true)
+        return "ERROR: typename of this list is not supported by print method!"
+    while(current_node != nullptr)
+    {
+        output += std::to_string(current_node->value);
+        current_node = current_node->next_element;
+        if (current_node != nullptr)
+            output += ", ";
+    }
+    output += "]";
+    return output;
 }
