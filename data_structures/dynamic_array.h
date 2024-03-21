@@ -1,5 +1,6 @@
 #include "I_data_structure.h"
 #include <iostream>
+#include <type_traits>
 
 template <typename Type>
 class DynamicArray : public IDataStructure<Type>
@@ -60,30 +61,33 @@ public:
 
 
     void add_at(Type value,int index) {
-         if (position >= size or position < 0)
-            std::cerr << "Position exceeds size!";
-        else
-        {
-            Node<Type>* new_node = new Node<Type>(value);
-            
-            if (position == 0)
-            {
-                new_node->next_element = head;
-                head = new_node;
-                size++;
-                return;
+         if (index >= 0 && index <= size){
+        if (size >= capacity) {
+            // If the array is full, double its size
+            int newCapacity = capacity * 2;
+            Type *tempArr = new int[newCapacity];
+            for (int i = 0; i < index ; ++i) {
+                tempArr[i] = arr[i];
             }
-
-            Node<Type>* currrent_node = head;
-            for(int i=1; i<position; i++)
-            {
-                currrent_node = currrent_node->next_element;
+            tempArr[index] = value;
+            for ( int i = index; i < size; i++){
+                tempArr[i+1] = arr[i];
             }
-            new_node->next_element = currrent_node->next_element;
-            currrent_node->next_element = new_node;
-            size++;
-        }
+            delete[] arr;
+            arr = tempArr;
+            capacity = newCapacity;
+        } else {
+            for (int i = size; i >index; i--){
+                arr[i] = arr[i-1]
+            }
+            arr[index] = value
+         }
+        size++;
+    } else {
+        return -1;
     }
+    }
+
 
 
 
@@ -162,8 +166,22 @@ public:
         return arr[index];
     };
 
-    int size() const {
+    int get_size() const {
         return size;
+    }
+
+    int  get_first(){
+        return arr[0];
+    }
+
+    int  get_last(){
+        return arr[size];
+    }
+
+    int find(Type value){
+        for(int i = 0; i < size;i++){
+            if arr[i] = value
+        }
     }
 
     int getElement(int index) const {
@@ -172,4 +190,24 @@ public:
     }
     return arr[index];
     }
+
+
+std::string get_as_string()
+    {
+        std::string output = "List[";
+        for (int i = 0; i < size; i++){
+        
+        if (std::is_integral_v<Type> != true)
+            return "ERROR: typename of this list is not supported by print method!";
+        while(arr[i] != nullptr)
+        {
+            output += std::to_string(arr[i]);
+            if ( i < size )
+                output += ", ";
+        }
+        }
+        output += "]";
+        return output;
+    }
+    
 };
