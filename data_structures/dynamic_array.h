@@ -78,13 +78,11 @@ public:
             capacity = newCapacity;
         } else {
             for (int i = size; i >index; i--){
-                arr[i] = arr[i-1]
+                arr[i] = arr[i-1];
             }
-            arr[index] = value
+            arr[index] = value;
          }
         size++;
-    } else {
-        return -1;
     }
     }
 
@@ -104,7 +102,7 @@ public:
             capacity = newCapacity;
         } else {
             for(int i =0; i <size - 1; i++){
-                arr[i] = arr[i+1;]
+                arr[i] = arr[i+1];
             }  
         }
         size--;
@@ -134,57 +132,58 @@ public:
             Type *tempArr = new int[newCapacity];
 
             for (int i = 0; i < index; i++){
-                tempArr[i] = arr[i]
+                tempArr[i] = arr[i];
             }
 
             for (int i = index; i < size - 1; i++){
-                tempArr[i] = arr[i+1]
+                tempArr[i] = arr[i+1];
             }
             delete[] arr;
             arr = tempArr;
             capacity = newCapacity;
         } else{
             for (int i = index; i < size - 1;i++){
-               arr[i] = arr[i+1]
+               arr[i] = arr[i+1];
             } 
         }
         size--;
-    }else{
-        return 1;
     }
     }
 
 
 
     void clear() {
-         for(int i=0; i <= size ;i++){
-        delete[i] arr;
-    }
+        delete[] arr;
+        capacity = 1;
+        size = 0;
+        arr = new Type[capacity];
     }
     
     int& operator[](int index) {
         return arr[index];
     };
 
-    int get_size() const {
+    int get_size() {
         return size;
     }
 
-    int  get_first(){
+    int  first_value(){
         return arr[0];
     }
 
-    int  get_last(){
+    int  last_value(){
         return arr[size];
     }
 
     int find(Type value){
         for(int i = 0; i < size;i++){
-            if arr[i] = value
+            if (arr[i] == value)
+                return i;
         }
+        return -1;
     }
 
-    int getElement(int index) const {
+    int value_at(int index) {
          if (index < 0 || index >= size) {
         return -1;
     }
@@ -194,20 +193,15 @@ public:
 
 std::string get_as_string()
     {
-        std::string output = "List[";
-        for (int i = 0; i < size; i++){
-        
         if (std::is_integral_v<Type> != true)
             return "ERROR: typename of this list is not supported by print method!";
-        while(arr[i] != nullptr)
-        {
+        std::string output = "DynamicArray[";
+        for (int i = 0; i < size; i++){
             output += std::to_string(arr[i]);
-            if ( i < size )
+            if ( i < size-1 )
                 output += ", ";
-        }
         }
         output += "]";
         return output;
     }
-    
 };

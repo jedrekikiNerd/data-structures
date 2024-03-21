@@ -8,6 +8,7 @@
 #include "data_structures/int_structures_manual_ui.hpp"
 
 
+// Create and return menu for list
 MenuDt<int>* setup_list_menu()
 {
     MenuDt<int> *list_menu = new MenuDt<int>(new LinkedListH<int>);
@@ -17,13 +18,14 @@ MenuDt<int>* setup_list_menu()
     list_menu->add_item_dt("Usuń z przodu", remove_front);
     list_menu->add_item_dt("Usuń z tyłu", remove_back);
     list_menu->add_item_dt("Usuń na pozycji", remove_at);
+    list_menu->add_item_dt("Wyczyść", clear_dt);
     list_menu->add_item_dt("Znajdź element", find);
-    list_menu->add_item_dt("Wyświetl", get_as_string);
     list_menu->add_item("Wróć do menu głównego", exit_action);
 
     return list_menu;
 }
 
+// Create and return menu for dynarray
 MenuDt<int>* setup_dynarray_menu()
 {
     MenuDt<int> *dynarray_menu = new MenuDt<int>(new DynamicArray<int>);
@@ -33,13 +35,14 @@ MenuDt<int>* setup_dynarray_menu()
     dynarray_menu->add_item_dt("Usuń z przodu", remove_front);
     dynarray_menu->add_item_dt("Usuń z tyłu", remove_back);
     dynarray_menu->add_item_dt("Usuń na pozycji", remove_at);
+    dynarray_menu->add_item_dt("Wyczyść", clear_dt);
     dynarray_menu->add_item_dt("Znajdź element", find);
-    dynarray_menu->add_item_dt("Wyświetl", get_as_string);
     dynarray_menu->add_item("Wróć do menu głównego", exit_action);
 
     return dynarray_menu;
 }
 
+// Create and return menu for structure selection
 Menu* setup_structures_menu()
 {
     Menu *structures_menu = new Menu();
@@ -52,7 +55,7 @@ Menu* setup_structures_menu()
     return structures_menu;
 }
 
-
+// Create and return main menu, also setup values of curses library
 Menu* set_up_ui()
 {
     // Init PDCurses and wait for user before jumping to main menu
@@ -65,6 +68,7 @@ Menu* set_up_ui()
     init_pair(2, COLOR_GREEN, COLOR_BLACK);
     init_pair(3, COLOR_BLUE, COLOR_BLACK);
     init_pair(4, COLOR_WHITE, COLOR_BLACK);
+    init_pair(5, COLOR_YELLOW, COLOR_BLACK);
     curs_set(0);
     printw( "Wcisnij dowolny przycisk, aby rozpoczac prace..\n" );
     curs_set(0);

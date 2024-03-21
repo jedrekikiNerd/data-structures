@@ -4,6 +4,9 @@
 #include <functional>
 #include "data_structures/I_data_structure.h"
 
+#define MY_KEY_EXIT 27
+#define MY_KEY_ENTER 10
+#define MY_KEY_SPACE 32
 
 /**
  * Inteface of MenuItems
@@ -84,7 +87,7 @@ class Menu
         void add_item(std::string label, std::function<int()> func);
         void add_item(std::string label, Menu *menu);
         int handle_click();
-        int display_menu();
+        virtual int display_menu();
 };
 
 
@@ -112,6 +115,130 @@ class MenuDt : public Menu
             {
                 throw "MAX_ITEMS in menu exceeded!";
             } 
+        }
+
+        int display_menu()
+        {
+            int pressed_key;
+            bool current_window = true;
+            int dt_box_h = LINES/2-(items_number/2)-4;
+            int menu_box_h = LINES - dt_box_h;
+            WINDOW *dt_window_bg = newwin(dt_box_h , COLS, 0, 0);
+            WINDOW *menu_window_bg = newwin(menu_box_h, COLS, LINES/2-(items_number/2)-4, 0);
+            WINDOW *dt_window = newpad(10000, COLS);
+            WINDOW *menu_window = newwin(menu_box_h-2, COLS - 2, LINES/2-(items_number/2)-3, 1);
+            wattron(menu_window_bg, COLOR_PAIR(5));
+            wattroff(dt_window_bg, COLOR_PAIR(5));
+            box(menu_window_bg, 0, 0);
+            box(dt_window_bg, 0, 0);
+            clear();
+            int scroll_pos = 0;
+            while (true)
+            {
+                // We clear terminal screen before printing new elements
+                if (current_window)
+                    wclear(dt_window);
+                wclear(menu_window);
+
+                // We iterate through every element and display it
+                for (int item_index=0; item_index<items_number; item_index++)
+                {
+                    // Add background to selected option
+                    if (item_index == selected_option)
+                        wattron(menu_window, A_REVERSE);
+                    mvwprintw(menu_window, item_index+3, COLS/2-10, items[item_index]->label.c_str());
+                    wattroff(menu_window, A_REVERSE);
+                }
+                wattron(menu_window, A_ITALIC);
+                wattron(menu_window, COLOR_PAIR(2));
+                mvwprintw(menu_window, menu_box_h-4, COLS/2-26, "Przeglądarka Własnych Implementacji Struktur Danych");
+                mvwprintw(menu_window, menu_box_h-3, COLS/2-19, "by Jędrzej Boruczkowski & Filip Zioło");
+                wattroff(menu_window, A_ITALIC);
+                wattroff(menu_window, COLOR_PAIR(2));
+
+                if (current_window)
+                    waddstr(dt_window, dt->get_as_string().c_str());
+                // refresh displays new elements
+                refresh();
+                wrefresh(menu_window_bg);
+                wrefresh(menu_window);
+                wrefresh(dt_window_bg);
+                prefresh(dt_window, scroll_pos, 0, 1, 1, dt_box_h - 2, COLS - 2);  
+
+                // Wait for input and handle it
+                pressed_key = getch();
+                switch(pressed_key)
+                {
+                    case KEY_DOWN:
+                    {
+                        if (current_window)
+                            selected_option = (selected_option + 1) % items_number;
+                        else
+                            if (scroll_pos < 10000)
+                                scroll_pos += 1;
+                        break;
+                    }
+                    case KEY_UP:
+                    {
+                        if (current_window)
+                        {
+                            selected_option = (selected_option - 1);
+                            if (selected_option < 0)
+                                selected_option = items_number - 1;
+                        }
+                        else
+                            if (scroll_pos != 0)
+                                scroll_pos -= 1;
+                        break;
+                    }
+                    case MY_KEY_ENTER:
+                    {
+                        int result = handle_click();
+                        if (result == 1)
+                        {
+                            delwin(dt_window);
+                            delwin(dt_window_bg);
+                            delwin(menu_window_bg);
+                            delwin(menu_window);
+                            return 1;
+                        }
+                        box(menu_window_bg, 0, 0);
+                        box(dt_window_bg, 0, 0);
+                        break;
+                    }
+                    case MY_KEY_EXIT:
+                    {
+                        delwin(dt_window);
+                        delwin(dt_window_bg);
+                        delwin(menu_window_bg);
+                        delwin(menu_window);
+                        return 1;
+                    }
+                    case MY_KEY_SPACE:
+                    {
+                        current_window = !current_window;
+                        wclear(dt_window_bg);
+                        wclear(menu_window_bg);
+                        wclear(dt_window);
+                        if (!current_window)
+                        {
+                            wattron(dt_window_bg,COLOR_PAIR(5));
+                            wattroff(menu_window_bg,COLOR_PAIR(5));
+                        }
+                        else
+                        {
+                            wattron(menu_window_bg, COLOR_PAIR(5));
+                            wattroff(dt_window_bg, COLOR_PAIR(5));
+                        }
+
+                        box(menu_window_bg, 0, 0);
+                        box(dt_window_bg, 0, 0);
+                        waddstr(dt_window, dt->get_as_string().c_str());
+                        break;
+                    }
+                }
+            }
+            return 0;
         }
 };
 

@@ -19,9 +19,6 @@
 #include "ui.h"
 #include "data_structures/I_data_structure.h"
 
-#define MY_KEY_EXIT 27
-#define MY_KEY_ENTER 10
-
 
 // Constructor when label and ptr to function are not specified
 MenuItemFunction::MenuItemFunction() : MenuItemInterface(), func(nullptr){}
@@ -79,7 +76,7 @@ int Menu::display_menu()
             // Add background to selected option
             if (item_index == selected_option)
                 attron(A_REVERSE);
-            mvprintw(item_index+LINES/2-items_number, COLS/2-10, items[item_index]->label.c_str());
+            mvprintw(item_index+LINES/2-(items_number/2), COLS/2-10, items[item_index]->label.c_str());
             attroff(A_REVERSE);
         }
         attron(A_ITALIC);
