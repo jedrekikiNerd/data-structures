@@ -4,6 +4,7 @@
 #include "generator.h"
 #include "ui_actions.h"
 #include "data_structures/list.h"
+#include "data_structures/dynamic_array.h"
 #include "data_structures/int_structures_manual_ui.hpp"
 
 
@@ -23,10 +24,26 @@ MenuDt<int>* setup_list_menu()
     return list_menu;
 }
 
+MenuDt<int>* setup_dynarray_menu()
+{
+    MenuDt<int> *dynarray_menu = new MenuDt<int>(new DynamicArray<int>);
+    dynarray_menu->add_item_dt("Dodaj z przodu", add_front);
+    dynarray_menu->add_item_dt("Dodaj z tyłu", add_back);
+    dynarray_menu->add_item_dt("Dodaj na wybranej pozycji", add_at);
+    dynarray_menu->add_item_dt("Usuń z przodu", remove_front);
+    dynarray_menu->add_item_dt("Usuń z tyłu", remove_back);
+    dynarray_menu->add_item_dt("Usuń na pozycji", remove_at);
+    dynarray_menu->add_item_dt("Znajdź element", find);
+    dynarray_menu->add_item_dt("Wyświetl", get_as_string);
+    dynarray_menu->add_item("Wróć do menu głównego", exit_action);
+
+    return dynarray_menu;
+}
 
 Menu* setup_structures_menu()
 {
     Menu *structures_menu = new Menu();
+    structures_menu->add_item("Tablica dynamiczna", setup_dynarray_menu());
     structures_menu->add_item("ListaH", setup_list_menu());
     structures_menu->add_item("Struktura2", nullptr);
     structures_menu->add_item("Struktura3", nullptr);

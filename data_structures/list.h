@@ -233,7 +233,7 @@ public:
         std::string output = "List[";
         Node<Type>* current_node = head;
         if (std::is_integral_v<Type> != true)
-            return "ERROR: typename of this list is not supported by print method!";
+            return "ERROR: typename of this list is not supported by this method!";
         while(current_node != nullptr)
         {
             output += std::to_string(current_node->value);
