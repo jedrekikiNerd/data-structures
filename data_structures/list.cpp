@@ -2,6 +2,10 @@
 #include <iostream>
 #include <type_traits>
 
+// WARNING THIS FILE IS NOT USED ANYMORE
+// DUE TO TEMPLATES COMPILING ONLY WHEN INSIDE HEADER FILE
+// EVERY DEFINITION WAS MOVED THERE
+
 // Adds element where head ptr is pointing
 template <typename Type>
 void LinkedListH<Type>::add_front(Type value)
@@ -166,8 +170,10 @@ template <typename Type>
 Type LinkedListH<Type>::value_at(int position)
 {
     if (position >= size or position < 0)
+    {
         std::cerr << "Position exceeds size!";
         return nullptr;
+    }
     else
     {
         Node<Type>* current_node = head;
@@ -179,7 +185,7 @@ Type LinkedListH<Type>::value_at(int position)
 
 // Returns size of list
 template <typename Type>
-int size()
+int LinkedListH<Type>::get_size()
 {
     return size;
 }
@@ -207,7 +213,7 @@ std::string LinkedListH<Type>::get_as_string()
     std::string output = "List[";
     Node<Type>* current_node = head;
     if (std::is_integral_v<Type> != true)
-        return "ERROR: typename of this list is not supported by print method!"
+        return "ERROR: typename of this list is not supported by print method!";
     while(current_node != nullptr)
     {
         output += std::to_string(current_node->value);

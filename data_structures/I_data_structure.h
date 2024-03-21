@@ -9,7 +9,6 @@ template <typename Type>
 class IDataStructure
 {
 public:
-    IDataStructure();
     ~IDataStructure() {}
 
     virtual void add_front(Type value) = 0;
@@ -25,7 +24,7 @@ public:
     virtual Type last_value() = 0;
     virtual Type value_at(int position) = 0;
 
-    virtual int size() = 0;
+    virtual int get_size() = 0;
     virtual int find(Type value) = 0;
     virtual std::string get_as_string() = 0;
 

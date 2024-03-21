@@ -3,20 +3,19 @@
 #include "ui.h"
 #include "generator.h"
 #include "ui_actions.h"
-#include "data_structures/I_data_structure.h"
+#include "data_structures/list.h"
 
 
 MenuDt<int>* setup_list_menu()
 {
-    MenuDt<int> *list_menu = new MenuDt<int>();
-    list_menu->add_item("Dodaj1", nullptr);
+    MenuDt<int> *list_menu = new MenuDt<int>(new LinkedListH<int>);
+    list_menu->add_item_dt("Dodaj1", nullptr);
     list_menu->add_item("Usun1", nullptr);
     list_menu->add_item("Wyswietl", nullptr);
     list_menu->add_item("Wróć do menu głównego", exit_action);
 
     return list_menu;
 }
-
 
 
 Menu* setup_structures_menu()

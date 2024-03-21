@@ -42,12 +42,6 @@ int MenuItemFunction::clicked()
 }
 
 
-// Constructors of MenuItemDTFunction
-template <typename Type>
-MenuItemDTFunction<Type>::MenuItemDTFunction() : MenuItemInterface(), func(nullptr), dt(nullptr){}
-template <typename Type>
-MenuItemDTFunction<Type>::MenuItemDTFunction(std::string label, std::function<int()> func, IDataStructure<Type> *dt) : MenuItemInterface(), func(nullptr), dt(nullptr){}
-
 // Clicked function - we should run it when someone presses enter while having this item selected
 template <typename Type>
 int MenuItemDTFunction<Type>::clicked() 
@@ -176,9 +170,6 @@ void Menu::add_item(std::string label, Menu *menu)
     }
 }
 
-
-template <typename Type>
-MenuDt<Type>::MenuDt(IDataStructure<Type> *ptr_to_dt) : Menu(), dt(ptr_to_dt) {}
 
 template <typename Type>
 void MenuDt<Type>::add_item_dt(std::string label, std::function<int()> func())

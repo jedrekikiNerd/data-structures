@@ -51,8 +51,8 @@ class MenuItemDTFunction : public MenuItemInterface
 
     public:
 
-        MenuItemDTFunction();
-        MenuItemDTFunction(std::string label, std::function<int()> func, IDataStructure<Type> *dt);
+        MenuItemDTFunction() : MenuItemInterface(), func(nullptr), dt(nullptr){}
+        MenuItemDTFunction(std::string label, std::function<int()> func, IDataStructure<Type> *dt) : MenuItemInterface(), func(nullptr), dt(nullptr){}
         int clicked();
 };
 
@@ -90,7 +90,7 @@ class MenuDt : public Menu
 
     public:
         MenuDt() : Menu(), dt(nullptr){}
-        MenuDt(IDataStructure<Type> *ptr_to_dt);
+        MenuDt(IDataStructure<Type> *ptr_to_dt) : Menu(), dt(ptr_to_dt) {}
         void add_item_dt(std::string label, std::function<int()> func());
 };
 
