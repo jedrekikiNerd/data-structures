@@ -1,3 +1,6 @@
+#ifndef LISTH
+#define LISTH
+
 #include <iostream>
 #include "I_data_structure.h"
 #include <type_traits>
@@ -243,3 +246,4 @@ public:
     }
     
 };
+#endif

@@ -42,21 +42,6 @@ int MenuItemFunction::clicked()
 }
 
 
-// Clicked function - we should run it when someone presses enter while having this item selected
-template <typename Type>
-int MenuItemDTFunction<Type>::clicked() 
-{
-    // Do not call func if it's null!
-    if (func != nullptr) 
-    {
-        int result = func(dt);
-        return result;
-    }
-    // 2 is exit status meaning func is nullptr
-    return 2;
-}
-
-
 Menu::Menu() : items_number(0), selected_option(0) {}
 
 // Add element (that runs standalone function) to menu
@@ -168,19 +153,4 @@ void Menu::add_item(std::string label, Menu *menu)
     {
         throw "MAX_ITEMS in menu exceeded!";
     }
-}
-
-
-template <typename Type>
-void MenuDt<Type>::add_item_dt(std::string label, std::function<int()> func())
-{
-    if (items_number<MAX_ITEMS)
-    {
-        items[items_number] = new MenuItemDTFunction<Type>(label, func, dt);
-        items_number++;
-    }
-    else
-    {
-        throw "MAX_ITEMS in menu exceeded!";
-    } 
 }

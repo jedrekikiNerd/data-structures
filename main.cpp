@@ -4,14 +4,20 @@
 #include "generator.h"
 #include "ui_actions.h"
 #include "data_structures/list.h"
+#include "data_structures/int_structures_manual_ui.hpp"
 
 
 MenuDt<int>* setup_list_menu()
 {
     MenuDt<int> *list_menu = new MenuDt<int>(new LinkedListH<int>);
-    list_menu->add_item_dt("Dodaj1", nullptr);
-    list_menu->add_item("Usun1", nullptr);
-    list_menu->add_item("Wyswietl", nullptr);
+    list_menu->add_item_dt("Dodaj z przodu", add_front);
+    list_menu->add_item_dt("Dodaj z tyłu", add_back);
+    list_menu->add_item_dt("Dodaj na wybranej pozycji", add_at);
+    list_menu->add_item_dt("Usuń z przodu", remove_front);
+    list_menu->add_item_dt("Usuń z tyłu", remove_back);
+    list_menu->add_item_dt("Usuń na pozycji", remove_at);
+    list_menu->add_item_dt("Znajdź element", find);
+    list_menu->add_item_dt("Wyświetl", get_as_string);
     list_menu->add_item("Wróć do menu głównego", exit_action);
 
     return list_menu;

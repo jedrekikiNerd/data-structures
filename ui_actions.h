@@ -24,5 +24,12 @@ int launch_menu_action();
  */
 int user_input_action(std::string input_field_label);
 
+/**
+ * Displays given string
+ * 
+ * @return int 
+ */
+int display_action(std::string display_label);
+
 
 #endif

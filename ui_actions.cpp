@@ -60,3 +60,19 @@ int user_input_action(std::string input_field_label)
     noecho();
     return user_input;
 }
+
+
+/**
+ * Displays given string
+ * 
+ * @return int 
+ */
+int display_action(std::string display_label)
+{
+    clear();
+    mvprintw(1, 1, display_label.c_str());
+    mvprintw(2, 1, "Kliknij dowolny przycisk, aby kontynuować...");
+    refresh();
+    getch();
+    return 0;
+}

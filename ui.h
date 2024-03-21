@@ -46,14 +46,24 @@ class MenuItemDTFunction : public MenuItemInterface
 {
     private:
         // Function we call when element is clicked (ptr to it)
-        std::function<int()> func;
+        std::function<int(IDataStructure<Type>*)> func;
         IDataStructure<Type> *dt;
 
     public:
 
         MenuItemDTFunction() : MenuItemInterface(), func(nullptr), dt(nullptr){}
-        MenuItemDTFunction(std::string label, std::function<int()> func, IDataStructure<Type> *dt) : MenuItemInterface(), func(nullptr), dt(nullptr){}
-        int clicked();
+        MenuItemDTFunction(std::string label, std::function<int(IDataStructure<Type>*)> func, IDataStructure<Type> *dt) : MenuItemInterface(label), func(func), dt(dt){}
+        int clicked()
+        {
+            // Do not call func if it's null!
+            if (func != nullptr) 
+            {
+                int result = func(dt);
+                return result;
+            }
+            // 2 is exit status meaning func is nullptr
+            return 2;
+        }
 };
 
 
@@ -64,7 +74,7 @@ class MenuItemDTFunction : public MenuItemInterface
 class Menu
 {
     protected:
-        static const int MAX_ITEMS = 10;
+        static const int MAX_ITEMS = 15;
 
     public:
         MenuItemInterface *items[MAX_ITEMS];
@@ -91,7 +101,18 @@ class MenuDt : public Menu
     public:
         MenuDt() : Menu(), dt(nullptr){}
         MenuDt(IDataStructure<Type> *ptr_to_dt) : Menu(), dt(ptr_to_dt) {}
-        void add_item_dt(std::string label, std::function<int()> func());
+        void add_item_dt(std::string label, std::function<int(IDataStructure<Type>*)> func)
+        {
+            if (items_number<MAX_ITEMS)
+            {
+                items[items_number] = new MenuItemDTFunction<Type>(label, func, dt);
+                items_number++;
+            }
+            else
+            {
+                throw "MAX_ITEMS in menu exceeded!";
+            } 
+        }
 };
 
 
