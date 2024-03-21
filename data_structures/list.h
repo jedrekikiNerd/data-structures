@@ -217,7 +217,7 @@ public:
     {
         Node<Type>* current_node = head;
         int i = 0;
-        while(current_node->next_element != nullptr)
+        while(current_node != nullptr)
         {
             if (current_node->value == value)
                 return i;
