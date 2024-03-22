@@ -44,4 +44,7 @@ int find(IDataStructure<int> *dt);
 // Agent between UI and data structure get_as_string
 int get_as_string(IDataStructure<int> *dt);
 
+// Function that fills data structure with data from file
+int fill_from_file(IDataStructure<int> *dt);
+
 #endif

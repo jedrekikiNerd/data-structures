@@ -20,6 +20,7 @@ MenuDt<int>* setup_list_menu()
     list_menu->add_item_dt("Usuń na pozycji", remove_at);
     list_menu->add_item_dt("Wyczyść", clear_dt);
     list_menu->add_item_dt("Znajdź element", find);
+    list_menu->add_item_dt("Wczytaj z pliku", fill_from_file);
     list_menu->add_item("Wróć do menu głównego", exit_action);
 
     return list_menu;
@@ -37,6 +38,7 @@ MenuDt<int>* setup_dynarray_menu()
     dynarray_menu->add_item_dt("Usuń na pozycji", remove_at);
     dynarray_menu->add_item_dt("Wyczyść", clear_dt);
     dynarray_menu->add_item_dt("Znajdź element", find);
+    dynarray_menu->add_item_dt("Wczytaj z pliku", fill_from_file);
     dynarray_menu->add_item("Wróć do menu głównego", exit_action);
 
     return dynarray_menu;

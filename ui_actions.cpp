@@ -61,6 +61,26 @@ int user_input_action(std::string input_field_label)
     return user_input;
 }
 
+/**
+ * Returns user input as string
+ * 
+ * @return string 
+ */
+std::string user_input_action_string(std::string input_field_label)
+{
+    echo();
+    clear();
+    // We use buffer char array cause scanw didn't want to work with std::string
+    char buffer[256];
+    mvprintw(1, 1, input_field_label.c_str());
+    refresh();
+    // Get string provided by user from terminal window with scanw (^\n means we do this until \n is next character and 255 means max input characters)
+    scanw("%255[^ \n]", buffer);
+    // We dump our char buffer into new string just created
+    std::string user_input(buffer);
+    noecho();
+    return user_input;
+}
 
 /**
  * Displays given string

@@ -2,6 +2,7 @@
 #include "../ui_actions.h"
 #include "int_structures_manual_ui.hpp"
 #include "I_data_structure.h"
+#include <fstream>
 
 
 // Agent between UI and data structure add_front
@@ -99,5 +100,28 @@ int find(IDataStructure<int> *dt)
 int get_as_string(IDataStructure<int> *dt)
 {
     display_action(dt->get_as_string());
+    return 0;
+}
+
+int fill_from_file(IDataStructure<int> *dt)
+{
+    std::string file_name = user_input_action_string("Podaj nazwę pliku, który chcesz wczytać (ścieżka względem programu): ");
+    bool direction = user_input_action("Czy dane od góry pliku wczytywać na koniec struktury danych? (1 - TAK, 0 - NIE): ");
+
+    std::ifstream file(file_name);
+    if (file.is_open()) 
+    {
+        int value;
+        //std::string line;
+        while (file) 
+        {
+            file >> value;
+            if (direction)
+                dt->add_back(value);
+            else
+                dt->add_front(value);
+        }
+        file.close();
+    }
     return 0;
 }

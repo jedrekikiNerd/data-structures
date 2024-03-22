@@ -59,5 +59,6 @@ int ui_run_generator()
     int first_sample_size = user_input_action("Podaj ilość danych do wylosowania: ");
     int sample_increment = user_input_action("Podaj o ile zwiększać dane: ");
     generator(first_sample_size, sample_increment, number_files);
+    display_action("Dane zostały wygenerowane!");
     return 0;
 }

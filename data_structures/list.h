@@ -2,6 +2,7 @@
 #define LISTH
 
 #include <iostream>
+#include <stdexcept>
 #include "I_data_structure.h"
 #include <type_traits>
 
@@ -194,7 +195,7 @@ public:
     {
         if (position >= size or position < 0)
         {
-            std::cerr << "Position exceeds size!";
+            throw std::out_of_range("Index is out of range");
             return -1;
         }
         else
@@ -244,6 +245,10 @@ public:
         output += "]";
         return output;
     }
+
+    Type operator[](int index) {
+        return value_at(index);
+    };
     
 };
 #endif
