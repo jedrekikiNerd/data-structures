@@ -1,5 +1,5 @@
-#ifndef LISTH
-#define LISTH
+#ifndef LISTHT
+#define LISTHT
 
 #include <iostream>
 #include <stdexcept>
@@ -9,20 +9,21 @@
 
 
 /**
- * SingleListH class that represents a list data structure with methodes
+ * SingleListHT class that represents a list data structure with methods
  * 
  */
 template <typename Type>
-class SingleListH : public IDataStructure<Type>
+class SingleListHT : public IDataStructure<Type>
 {
 private:
     Node<Type>* head;
+    Node<Type>* tail;
     unsigned int size;
 
 
 public:
-    SingleListH() : head(nullptr), size(0) {}
-    ~SingleListH() {
+    SingleListHT() : head(nullptr), tail(nullptr), size(0) {}
+    ~SingleListHT() {
         clear();
     }
 
@@ -31,7 +32,10 @@ public:
     {
         Node<Type>* new_node = new Node<Type>(value);
         if (head == nullptr)
+        {
             head = new_node;
+            tail = new_node;
+        }
         else
         {
             new_node->next_element = head;
@@ -45,15 +49,15 @@ public:
     {
         Node<Type>* new_node = new Node<Type>(value);
         if (head == nullptr)
+        {
             head = new_node;
+            tail = new_node;
+        }
         else
         {
-            Node<Type>* last_node = head;
-            while(last_node->next_element != nullptr)
-            {
-                last_node = last_node->next_element;
-            }
-            last_node->next_element = new_node;
+            tail->next_element = new_node;
+            tail = new_node;
+            
         }
         size++;
     }
@@ -71,6 +75,13 @@ public:
             if (position == 0)
             {
                 add_front(value);
+                return;
+            }
+
+            if (position == size)
+            {
+                add_back(value);
+                return;
             }
 
             Node<Type>* new_node = new Node<Type>(value);
@@ -94,6 +105,8 @@ public:
             Node<Type>* temp = head;
             head = head->next_element;
             delete temp;
+            if(head == nullptr)
+                tail = nullptr;
             size--;
         }
     }
@@ -103,22 +116,24 @@ public:
     {
         if (head != nullptr)
         {
-            if (head->next_element == nullptr)
+            if (head == tail)
             {
                 delete head;
+                tail = nullptr;
                 head = nullptr;
             }
             else
             {
                 Node<Type>* prev_last_node = head;
                 // We have to reach last element - 1 in order to change pointers and then delete last one
-                while(prev_last_node->next_element->next_element != nullptr)
+                while(prev_last_node->next_element != tail)
                 {
                     prev_last_node = prev_last_node->next_element;
                 }
                 // We delete last element and set nullptr for prev_last
-                delete prev_last_node->next_element;
-                prev_last_node->next_element = nullptr;
+                delete tail;
+                tail = prev_last_node;
+                tail->next_element = nullptr;
             }
             size--;
         }
@@ -146,9 +161,12 @@ public:
                 currrent_node = currrent_node->next_element;
             }
             Node<Type>* temp = currrent_node->next_element;
-            currrent_node->next_element = currrent_node->next_element->next_element;
+            currrent_node->next_element = temp->next_element;
             delete temp;
+            if (currrent_node->next_element == nullptr)
+                tail = currrent_node;
             size--;
+
         }
     }
 
@@ -170,14 +188,9 @@ public:
     // Returns last value (tail value)
     Type last_value()
     {
-        if (head==nullptr)
+        if (tail==nullptr)
             throw std::out_of_range("Index is out of range");
-        Node<Type>* last_node = head;
-        while(last_node->next_element != nullptr)
-        {
-            last_node = last_node->next_element;
-        }
-        return last_node->value;
+        return tail->value;
     }
 
     Type value_at(unsigned int position)
@@ -186,6 +199,8 @@ public:
             throw std::out_of_range("Index is out of range");
         else
         {
+            if(position == size-1)
+                return tail->value;
             Node<Type>* current_node = head;
             for(unsigned int i=0; i<position; i++)
                 current_node=current_node->next_element;
@@ -235,7 +250,7 @@ public:
     // Return size of data structure in bytes
     unsigned int get_byte_size()
     {
-        return sizeof(SingleListH) + sizeof(Node<Type>)*size;
+        return sizeof(SingleListHT) + sizeof(Node<Type>)*size;
     }
 
     // Change value at given position
@@ -243,11 +258,19 @@ public:
     {
         if (position < 0 || position >= size)
             throw std::out_of_range("Position out of range");
+    
+        if(position == size-1)
+        {
+            tail->value = value;
+            return;
+        }
+
         Node<Type>* current_node = head;
+
         for(unsigned int i=0; i<position; i++)
             current_node=current_node->next_element;
-        current_node->value = value;
         
+        current_node->value = value;
     }
 };
 #endif

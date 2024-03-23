@@ -4,6 +4,8 @@
 #include "generator.h"
 #include "ui_actions.h"
 #include "data_structures/list.h"
+#include "data_structures/list_ht.h"
+#include "data_structures/list_double.h"
 #include "data_structures/dynamic_array.h"
 #include "data_structures/int_structures_manual_ui.hpp"
 
@@ -11,35 +13,79 @@
 // Create and return menu for list
 MenuDt<int>* setup_list_menu()
 {
-    MenuDt<int> *list_menu = new MenuDt<int>(new LinkedListH<int>);
-    list_menu->add_item_dt("Dodaj z przodu", add_front);
-    list_menu->add_item_dt("Dodaj z tyłu", add_back);
-    list_menu->add_item_dt("Dodaj na wybranej pozycji", add_at);
-    list_menu->add_item_dt("Usuń z przodu", remove_front);
-    list_menu->add_item_dt("Usuń z tyłu", remove_back);
-    list_menu->add_item_dt("Usuń na pozycji", remove_at);
-    list_menu->add_item_dt("Wyczyść", clear_dt);
-    list_menu->add_item_dt("Znajdź element", find);
-    list_menu->add_item_dt("Wczytaj z pliku", fill_from_file);
-    list_menu->add_item("Wróć do menu głównego", exit_action);
+    MenuDt<int> *list_menu = new MenuDt<int>(new SingleListH<int>);
+    list_menu->add_item_dt("|Dodaj z przodu", add_front);
+    list_menu->add_item_dt("|Dodaj z tyłu", add_back);
+    list_menu->add_item_dt("|Dodaj na wybranej pozycji", add_at);
+    list_menu->add_item_dt("|Usuń z przodu", remove_front);
+    list_menu->add_item_dt("|Usuń z tyłu", remove_back);
+    list_menu->add_item_dt("|Usuń na pozycji", remove_at);
+    list_menu->add_item_dt("|Wyczyść", clear_dt);
+    list_menu->add_item_dt("|Znajdź element", find);
+    list_menu->add_item_dt("|Wypisz rozmiar", get_size);
+    list_menu->add_item_dt("|Wczytaj z pliku", fill_from_file);
+    list_menu->add_item("|Wyświetlanie czasu", change_print_flag);
+    list_menu->add_item("|Wróć do wyboru struktur", exit_action);
 
     return list_menu;
+}
+
+// Create and return menu for list_ht
+MenuDt<int>* setup_list_ht_menu()
+{
+    MenuDt<int> *list_ht_menu = new MenuDt<int>(new SingleListHT<int>);
+    list_ht_menu->add_item_dt("|Dodaj z przodu", add_front);
+    list_ht_menu->add_item_dt("|Dodaj z tyłu", add_back);
+    list_ht_menu->add_item_dt("|Dodaj na wybranej pozycji", add_at);
+    list_ht_menu->add_item_dt("|Usuń z przodu", remove_front);
+    list_ht_menu->add_item_dt("|Usuń z tyłu", remove_back);
+    list_ht_menu->add_item_dt("|Usuń na pozycji", remove_at);
+    list_ht_menu->add_item_dt("|Wyczyść", clear_dt);
+    list_ht_menu->add_item_dt("|Znajdź element", find);
+    list_ht_menu->add_item_dt("|Wypisz rozmiar", get_size);
+    list_ht_menu->add_item_dt("|Wczytaj z pliku", fill_from_file);
+    list_ht_menu->add_item("|Wyświetlanie czasu", change_print_flag);
+    list_ht_menu->add_item("|Wróć do wyboru struktur", exit_action);
+
+    return list_ht_menu;
+}
+
+// Create and return menu for double list
+MenuDt<int>* setup_dlist_menu()
+{
+    MenuDt<int> *dlist_menu = new MenuDt<int>(new DoubleListHT<int>);
+    dlist_menu->add_item_dt("|Dodaj z przodu", add_front);
+    dlist_menu->add_item_dt("|Dodaj z tyłu", add_back);
+    dlist_menu->add_item_dt("|Dodaj na wybranej pozycji", add_at);
+    dlist_menu->add_item_dt("|Usuń z przodu", remove_front);
+    dlist_menu->add_item_dt("|Usuń z tyłu", remove_back);
+    dlist_menu->add_item_dt("|Usuń na pozycji", remove_at);
+    dlist_menu->add_item_dt("|Wyczyść", clear_dt);
+    dlist_menu->add_item_dt("|Znajdź element", find);
+    dlist_menu->add_item_dt("|Wypisz rozmiar", get_size);
+    dlist_menu->add_item_dt("|Wczytaj z pliku", fill_from_file);
+    dlist_menu->add_item("|Wyświetlanie czasu", change_print_flag);
+    dlist_menu->add_item("|Wróć do wyboru struktur", exit_action);
+
+    return dlist_menu;
 }
 
 // Create and return menu for dynarray
 MenuDt<int>* setup_dynarray_menu()
 {
     MenuDt<int> *dynarray_menu = new MenuDt<int>(new DynamicArray<int>);
-    dynarray_menu->add_item_dt("Dodaj z przodu", add_front);
-    dynarray_menu->add_item_dt("Dodaj z tyłu", add_back);
-    dynarray_menu->add_item_dt("Dodaj na wybranej pozycji", add_at);
-    dynarray_menu->add_item_dt("Usuń z przodu", remove_front);
-    dynarray_menu->add_item_dt("Usuń z tyłu", remove_back);
-    dynarray_menu->add_item_dt("Usuń na pozycji", remove_at);
-    dynarray_menu->add_item_dt("Wyczyść", clear_dt);
-    dynarray_menu->add_item_dt("Znajdź element", find);
-    dynarray_menu->add_item_dt("Wczytaj z pliku", fill_from_file);
-    dynarray_menu->add_item("Wróć do menu głównego", exit_action);
+    dynarray_menu->add_item_dt("|Dodaj z przodu", add_front);
+    dynarray_menu->add_item_dt("|Dodaj z tyłu", add_back);
+    dynarray_menu->add_item_dt("|Dodaj na wybranej pozycji", add_at);
+    dynarray_menu->add_item_dt("|Usuń z przodu", remove_front);
+    dynarray_menu->add_item_dt("|Usuń z tyłu", remove_back);
+    dynarray_menu->add_item_dt("|Usuń na pozycji", remove_at);
+    dynarray_menu->add_item_dt("|Wyczyść", clear_dt);
+    dynarray_menu->add_item_dt("|Znajdź element", find);
+    dynarray_menu->add_item_dt("|Wypisz rozmiar", get_size);
+    dynarray_menu->add_item_dt("|Wczytaj z pliku", fill_from_file);
+    dynarray_menu->add_item("|Wyświetlanie czasu", change_print_flag);
+    dynarray_menu->add_item("|Wróć do wyboru struktur", exit_action);
 
     return dynarray_menu;
 }
@@ -48,11 +94,11 @@ MenuDt<int>* setup_dynarray_menu()
 Menu* setup_structures_menu()
 {
     Menu *structures_menu = new Menu();
-    structures_menu->add_item("Tablica dynamiczna", setup_dynarray_menu());
-    structures_menu->add_item("ListaH", setup_list_menu());
-    structures_menu->add_item("Struktura2", nullptr);
-    structures_menu->add_item("Struktura3", nullptr);
-    structures_menu->add_item("Wróć do menu głównego", exit_action);
+    structures_menu->add_item("|Tablica dynamiczna", setup_dynarray_menu());
+    structures_menu->add_item("|Lista jednokierunkowa (head)", setup_list_menu());
+    structures_menu->add_item("|Lista jednokierunkowa (head, tail)", setup_list_ht_menu());
+    structures_menu->add_item("|Lista dwukierunkowa (head, tail)", setup_dlist_menu());
+    structures_menu->add_item("|Wróć do menu głównego", exit_action);
 
     return structures_menu;
 }
@@ -78,9 +124,11 @@ Menu* set_up_ui()
 
     // Create main_menu and add menu items to it
     Menu *main_menu = new Menu();
-    main_menu->add_item("Wybór struktury", setup_structures_menu());
-    main_menu->add_item("Generuj dane", ui_run_generator);
-    main_menu->add_item("Exit", exit_action);
+    main_menu->add_item("|Wykonaj automatyczne testy", nullptr);
+    main_menu->add_item("|Wybór struktury", setup_structures_menu());
+    main_menu->add_item("|Generuj dane", ui_run_generator);
+    main_menu->add_item("|Pomoc", display_help);
+    main_menu->add_item("|Exit", exit_action);
     
     return main_menu;
 }

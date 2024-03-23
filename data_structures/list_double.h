@@ -1,5 +1,5 @@
-#ifndef LISTH
-#define LISTH
+#ifndef DLISTHT
+#define DLISTHT
 
 #include <iostream>
 #include <stdexcept>
@@ -9,32 +9,37 @@
 
 
 /**
- * SingleListH class that represents a list data structure with methodes
+ * LinkedListHT class that represents a list data structure with methods
  * 
  */
 template <typename Type>
-class SingleListH : public IDataStructure<Type>
+class DoubleListHT : public IDataStructure<Type>
 {
 private:
-    Node<Type>* head;
+    DoubleNode<Type>* head;
+    DoubleNode<Type>* tail;
     unsigned int size;
 
 
 public:
-    SingleListH() : head(nullptr), size(0) {}
-    ~SingleListH() {
+    DoubleListHT() : head(nullptr), tail(nullptr), size(0) {}
+    ~DoubleListHT() {
         clear();
     }
 
     // Adds element where head ptr is pointing
     void add_front(Type value)
     {
-        Node<Type>* new_node = new Node<Type>(value);
+        DoubleNode<Type>* new_node = new DoubleNode<Type>(value);
         if (head == nullptr)
+        {
             head = new_node;
+            tail = new_node;
+        }
         else
         {
             new_node->next_element = head;
+            head->previous_element = new_node;
             head = new_node;
         }
         size++;
@@ -43,22 +48,22 @@ public:
     // Adds element to the tail of the list
     void add_back(Type value)
     {
-        Node<Type>* new_node = new Node<Type>(value);
+        DoubleNode<Type>* new_node = new DoubleNode<Type>(value);
         if (head == nullptr)
+        {
             head = new_node;
+            tail = new_node;
+        }
         else
         {
-            Node<Type>* last_node = head;
-            while(last_node->next_element != nullptr)
-            {
-                last_node = last_node->next_element;
-            }
-            last_node->next_element = new_node;
+            tail->next_element = new_node;
+            new_node->previous_element = tail;
+            tail = new_node;  
         }
         size++;
     }
 
-    // Adds element on specified index starting counting from head
+    // Adds element on specified index starting counting from head or from tail
     void add_at(Type value, unsigned int position)
     {
         if (position > size or position < 0)
@@ -71,17 +76,41 @@ public:
             if (position == 0)
             {
                 add_front(value);
+                return;
             }
 
-            Node<Type>* new_node = new Node<Type>(value);
-
-            Node<Type>* currrent_node = head;
-            for(unsigned int i=1; i<position; i++)
+            if (position == size)
             {
-                currrent_node = currrent_node->next_element;
+                add_back(value);
+                return;
             }
-            new_node->next_element = currrent_node->next_element;
-            currrent_node->next_element = new_node;
+
+            DoubleNode<Type>* new_node = new DoubleNode<Type>(value);
+
+            if(position <= size/2)
+            {
+                DoubleNode<Type>* currrent_node = head;
+                for(unsigned int i=1; i<position; i++)
+                {
+                    currrent_node = currrent_node->next_element;
+                }
+                new_node->next_element = currrent_node->next_element;
+                new_node->next_element->previous_element = new_node;
+                new_node->previous_element = currrent_node;
+                currrent_node->next_element = new_node;
+            }
+            else
+            {
+                DoubleNode<Type>* currrent_node = tail;
+                for(unsigned int i=size-1; i>position; i--)
+                {
+                    currrent_node = currrent_node->previous_element;
+                }
+                new_node->next_element = currrent_node;
+                new_node->previous_element = currrent_node->previous_element;
+                currrent_node->previous_element = new_node;
+                new_node->previous_element->next_element = new_node;
+            }
             size++;
         }
     }
@@ -91,9 +120,12 @@ public:
     {
         if (head != nullptr) 
         {
-            Node<Type>* temp = head;
+            DoubleNode<Type>* temp = head;
             head = head->next_element;
+            head->previous_element = nullptr;
             delete temp;
+            if(head == nullptr)
+                tail = nullptr;
             size--;
         }
     }
@@ -103,22 +135,19 @@ public:
     {
         if (head != nullptr)
         {
-            if (head->next_element == nullptr)
+            if (head == tail)
             {
                 delete head;
+                tail = nullptr;
                 head = nullptr;
             }
             else
             {
-                Node<Type>* prev_last_node = head;
-                // We have to reach last element - 1 in order to change pointers and then delete last one
-                while(prev_last_node->next_element->next_element != nullptr)
-                {
-                    prev_last_node = prev_last_node->next_element;
-                }
-                // We delete last element and set nullptr for prev_last
-                delete prev_last_node->next_element;
-                prev_last_node->next_element = nullptr;
+                // We delete last element and set nullptr to previous one
+                DoubleNode<Type>* temp = tail;
+                tail = tail->previous_element;
+                tail->next_element = nullptr;
+                delete temp;
             }
             size--;
         }
@@ -140,15 +169,18 @@ public:
                 return;
             }
 
-            Node<Type>* currrent_node = head;
+            DoubleNode<Type>* currrent_node = head;
             for(unsigned int i=1; i<position; i++)
             {
                 currrent_node = currrent_node->next_element;
             }
-            Node<Type>* temp = currrent_node->next_element;
-            currrent_node->next_element = currrent_node->next_element->next_element;
+            DoubleNode<Type>* temp = currrent_node->next_element;
+            currrent_node->next_element = temp->next_element;
             delete temp;
+            if (currrent_node->next_element == nullptr)
+                tail = currrent_node;
             size--;
+
         }
     }
 
@@ -170,14 +202,9 @@ public:
     // Returns last value (tail value)
     Type last_value()
     {
-        if (head==nullptr)
+        if (tail==nullptr)
             throw std::out_of_range("Index is out of range");
-        Node<Type>* last_node = head;
-        while(last_node->next_element != nullptr)
-        {
-            last_node = last_node->next_element;
-        }
-        return last_node->value;
+        return tail->value;
     }
 
     Type value_at(unsigned int position)
@@ -186,7 +213,9 @@ public:
             throw std::out_of_range("Index is out of range");
         else
         {
-            Node<Type>* current_node = head;
+            if(position == size-1)
+                return tail->value;
+            DoubleNode<Type>* current_node = head;
             for(unsigned int i=0; i<position; i++)
                 current_node=current_node->next_element;
             return current_node->value;
@@ -202,7 +231,7 @@ public:
     // Returns position of element
     unsigned int find(Type value)
     {
-        Node<Type>* current_node = head;
+        DoubleNode<Type>* current_node = head;
         unsigned int i = 0;
         while(current_node != nullptr)
         {
@@ -218,7 +247,7 @@ public:
     std::string get_as_string()
     {
         std::string output = "List[";
-        Node<Type>* current_node = head;
+        DoubleNode<Type>* current_node = head;
         if (std::is_integral_v<Type> != true)
             return "ERROR: typename of this list is not supported by this method!";
         while(current_node != nullptr)
@@ -235,7 +264,7 @@ public:
     // Return size of data structure in bytes
     unsigned int get_byte_size()
     {
-        return sizeof(SingleListH) + sizeof(Node<Type>)*size;
+        return sizeof(DoubleListHT) + sizeof(DoubleNode<Type>)*size;
     }
 
     // Change value at given position
@@ -243,11 +272,19 @@ public:
     {
         if (position < 0 || position >= size)
             throw std::out_of_range("Position out of range");
-        Node<Type>* current_node = head;
+    
+        if(position == size-1)
+        {
+            tail->value = value;
+            return;
+        }
+        
+        DoubleNode<Type>* current_node = head;
+
         for(unsigned int i=0; i<position; i++)
             current_node=current_node->next_element;
-        current_node->value = value;
         
+        current_node->value = value;
     }
 };
 #endif

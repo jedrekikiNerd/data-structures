@@ -3,6 +3,7 @@
 #include <iostream>
 #include <functional>
 #include "data_structures/I_data_structure.h"
+#include "ui_actions.h"
 
 #define MY_KEY_EXIT 27
 #define MY_KEY_ENTER 10
@@ -146,15 +147,41 @@ class MenuDt : public Menu
                     // Add background to selected option
                     if (item_index == selected_option)
                         wattron(menu_window, A_REVERSE);
-                    mvwprintw(menu_window, item_index+3, COLS/2-10, items[item_index]->label.c_str());
+                    mvwprintw(menu_window, item_index+5, COLS/2-10, items[item_index]->label.c_str());
                     wattroff(menu_window, A_REVERSE);
                 }
+
                 wattron(menu_window, A_ITALIC);
                 wattron(menu_window, COLOR_PAIR(2));
                 mvwprintw(menu_window, menu_box_h-4, COLS/2-26, "Przeglądarka Własnych Implementacji Struktur Danych");
                 mvwprintw(menu_window, menu_box_h-3, COLS/2-19, "by Jędrzej Boruczkowski & Filip Zioło");
                 wattroff(menu_window, A_ITALIC);
                 wattroff(menu_window, COLOR_PAIR(2));
+
+                wattron(menu_window, COLOR_PAIR(1));
+                mvwprintw(menu_window, 0, 0, "UWAGA: Indeksowanie od 0!");
+                wattroff(menu_window, COLOR_PAIR(1));
+
+                mvwprintw(menu_window, 1, 0, "Struktura zajmuje:");
+                wattron(menu_window, COLOR_PAIR(3));
+                wattron(menu_window, A_BOLD);
+                mvwprintw(menu_window, 1, 19, (std::to_string(dt->get_byte_size()) + "B").c_str());
+                wattroff(menu_window, COLOR_PAIR(3));
+                wattroff(menu_window, A_BOLD);
+
+                mvwprintw(menu_window, 2, 0, "Wypisywanie czasu operacji:");
+                if(print_time)
+                {
+                    wattron(menu_window, COLOR_PAIR(2));
+                    mvwprintw(menu_window, 2, 28, "AKTYWNE");
+                    wattroff(menu_window, COLOR_PAIR(2));
+                }
+                else
+                {
+                    wattron(menu_window, COLOR_PAIR(1));
+                    mvwprintw(menu_window, 2, 28, "NIEAKTYWNE");
+                    wattroff(menu_window, COLOR_PAIR(1));                    
+                }
 
                 if (current_window)
                     waddstr(dt_window, dt->get_as_string().c_str());

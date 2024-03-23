@@ -20,6 +20,7 @@
 #include <curses.h>
 #include <iostream>
 
+bool print_time = false;
 
 /**
  * Returns 1 - this will be handled by menu and interpreted as call for menu exit
@@ -92,6 +93,85 @@ int display_action(std::string display_label)
     clear();
     mvprintw(1, 1, display_label.c_str());
     mvprintw(2, 1, "Kliknij dowolny przycisk, aby kontynuować...");
+    refresh();
+    getch();
+    return 0;
+}
+
+/**
+ * Displays 2 given strings
+ * 
+ * @return int 
+ */
+int display_action2(std::string display_label, std::string display_label2)
+{
+    clear();
+    mvprintw(1, 1, display_label.c_str());
+    mvprintw(2, 1, display_label.c_str());
+    mvprintw(3, 1, "Kliknij dowolny przycisk, aby kontynuować...");
+    refresh();
+    getch();
+    return 0;
+}
+
+/**
+ * Changes print flag
+ * 
+ * @return int
+ */
+int change_print_flag()
+{
+    print_time = !print_time;
+    return 0;
+}
+
+/**
+ * Displays help page
+ * 
+ * @return int 
+ */
+int display_help()
+{
+    clear();
+    attron(COLOR_PAIR(3));
+    attron(A_BOLD);
+    mvprintw(1, 1, "Witaj w sekcji tłumaczącej jak nawigować po menu!");
+    attroff(A_BOLD);
+    attroff(COLOR_PAIR(3));
+
+    attron(A_BOLD);
+    attron(COLOR_PAIR(5));
+    mvprintw(3, 1, "|Nawigacja/sterowanie|");
+    mvprintw(9, 1, "|Aktywny obszar|");
+    mvprintw(15, 1, "|Przyciski i dodatkowe ekrany|");
+    mvprintw(20, 1, "|Struktury danych|");
+    attroff(A_BOLD);
+    attroff(COLOR_PAIR(5));
+
+    mvprintw(4, 1, ">Pomiędzy przyciskami menu przełączaj korzystając ze strzałek GÓRA i DÓŁ");
+    mvprintw(5, 1, ">ESC pełni funkcję wyjścia z menu lub z całego programu");
+    mvprintw(6, 1, ">Wciskając ENTER możesz potwierdzić wybrany przycisk w menu lub zatwierdzić wpisaną przez siebie wartość");
+    mvprintw(7, 1, ">Aby przełączyć pomiędzy aktywnym obszarem wciśnij klawisz SPACJI");
+
+
+    mvprintw(10, 1, ">Będąc w trybie ręcznej edycji struktur danych możesz zauważyć dwie ramki w konsoli");
+    mvprintw(11, 1, ">Żółta ramka oznacza obecnie aktywny obszar wewnątrz którego działają twoje klawisze strzałek z klawiatury");
+    mvprintw(12, 1, ">Kiedy aktywny jest panel menu możesz wybierać przyciski menu strzałkami");
+    mvprintw(13, 1, ">Kiedy aktywny jest panel struktur danych możesz przewijać góra-dół zawartość tego panelu");
+
+    mvprintw(16, 1, ">Niektóre przyciski otwierają ekran wyświetlający coś i czekający na wciśnięcie dowolnego klawisza");
+    mvprintw(17, 1, ">Niektóre przyciski otwierają pole które oczekuje na wpisanie ciągu znaków i potwierdzenie ENTEREM");
+    mvprintw(18, 1, ">Niektóre przyciski przenoszą do nowego menu");
+
+    mvprintw(21, 1, ">Menu do sterowania strukturą danych przechowuje strukturę");
+    mvprintw(22, 1, ">Struktury danych nie dodadzą nowej wartości jeżeli podany indeks wykracza poza ich zakres");
+    mvprintw(23, 1, ">Struktury danych wypiszą -1 jeżeli nie zostanie znaleziona szukana w nich wartość");
+    mvprintw(24, 1, ">Struktury danych są indeksowane od 0");
+
+    attron(COLOR_PAIR(1));
+    mvprintw(26, 1, "Kliknij dowolny przycisk, aby wyjść...");
+    attroff(COLOR_PAIR(1));
+
     refresh();
     getch();
     return 0;
