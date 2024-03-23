@@ -12,12 +12,13 @@ using namespace std;
 namespace fs = std::filesystem;
 
 //clearing the folder before adding files
-void removeFilesInFolder(const string& folderName) 
-{
-    for (const auto& entry : fs::directory_iterator(folderName)) 
-    {
-        if (entry.is_regular_file()) 
-        {
+void removeFilesInFolder(const std::string& folderName) {
+    if (!fs::exists(folderName)) {
+        fs::create_directories(folderName);
+    }
+
+    for (const auto& entry : fs::directory_iterator(folderName)) {
+        if (entry.is_regular_file()) {
             fs::remove(entry.path());
         }
     }
@@ -32,6 +33,7 @@ int generator(int number_samples, int sample_skip, int file_number) {
     string folder_name = "generated_data";
 
     removeFilesInFolder(folder_name);
+
 
     for (int j = 0; j < file_number; j++) 
     {
