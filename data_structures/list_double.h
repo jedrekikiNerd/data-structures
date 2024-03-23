@@ -169,21 +169,31 @@ public:
                 return;
             }
 
-            Node<Type>* current_node = head;
-            for(unsigned int i = 0; i < position; i++)
+            if(position <= size/2)
             {
-            current_node = current_node->next_element;
+                DoubleNode<Type>* current_node = head;
+                for(unsigned int i = 0; i < position; i++)
+                {
+                current_node = current_node->next_element;
+                }
             }
-
-            Node<Type>* temp = current_node;
-
-            current_node->prev_element->next_element = current_node->next_element;
-             if (current_node->next_element != nullptr) 
+            else
             {
-            current_node->next_element->prev_element = current_node->prev_element;
+                Node<Type>* current_node = tail;
+                for(unsigned int i = size-1; i > position; i--)
+                {
+                current_node = current_node->next_element;
+                }
             }
-        
-            delete temp;
+            DoubleNode<Type>* previous_node = current_node->prev_element;
+            DoubleNode<Type>* next_node = current_node->next_element;
+
+            if (previous_node != nullptr)
+                previous_node->next_element = next_node;
+            if (next_node != nullptr)
+                next_node->prev_element = previous_node;
+
+            delete current_node;
             size--;
         }
     }
