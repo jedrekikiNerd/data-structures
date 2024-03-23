@@ -7,7 +7,7 @@
 
 class Timer {
 public:
-    Timer(); 
+    Timer() : running(false){}; 
     void start() {
         startTime = std::chrono::high_resolution_clock::now();
     running = true;

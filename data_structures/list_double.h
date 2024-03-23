@@ -169,9 +169,10 @@ public:
                 return;
             }
 
+            DoubleNode<Type>* current_node = nullptr;
             if(position <= size/2)
             {
-                DoubleNode<Type>* current_node = head;
+                current_node = head;
                 for(unsigned int i = 0; i < position; i++)
                 {
                 current_node = current_node->next_element;
@@ -179,19 +180,19 @@ public:
             }
             else
             {
-                Node<Type>* current_node = tail;
+                current_node = tail;
                 for(unsigned int i = size-1; i > position; i--)
                 {
                 current_node = current_node->next_element;
                 }
             }
-            DoubleNode<Type>* previous_node = current_node->prev_element;
+            DoubleNode<Type>* prev_node = current_node->previous_element;
             DoubleNode<Type>* next_node = current_node->next_element;
 
-            if (previous_node != nullptr)
-                previous_node->next_element = next_node;
+            if (prev_node != nullptr)
+                prev_node->next_element = next_node;
             if (next_node != nullptr)
-                next_node->prev_element = previous_node;
+                next_node->previous_element = prev_node;
 
             delete current_node;
             size--;
