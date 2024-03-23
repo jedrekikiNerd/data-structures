@@ -4,23 +4,25 @@
 #include <fstream>
 #include <string>
 
-
+namespace fs = std::filesystem;
 Timer timer;
 
 
-int countFilesInFolder(){
-    int fileCount = 0;
-
-    for ()
-    {
-        /* code */
+int countTxtFiles(const std::string& folderPath) {
+    int count = 0;
+    for (const auto& entry : fs::directory_iterator(folderPath)) {
+        if (entry.is_regular_file() && entry.path().extension() == ".txt") {
+            count++;
+        }
     }
-    
+    return count;
 }
 
 double fill_from_file(IDataStructure<int> *dt,bool direction)
 {
-    for (int i = 0; i < ; i++)
+    std::string folderPath = "generated_data";
+    int fileCount = countTxtFiles(folderPath);
+    for (int i = 0; i < fileCount ; i++)
     {
         const std::string filePre =  "plik";
         const std::string fileExt = ".txt";
@@ -97,5 +99,15 @@ double find_number_test(IDataStructure<int> *dt,int Value){
     dt -> find(Value);
     timer.stop();
     timer.elapsedSeconds();
+}
+
+void addLineToFile(const std::string& filePath, const std::string& line) {
+    std::ofstream file(filePath, std::ios_base::app); 
+    if (file.is_open()) {
+        file << line << std::endl; 
+        file.close(); 
+    } else {
+        std::cerr << "Failed to open file: " << filePath << std::endl;
+    }
 }
 
