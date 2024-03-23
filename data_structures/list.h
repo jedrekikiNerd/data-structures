@@ -242,7 +242,8 @@ public:
     void change_at(Type value, unsigned int position)
     {
         if (position < 0 || position >= size)
-            throw std::out_of_range("Position out of range");
+            return;
+            //throw std::out_of_range("Position out of range");
         Node<Type>* current_node = head;
         for(unsigned int i=0; i<position; i++)
             current_node=current_node->next_element;

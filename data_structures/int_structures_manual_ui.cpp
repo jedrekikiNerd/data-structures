@@ -29,7 +29,7 @@ int add_back(IDataStructure<int> *dt)
 int add_at(IDataStructure<int> *dt)
 {
     int value = user_input_action("Podaj liczbę jaką chcesz dodać: ");
-    int pos = user_input_action("Podaj pozycję na której chcesz dodać liczbę: ");
+    unsigned int pos = user_input_action("Podaj pozycję na której chcesz dodać liczbę: ");
     dt->add_at(value, pos);
     if (print_time)
         display_action("Dodawanie zajęło " + std::to_string(12) + "ms");
@@ -57,7 +57,7 @@ int remove_back(IDataStructure<int> *dt)
 // Agent between UI and data structure remove_at
 int remove_at(IDataStructure<int> *dt)
 {
-    int pos = user_input_action("Podaj pozycję na której chcesz usunąć liczbę: ");
+    unsigned int pos = user_input_action("Podaj pozycję na której chcesz usunąć liczbę: ");
     dt->remove_at(pos);
     if (print_time)
         display_action("Usuwanie zajęło " + std::to_string(12) + "ms");
@@ -98,7 +98,7 @@ int last_value(IDataStructure<int> *dt)
 // Agent between UI and data structure value_at
 int value_at(IDataStructure<int> *dt)
 {
-    int pos = user_input_action("Podaj pozycję z której chcesz wyświetlić liczbę: ");
+    unsigned int pos = user_input_action("Podaj pozycję z której chcesz wyświetlić liczbę: ");
     int val = dt->value_at(pos);
     if (print_time)
         display_action2(std::to_string(val), "Pobranie wartości zajęło " + std::to_string(12) + "ms");
@@ -136,6 +136,20 @@ int find(IDataStructure<int> *dt)
 int get_as_string(IDataStructure<int> *dt)
 {
     display_action(dt->get_as_string());
+    return 0;
+}
+
+// Agent bewteen UI and data structure change_at
+int change_at(IDataStructure<int> *dt)
+{
+    unsigned int position_to_change = user_input_action("Podaj indeks na którym chcesz coś zmienić: ");
+    int new_value = user_input_action("Podaj liczbę jaką chcesz nadpisać podane pole: ");
+
+    dt->change_at(new_value, position_to_change);
+
+    if (print_time)
+        display_action("Wypełnienie danymi z pliku zajęło " + std::to_string(12) + "ms");
+    
     return 0;
 }
 

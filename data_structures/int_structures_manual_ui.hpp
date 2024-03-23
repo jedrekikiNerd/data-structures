@@ -47,4 +47,7 @@ int get_as_string(IDataStructure<int> *dt);
 // Function that fills data structure with data from file
 int fill_from_file(IDataStructure<int> *dt);
 
+// Agent bewteen UI and data structure change_at
+int change_at(IDataStructure<int> *dt);
+
 #endif

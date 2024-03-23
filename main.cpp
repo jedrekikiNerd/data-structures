@@ -22,6 +22,7 @@ MenuDt<int>* setup_list_menu()
     list_menu->add_item_dt("|Usuń na pozycji", remove_at);
     list_menu->add_item_dt("|Wyczyść", clear_dt);
     list_menu->add_item_dt("|Znajdź element", find);
+    list_menu->add_item_dt("|Zmień wartość na danym polu", change_at);
     list_menu->add_item_dt("|Wypisz rozmiar", get_size);
     list_menu->add_item_dt("|Wczytaj z pliku", fill_from_file);
     list_menu->add_item("|Wyświetlanie czasu", change_print_flag);
@@ -42,6 +43,7 @@ MenuDt<int>* setup_list_ht_menu()
     list_ht_menu->add_item_dt("|Usuń na pozycji", remove_at);
     list_ht_menu->add_item_dt("|Wyczyść", clear_dt);
     list_ht_menu->add_item_dt("|Znajdź element", find);
+    list_ht_menu->add_item_dt("|Zmień wartość na danym polu", change_at);
     list_ht_menu->add_item_dt("|Wypisz rozmiar", get_size);
     list_ht_menu->add_item_dt("|Wczytaj z pliku", fill_from_file);
     list_ht_menu->add_item("|Wyświetlanie czasu", change_print_flag);
@@ -62,6 +64,7 @@ MenuDt<int>* setup_dlist_menu()
     dlist_menu->add_item_dt("|Usuń na pozycji", remove_at);
     dlist_menu->add_item_dt("|Wyczyść", clear_dt);
     dlist_menu->add_item_dt("|Znajdź element", find);
+    dlist_menu->add_item_dt("|Zmień wartość na danym polu", change_at);
     dlist_menu->add_item_dt("|Wypisz rozmiar", get_size);
     dlist_menu->add_item_dt("|Wczytaj z pliku", fill_from_file);
     dlist_menu->add_item("|Wyświetlanie czasu", change_print_flag);
@@ -82,6 +85,7 @@ MenuDt<int>* setup_dynarray_menu()
     dynarray_menu->add_item_dt("|Usuń na pozycji", remove_at);
     dynarray_menu->add_item_dt("|Wyczyść", clear_dt);
     dynarray_menu->add_item_dt("|Znajdź element", find);
+    dynarray_menu->add_item_dt("|Zmień wartość na danym polu", change_at);
     dynarray_menu->add_item_dt("|Wypisz rozmiar", get_size);
     dynarray_menu->add_item_dt("|Wczytaj z pliku", fill_from_file);
     dynarray_menu->add_item("|Wyświetlanie czasu", change_print_flag);

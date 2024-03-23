@@ -257,7 +257,8 @@ public:
     void change_at(Type value, unsigned int position)
     {
         if (position < 0 || position >= size)
-            throw std::out_of_range("Position out of range");
+            return;
+            //throw std::out_of_range("Position out of range");
     
         if(position == size-1)
         {

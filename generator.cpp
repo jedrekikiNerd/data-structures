@@ -12,9 +12,12 @@ using namespace std;
 namespace fs = std::filesystem;
 
 //clearing the folder before adding files
-void removeFilesInFolder(const string& folderName) {
-    for (const auto& entry : fs::directory_iterator(folderName)) {
-        if (entry.is_regular_file()) {
+void removeFilesInFolder(const string& folderName) 
+{
+    for (const auto& entry : fs::directory_iterator(folderName)) 
+    {
+        if (entry.is_regular_file()) 
+        {
             fs::remove(entry.path());
         }
     }
@@ -26,19 +29,22 @@ int generator(int number_samples, int sample_skip, int file_number) {
     default_random_engine generator;
     uniform_int_distribution<int> distribution(-2147483647,2147483647);
 
-     string folder_name = "generated_data";
+    string folder_name = "generated_data";
 
     removeFilesInFolder(folder_name);
 
-    for (int j = 0; j < file_number; j++) {
+    for (int j = 0; j < file_number; j++) 
+    {
         string nazwaPliku = folder_name + "/wyniki_" + to_string(j + 1) + ".txt";
         fstream plik(nazwaPliku, ios::out);
-        if (!plik.is_open()) {
+        if (!plik.is_open()) 
+        {
             return 1;
         }
 
         //Generate random numbers 
-        for (int i = 0; i < number_samples; i++) {
+        for (int i = 0; i < number_samples; i++) 
+        {
             int temp = distribution(generator);
             plik << temp << endl;
         }
