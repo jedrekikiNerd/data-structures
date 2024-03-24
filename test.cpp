@@ -23,16 +23,40 @@ int countTxtFiles(const std::string& folderPath) {
 }
 
 // Function that loads one file into given data structure
-double fill_from_file(IDataStructure<int> *dt, std::ifstream file, bool direction)
+double fill_from_file(IDataStructure<int> *dt, std::ifstream file, bool direction,int fileIndex)
 {
-    // TODO: Finish
-    return;
+   std::string folderPath = "generated_data";
+    const std::string filePre = "plik";
+    const std::string fileExt = ".txt";
+    std::string file_name = folderPath + "/" + filePre + std::to_string(fileIndex) + fileExt;
+
+    std::ifstream file(file_name);
+    if (file.is_open()) {
+        int value;
+        while (file >> value) {
+            if (direction)
+                dt->add_back(value);
+            else
+                dt->add_front(value);
+        }
+        file.close();
+    } else {
+        std::cerr << "Unable to open file: " << file_name << std::endl;
+    }
+    return 0;
 }
 
+
 // Adds one line to given file
-int add_line_to_file(std::string line, std::ofstream file)
+int add_line_to_file(std::string line, std::string& filePath)
 {
-    // TODO: Finish
+    std::ofstream file(filePath, std::ios_base::app); 
+    if (file.is_open()) {
+        file << line << std::endl; 
+        file.close(); 
+    } else {
+        std::cerr << "Failed to open file: " << filePath << std::endl;
+    }
     return;
 }
 
@@ -137,13 +161,4 @@ double find_number_test(IDataStructure<int> *dt,int Value){
     timer.elapsedSeconds();
 }
 
-void addLineToFile(const std::string& filePath, const std::string& line) {
-    std::ofstream file(filePath, std::ios_base::app); 
-    if (file.is_open()) {
-        file << line << std::endl; 
-        file.close(); 
-    } else {
-        std::cerr << "Failed to open file: " << filePath << std::endl;
-    }
-}
 
