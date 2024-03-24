@@ -20,7 +20,7 @@ public:
         if (running) {
         stop();
     }
-    std::chrono::duration<double> elapsed = endTime - startTime;
+    std::chrono::duration<double, std::nano> elapsed = endTime - startTime;
     return elapsed.count();
     } 
 private:
