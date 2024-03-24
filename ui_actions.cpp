@@ -107,7 +107,7 @@ int display_action2(std::string display_label, std::string display_label2)
 {
     clear();
     mvprintw(1, 1, display_label.c_str());
-    mvprintw(2, 1, display_label.c_str());
+    mvprintw(2, 1, display_label2.c_str());
     mvprintw(3, 1, "Kliknij dowolny przycisk, aby kontynuować...");
     refresh();
     getch();

@@ -122,11 +122,14 @@ public:
         {
             DoubleNode<Type>* temp = head;
             head = head->next_element;
-            head->previous_element = nullptr;
             delete temp;
-            if(head == nullptr)
-                tail = nullptr;
             size--;
+            if(head == nullptr)
+            {
+                tail = nullptr;
+                return;
+            }
+            head->previous_element = nullptr;
         }
     }
 
@@ -168,6 +171,11 @@ public:
                 remove_front();
                 return;
             }
+            if (position == size-1)
+            {
+                remove_back();
+                return;
+            }
 
             DoubleNode<Type>* current_node = nullptr;
             if(position <= size/2)
@@ -183,7 +191,7 @@ public:
                 current_node = tail;
                 for(unsigned int i = size-1; i > position; i--)
                 {
-                current_node = current_node->next_element;
+                current_node = current_node->previous_element;
                 }
             }
             DoubleNode<Type>* prev_node = current_node->previous_element;
@@ -223,21 +231,28 @@ public:
     }
 
     Type value_at(unsigned int position)
-{
-    if (position >= size)
-        throw std::out_of_range("Index is out of range");
-    else
     {
-        if(position == size-1)
-            return tail->value;
-
-        DoubleNode<Type>* current_node = head;
-        for(unsigned int i = 0; i < position; i++)
-            current_node = current_node->next_element;
-        
-    return current_node->value;
+        if (position >= size)
+            throw std::out_of_range("Index is out of range");
+        else
+        {
+            DoubleNode<Type>* current_node = nullptr;
+            if(position <= size/2)
+            {
+                current_node = head;
+                for(unsigned int i=0; i<position; i++)
+                    current_node=current_node->next_element;
+            }
+            else
+            {
+                current_node = tail;
+                for(unsigned int i=size-1; i>position; i--)
+                    current_node=current_node->previous_element;
+            }
+                
+            return current_node->value;
+        }
     }
-}
 
     // Returns size of list
     unsigned int get_size()
@@ -290,17 +305,20 @@ public:
         if (position < 0 || position >= size)
             return;
             //throw std::out_of_range("Position out of range");
-    
-        if(position == size-1)
-        {
-            tail->value = value;
-            return;
-        }
         
-        DoubleNode<Type>* current_node = head;
-
-        for(unsigned int i=0; i<position; i++)
-            current_node=current_node->next_element;
+        DoubleNode<Type>* current_node = nullptr;
+        if(position <= size/2)
+        {
+            current_node = head;
+            for(unsigned int i=0; i<position; i++)
+                current_node=current_node->next_element;
+        }
+        else
+        {
+            current_node = tail;
+            for(unsigned int i=size-1; i>position; i--)
+                current_node=current_node->previous_element;
+        }
         
         current_node->value = value;
     }

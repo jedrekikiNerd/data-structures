@@ -5,6 +5,7 @@
 #include "../Timer.h"
 #include <fstream>
 #include <limits>
+#include <iomanip>
 
 // Agent between UI and data structure add_front
 int add_front(IDataStructure<int> *dt)
@@ -14,8 +15,9 @@ int add_front(IDataStructure<int> *dt)
     timer.start();
     dt->add_front(value);
     timer.stop();
+    std::setprecision(9);
     if (print_time)
-        display_action("Dodawanie zajęło " + std::to_string(timer.elapsedSeconds()) + "ms");
+        display_action("Dodawanie zajęło " + std::to_string(timer.elapsedSeconds()*1000) + "ms");
     return 0;
 }
 
@@ -27,8 +29,9 @@ int add_back(IDataStructure<int> *dt)
     timer.start();
     dt->add_back(value);
     timer.stop();
+    std::setprecision(9);
     if (print_time)
-        display_action("Dodawanie zajęło " + std::to_string(timer.elapsedSeconds()) + "ms");
+        display_action("Dodawanie zajęło " + std::to_string(timer.elapsedSeconds()*1000) + "ms");
     return 0;
 }
 
@@ -41,8 +44,9 @@ int add_at(IDataStructure<int> *dt)
     timer.start();
     dt->add_at(value, pos);
     timer.stop();
+    std::setprecision(9);
     if (print_time)
-        display_action("Dodawanie zajęło " + std::to_string(timer.elapsedSeconds()) + "ms");
+        display_action("Dodawanie zajęło " + std::to_string(timer.elapsedSeconds()*1000) + "ms");
     return 0;
 }
 
@@ -53,8 +57,9 @@ int remove_front(IDataStructure<int> *dt)
     timer.start();
     dt->remove_front();
     timer.stop();
+    std::setprecision(9);
     if (print_time)
-        display_action("Usuwanie zajęło " + std::to_string(timer.elapsedSeconds()) + "ms");
+        display_action("Usuwanie zajęło " + std::to_string(timer.elapsedSeconds()*1000) + "ms");
     return 0;
 }
 
@@ -65,8 +70,9 @@ int remove_back(IDataStructure<int> *dt)
     timer.start();
     dt->remove_back();
     timer.stop();
+    std::setprecision(9);
     if (print_time)
-        display_action("Usuwanie zajęło " + std::to_string(timer.elapsedSeconds()) + "ms");
+        display_action("Usuwanie zajęło " + std::to_string(timer.elapsedSeconds()*1000) + "ms");
     return 0;
 }
 
@@ -78,8 +84,9 @@ int remove_at(IDataStructure<int> *dt)
     timer.start();
     dt->remove_at(pos);
     timer.stop();
+    std::setprecision(9);
     if (print_time)
-        display_action("Usuwanie zajęło " + std::to_string(timer.elapsedSeconds()) + "ms");
+        display_action("Usuwanie zajęło " + std::to_string(timer.elapsedSeconds()*1000) + "ms");
     return 0;
 }
 
@@ -90,8 +97,9 @@ int clear_dt(IDataStructure<int> *dt)
     timer.start();
     dt->clear();
     timer.stop();
+    std::setprecision(9);
     if (print_time)
-        display_action("Czyszczenie zajęło " + std::to_string(timer.elapsedSeconds()) + "ms");
+        display_action("Czyszczenie zajęło " + std::to_string(timer.elapsedSeconds()*1000) + "ms");
     return 0;
 }
 
@@ -102,8 +110,9 @@ int first_value(IDataStructure<int> *dt)
     timer.start();
     int val = dt->first_value();
     timer.stop();
+    std::setprecision(9);
     if (print_time)
-        display_action2(std::to_string(val), "Pobranie wartości zajęło " + std::to_string(timer.elapsedSeconds()) + "ms");
+        display_action2(std::to_string(val), "Pobranie wartości zajęło " + std::to_string(timer.elapsedSeconds()*1000) + "ms");
     else
         display_action(std::to_string(val));
     return 0;
@@ -116,8 +125,9 @@ int last_value(IDataStructure<int> *dt)
     timer.start();
     int val = dt->last_value();
     timer.stop();
+    std::setprecision(9);
     if (print_time)
-        display_action2(std::to_string(val), "Pobranie wartości zajęło " + std::to_string(timer.elapsedSeconds()) + "ms");
+        display_action2(std::to_string(val), "Pobranie wartości zajęło " + std::to_string(timer.elapsedSeconds()*1000) + "ms");
     else
         display_action(std::to_string(val));
     return 0;
@@ -131,8 +141,9 @@ int value_at(IDataStructure<int> *dt)
     timer.start();
     int val = dt->value_at(pos);
     timer.stop();
+    std::setprecision(9);
     if (print_time)
-        display_action2(std::to_string(val), "Pobranie wartości zajęło " + std::to_string(timer.elapsedSeconds()) + "ms");
+        display_action2(std::to_string(val), "Pobranie wartości zajęło " + std::to_string(timer.elapsedSeconds()*1000) + "ms");
     else
         display_action(std::to_string(val));
     return 0;
@@ -145,8 +156,9 @@ int get_size(IDataStructure<int> *dt)
     timer.start();
     int val = dt->get_size();
     timer.stop();
+    std::setprecision(9);
     if (print_time)
-        display_action2(std::to_string(val), "Pobranie rozmiaru zajęło " + std::to_string(timer.elapsedSeconds()) + "ms");
+        display_action2(std::to_string(val), "Pobranie rozmiaru zajęło " + std::to_string(timer.elapsedSeconds()*1000) + "ms");
     else
         display_action(std::to_string(val));
     return 0;
@@ -160,10 +172,11 @@ int find(IDataStructure<int> *dt)
     timer.start();
     int val = dt->find(value_to_find);
     timer.stop();
+    std::setprecision(9);
     if (val == UINT_MAX)
         val = -1;
     if (print_time)
-        display_action2(std::to_string(val), "Znalezienie indeksu zajęło " + std::to_string(timer.elapsedSeconds()) + "ms");
+        display_action2(std::to_string(val), "Znalezienie indeksu zajęło " + std::to_string(timer.elapsedSeconds()*1000) + "ms");
     else
         display_action(std::to_string(val));
     return 0;
@@ -186,9 +199,10 @@ int change_at(IDataStructure<int> *dt)
     timer.start();
     dt->change_at(new_value, position_to_change);
     timer.stop();
+    std::setprecision(9);
 
     if (print_time)
-        display_action("Wypełnienie danymi z pliku zajęło " + std::to_string(timer.elapsedSeconds()) + "ms");
+        display_action("Wypełnienie danymi z pliku zajęło " + std::to_string(timer.elapsedSeconds()*1000) + "ms");
     
     return 0;
 }
@@ -216,7 +230,8 @@ int fill_from_file(IDataStructure<int> *dt)
         file.close();
     }
     timer.stop();
+    std::setprecision(9);
     if (print_time)
-        display_action("Wypełnienie danymi z pliku zajęło " + std::to_string(timer.elapsedSeconds()) + "ms");
+        display_action("Wypełnienie danymi z pliku zajęło " + std::to_string(timer.elapsedSeconds()*1000) + "ms");
     return 0;
 }
