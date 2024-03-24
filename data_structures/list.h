@@ -71,6 +71,7 @@ public:
             if (position == 0)
             {
                 add_front(value);
+                return;
             }
 
             Node<Type>* new_node = new Node<Type>(value);
