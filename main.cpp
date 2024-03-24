@@ -8,6 +8,7 @@
 #include "data_structures/list_double.h"
 #include "data_structures/dynamic_array.h"
 #include "data_structures/int_structures_manual_ui.hpp"
+#include "test.h"
 
 
 // Create and return menu for list
@@ -128,7 +129,7 @@ Menu* set_up_ui()
 
     // Create main_menu and add menu items to it
     Menu *main_menu = new Menu();
-    main_menu->add_item("|Wykonaj automatyczne testy", nullptr);
+    main_menu->add_item("|Wykonaj automatyczne testy", run_tests);
     main_menu->add_item("|Wybór struktury", setup_structures_menu());
     main_menu->add_item("|Generuj dane", ui_run_generator);
     main_menu->add_item("|Pomoc", display_help);
@@ -142,6 +143,9 @@ int main()
 {
     Menu *main_menu = set_up_ui();
     main_menu->display_menu();
+    endwin();
+
+    delete main_menu;
 
     return 0;
 }

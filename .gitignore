@@ -1,2 +1,3 @@
 *.exe
 generated_data/**
+test_results/**

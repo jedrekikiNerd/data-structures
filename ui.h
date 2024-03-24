@@ -5,6 +5,7 @@
 #include "data_structures/I_data_structure.h"
 #include "ui_actions.h"
 
+// Key definitions for handling UI interactions with keyboard
 #define MY_KEY_EXIT 27
 #define MY_KEY_ENTER 10
 #define MY_KEY_SPACE 32
@@ -84,7 +85,17 @@ class Menu
         MenuItemInterface *items[MAX_ITEMS];
         int items_number;
         int selected_option;
+
         Menu();
+        virtual ~Menu() 
+        {
+            // Delete all buttons this menu stores
+            for(int i=0; i<items_number; i++)
+            {
+                delete items[i];
+                items[i] = nullptr;
+            }
+        }
         void add_item(std::string label, std::function<int()> func);
         void add_item(std::string label, Menu *menu);
         int handle_click();
@@ -105,6 +116,11 @@ class MenuDt : public Menu
     public:
         MenuDt() : Menu(), dt(nullptr){}
         MenuDt(IDataStructure<Type> *ptr_to_dt) : Menu(), dt(ptr_to_dt) {}
+        ~MenuDt()
+        {
+            delete dt;
+            dt = nullptr;
+        }
         void add_item_dt(std::string label, std::function<int(IDataStructure<Type>*)> func)
         {
             if (items_number<MAX_ITEMS)
@@ -124,8 +140,10 @@ class MenuDt : public Menu
             bool current_window = true;
             int dt_box_h = LINES/2-(items_number/2)-4;
             int menu_box_h = LINES - dt_box_h;
+            // We make some windows inside terminal (bg are for border decoration, dt_window is for structure panel we can scroll and menu_window is for menu)
             WINDOW *dt_window_bg = newwin(dt_box_h , COLS, 0, 0);
             WINDOW *menu_window_bg = newwin(menu_box_h, COLS, LINES/2-(items_number/2)-4, 0);
+            // Pad can hold more data then it's size - we use it for scrolling over data structure
             WINDOW *dt_window = newpad(10000, COLS);
             WINDOW *menu_window = newwin(menu_box_h-2, COLS - 2, LINES/2-(items_number/2)-3, 1);
             wattron(menu_window_bg, COLOR_PAIR(5));
@@ -137,6 +155,7 @@ class MenuDt : public Menu
             while (true)
             {
                 // We clear terminal screen before printing new elements
+                // If current selected window is data structure we dont want to clear it
                 if (current_window)
                     wclear(dt_window);
                 wclear(menu_window);
@@ -151,6 +170,7 @@ class MenuDt : public Menu
                     wattroff(menu_window, A_REVERSE);
                 }
 
+                // Here some text in left upper corner and on the last line authors and title with attributes such as bold, colors etc.
                 wattron(menu_window, A_ITALIC);
                 wattron(menu_window, COLOR_PAIR(2));
                 mvwprintw(menu_window, menu_box_h-4, COLS/2-26, "Przeglądarka Własnych Implementacji Struktur Danych");
@@ -169,6 +189,7 @@ class MenuDt : public Menu
                 wattroff(menu_window, COLOR_PAIR(3));
                 wattroff(menu_window, A_BOLD);
 
+                // Informtaion about print_time flag
                 mvwprintw(menu_window, 2, 0, "Wypisywanie czasu operacji:");
                 if(print_time)
                 {
@@ -190,6 +211,7 @@ class MenuDt : public Menu
                 wrefresh(menu_window_bg);
                 wrefresh(menu_window);
                 wrefresh(dt_window_bg);
+                // inside pefresh we specify size, position inside terminal window and offset of data that are inside this panel (scroll_pos in y axis)
                 prefresh(dt_window, scroll_pos, 0, 1, 1, dt_box_h - 2, COLS - 2);  
 
                 // Wait for input and handle it
@@ -198,6 +220,7 @@ class MenuDt : public Menu
                 {
                     case KEY_DOWN:
                     {
+                        // We check if we are in menu and need to switch between buttons or if we are in data structure and want to scroll
                         if (current_window)
                             selected_option = (selected_option + 1) % items_number;
                         else
@@ -207,6 +230,7 @@ class MenuDt : public Menu
                     }
                     case KEY_UP:
                     {
+                        // We check if we are in menu and need to switch between buttons or if we are in data structure and want to scroll
                         if (current_window)
                         {
                             selected_option = (selected_option - 1);
@@ -223,6 +247,7 @@ class MenuDt : public Menu
                         int result = handle_click();
                         if (result == 1)
                         {
+                            // Before exiting free all windows from memory
                             delwin(dt_window);
                             delwin(dt_window_bg);
                             delwin(menu_window_bg);
@@ -235,6 +260,7 @@ class MenuDt : public Menu
                     }
                     case MY_KEY_EXIT:
                     {
+                        // Before exiting free all windows from memory
                         delwin(dt_window);
                         delwin(dt_window_bg);
                         delwin(menu_window_bg);
@@ -243,6 +269,7 @@ class MenuDt : public Menu
                     }
                     case MY_KEY_SPACE:
                     {
+                        // Change current active area on terminal (data structure panel or menu)
                         current_window = !current_window;
                         wclear(dt_window_bg);
                         wclear(menu_window_bg);
@@ -283,6 +310,12 @@ class MenuItemSwitcher : public MenuItemInterface
         MenuItemSwitcher();
         MenuItemSwitcher(std::string label, Menu *menu);
         int clicked();
+        // We have to delete menu it stores
+        ~MenuItemSwitcher()
+        {
+            delete menu_to_switch;
+            menu_to_switch = nullptr;
+        }
 };
 
 #endif
