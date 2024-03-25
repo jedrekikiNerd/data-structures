@@ -16,7 +16,7 @@ int add_front(IDataStructure<int> *dt)
     dt->add_front(value);
     timer.stop();
     if (print_time)
-        display_action("Dodawanie zajęło " + std::to_string(timer.elapsedSeconds()*1000000) + "ms");
+        display_action("Dodawanie zajęło " + std::to_string(timer.elapsedSeconds()) + "ns");
     return 0;
 }
 
@@ -29,7 +29,7 @@ int add_back(IDataStructure<int> *dt)
     dt->add_back(value);
     timer.stop();
     if (print_time)
-        display_action("Dodawanie zajęło " + std::to_string(timer.elapsedSeconds()*1000000) + "ms");
+        display_action("Dodawanie zajęło " + std::to_string(timer.elapsedSeconds()) + "ns");
     return 0;
 }
 
@@ -43,7 +43,7 @@ int add_at(IDataStructure<int> *dt)
     dt->add_at(value, pos);
     timer.stop();
     if (print_time)
-        display_action("Dodawanie zajęło " + std::to_string(timer.elapsedSeconds()*1000000) + "ms");
+        display_action("Dodawanie zajęło " + std::to_string(timer.elapsedSeconds()) + "ns");
     return 0;
 }
 
@@ -55,7 +55,7 @@ int remove_front(IDataStructure<int> *dt)
     dt->remove_front();
     timer.stop();
     if (print_time)
-        display_action("Usuwanie zajęło " + std::to_string(timer.elapsedSeconds()*1000000) + "ms");
+        display_action("Usuwanie zajęło " + std::to_string(timer.elapsedSeconds()) + "ns");
     return 0;
 }
 
@@ -67,7 +67,7 @@ int remove_back(IDataStructure<int> *dt)
     dt->remove_back();
     timer.stop();
     if (print_time)
-        display_action("Usuwanie zajęło " + std::to_string(timer.elapsedSeconds()*1000000) + "ms");
+        display_action("Usuwanie zajęło " + std::to_string(timer.elapsedSeconds()) + "ns");
     return 0;
 }
 
@@ -80,7 +80,7 @@ int remove_at(IDataStructure<int> *dt)
     dt->remove_at(pos);
     timer.stop();
     if (print_time)
-        display_action("Usuwanie zajęło " + std::to_string(timer.elapsedSeconds()*1000000) + "ms");
+        display_action("Usuwanie zajęło " + std::to_string(timer.elapsedSeconds()) + "ns");
     return 0;
 }
 
@@ -92,7 +92,7 @@ int clear_dt(IDataStructure<int> *dt)
     dt->clear();
     timer.stop();
     if (print_time)
-        display_action("Czyszczenie zajęło " + std::to_string(timer.elapsedSeconds()*1000000) + "ms");
+        display_action("Czyszczenie zajęło " + std::to_string(timer.elapsedSeconds()) + "ns");
     return 0;
 }
 
@@ -104,7 +104,7 @@ int first_value(IDataStructure<int> *dt)
     int val = dt->first_value();
     timer.stop();
     if (print_time)
-        display_action2(std::to_string(val), "Pobranie wartości zajęło " + std::to_string(timer.elapsedSeconds()*1000000) + "ms");
+        display_action2(std::to_string(val), "Pobranie wartości zajęło " + std::to_string(timer.elapsedSeconds()) + "ns");
     else
         display_action(std::to_string(val));
     return 0;
@@ -118,7 +118,7 @@ int last_value(IDataStructure<int> *dt)
     int val = dt->last_value();
     timer.stop();
     if (print_time)
-        display_action2(std::to_string(val), "Pobranie wartości zajęło " + std::to_string(timer.elapsedSeconds()*1000000) + "ms");
+        display_action2(std::to_string(val), "Pobranie wartości zajęło " + std::to_string(timer.elapsedSeconds()) + "ns");
     else
         display_action(std::to_string(val));
     return 0;
@@ -133,7 +133,7 @@ int value_at(IDataStructure<int> *dt)
     int val = dt->value_at(pos);
     timer.stop();
     if (print_time)
-        display_action2(std::to_string(val), "Pobranie wartości zajęło " + std::to_string(timer.elapsedSeconds()*1000000) + "ms");
+        display_action2(std::to_string(val), "Pobranie wartości zajęło " + std::to_string(timer.elapsedSeconds()) + "ns");
     else
         display_action(std::to_string(val));
     return 0;
@@ -147,7 +147,7 @@ int get_size(IDataStructure<int> *dt)
     int val = dt->get_size();
     timer.stop();
     if (print_time)
-        display_action2(std::to_string(val), "Pobranie rozmiaru zajęło " + std::to_string(timer.elapsedSeconds()*1000000) + "ms");
+        display_action2(std::to_string(val), "Pobranie rozmiaru zajęło " + std::to_string(timer.elapsedSeconds()) + "ns");
     else
         display_action(std::to_string(val));
     return 0;
@@ -164,7 +164,7 @@ int find(IDataStructure<int> *dt)
     if (val == UINT_MAX)
         val = -1;
     if (print_time)
-        display_action2(std::to_string(val), "Znalezienie indeksu zajęło " + std::to_string(timer.elapsedSeconds()*1000000) + "ms");
+        display_action2(std::to_string(val), "Znalezienie indeksu zajęło " + std::to_string(timer.elapsedSeconds()) + "ns");
     else
         display_action(std::to_string(val));
     return 0;
@@ -189,7 +189,7 @@ int change_at(IDataStructure<int> *dt)
     timer.stop();
 
     if (print_time)
-        display_action("Wypełnienie danymi z pliku zajęło " + std::to_string(timer.elapsedSeconds()*1000000) + "ms");
+        display_action("Wypełnienie danymi z pliku zajęło " + std::to_string(timer.elapsedSeconds()) + "ns");
     
     return 0;
 }
@@ -218,6 +218,6 @@ int fill_from_file(IDataStructure<int> *dt)
     }
     timer.stop();
     if (print_time)
-        display_action("Wypełnienie danymi z pliku zajęło " + std::to_string(timer.elapsedSeconds()*1000000) + "ms");
+        display_action("Wypełnienie danymi z pliku zajęło " + std::to_string(timer.elapsedSeconds()) + "ns");
     return 0;
 }

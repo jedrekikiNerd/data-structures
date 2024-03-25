@@ -4,7 +4,6 @@
 #include <chrono>
 
 
-
 class Timer {
 public:
     Timer() : running(false){}; 
