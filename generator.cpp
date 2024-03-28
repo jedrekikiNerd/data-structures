@@ -37,7 +37,12 @@ int generator(int number_samples, int sample_skip, int file_number) {
 
     for (int j = 0; j < file_number; j++) 
     {
-        string nazwaPliku = folder_name + "/wyniki_" + to_string(j + 1) + ".txt";
+
+        for(int x = 0; x < number_of_data; x++) // number of data is a new variable that we add to the UI 
+        {
+
+
+        string nazwaPliku = folder_name + "/wyniki_" + to_string(number_samples) + "tys" +"_" + to_string(x) + ".txt";
         fstream plik(nazwaPliku, ios::out);
         if (!plik.is_open()) 
         {
@@ -50,11 +55,11 @@ int generator(int number_samples, int sample_skip, int file_number) {
             int temp = distribution(generator);
             plik << temp << endl;
         }
+        plik.close();
+        }
         
         // Increasing the number of samples for the next file
-        number_samples += sample_skip;
-        
-        plik.close();
+        number_samples += sample_skip; 
     }
     return 0;
 }
