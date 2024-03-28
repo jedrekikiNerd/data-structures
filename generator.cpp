@@ -42,7 +42,7 @@ int generator(int number_samples, int sample_skip, int file_number) {
         {
 
 
-        string nazwaPliku = folder_name + "/wyniki_" + to_string(number_samples) + "tys" +"_" + to_string(x) + ".txt";
+        string nazwaPliku = folder_name + "/wyniki_" + to_string(number_samples) + "_" + to_string(x) + ".txt";
         fstream plik(nazwaPliku, ios::out);
         if (!plik.is_open()) 
         {
