@@ -35,14 +35,14 @@ int generator(int number_samples, int number_of_data, int file_number) {
     removeFilesInFolder(folder_name);
 
 
-    for (int j = 0; j < file_number; j++) 
+    for (int j = 1; j <= file_number; j++) 
     {
 
-        for(int x = 0; x < number_of_data; x++) // number of data is a new variable that we add to the UI 
+        for(int x = 1; x <= number_of_data; x++) // number of data is a new variable that we add to the UI 
         {
 
 
-        string nazwaPliku = folder_name + "/wyniki_" + to_string(number_samples) + "_" + to_string(x) + ".txt";
+        string nazwaPliku = folder_name + "/wyniki_" + to_string(j) + "_" + to_string(x) + ".txt";
         fstream plik(nazwaPliku, ios::out);
         if (!plik.is_open()) 
         {
@@ -70,8 +70,8 @@ int ui_run_generator()
 {
     int number_files = user_input_action("Podaj ile próbek danych chcesz otrzymać: ");
     int first_sample_size = user_input_action("Podaj ilość danych do wylosowania: ");
-    int sample_increment = user_input_action("Podaj o ile zwiększać dane: ");
-    generator(first_sample_size, sample_increment, number_files);
+    int number_of_data = user_input_action("Podaj ile próbek każdej wielkości wygenerować: ");
+    generator(first_sample_size, number_of_data, number_files);
     display_action("Dane zostały wygenerowane!");
     return 0;
 }
