@@ -138,6 +138,7 @@ int generate_random_number(bool symbol){
 }
 
 // Function that runs all tests for all data structures and saves time series to files
+// We use buffer (stream) because thats the solution we found to output more than 4 digits after decimal point to string
 int run_all_tests_for_dt(IDataStructure<int>* dt, int to_find, int to_add, int random_position, int data_size, std::string dt_name, int data_sample_number, int series_number)
 {
     std::ostringstream stream;
@@ -234,49 +235,46 @@ int run_tests()
     int data_number = user_input_action("Podaj ilość wygenerowanych instancji dla jednej wielkości: ");
     int repetition = user_input_action("Podaj numer serii pomiarowej (przydatne jeżeli nie chcesz utracić wyników poprzedniego pomiaru, ale dokonać kolejnego): ");
 
-    for(int r=1; r<=repetition; r++)
+    for(int i=1; i<=file_number; i++)
     {
-        for(int i=1; i<=file_number; i++)
+        for(int j=1; j<=data_number; j++)
         {
-            for(int j=1; j<=data_number; j++)
-            {
-                int to_add = generate_random_number(0);
-                int to_find = generate_random_number(0);
-                int random_position = generate_random_number(1);
-                int bytes;
+            int to_add = generate_random_number(0);
+            int to_find = generate_random_number(0);
+            int random_position = generate_random_number(1);
+            int bytes;
 
-                // Run tests for list
-                fill_from_file(&list, 0, i, j);
-                bytes = list.get_byte_size();
-                // We check (and save) size for only one iteration over data sizes
-                if(j==1 and r==1)
-                    add_line_to_file(std::to_string(list.get_size()) + ";" + std::to_string(bytes), ("SingleList_size_growth.txt"));
-                run_all_tests_for_dt(&list, to_find, to_add, random_position, list.get_size(), "SingleList", j, r);
+            // Run tests for list
+            fill_from_file(&list, 0, i, j);
+            bytes = list.get_byte_size();
+            // We check (and save) size for only one iteration over data sizes
+            if(j==1)
+                add_line_to_file(std::to_string(list.get_size()) + ";" + std::to_string(bytes), ("SingleList_size_growth.txt"));
+            run_all_tests_for_dt(&list, to_find, to_add, random_position, list.get_size(), "SingleList", j, repetition);
 
-                // Run tests for list with head and tail
-                fill_from_file(&list_ht, 0, i, j);
-                bytes = list_ht.get_byte_size();
-                // We check (and save) size for only one iteration over data sizes
-                if(j==1 and r==1)
-                    add_line_to_file(std::to_string(list_ht.get_size()) + ";" + std::to_string(bytes), ("SingleListHeadTail_size_growth.txt"));
-                run_all_tests_for_dt(&list_ht, to_find, to_add, random_position, list_ht.get_size(), "SingleListHeadTail", j, r);
+            // Run tests for list with head and tail
+            fill_from_file(&list_ht, 0, i, j);
+            bytes = list_ht.get_byte_size();
+            // We check (and save) size for only one iteration over data sizes
+            if(j==1)
+                add_line_to_file(std::to_string(list_ht.get_size()) + ";" + std::to_string(bytes), ("SingleListHeadTail_size_growth.txt"));
+            run_all_tests_for_dt(&list_ht, to_find, to_add, random_position, list_ht.get_size(), "SingleListHeadTail", j, repetition);
 
-                // Run tests for double list
-                fill_from_file(&double_list, 0, i, j);
-                bytes = double_list.get_byte_size();
-                // We check (and save) size for only one iteration over data sizes
-                if(j==1 and r==1)
-                    add_line_to_file(std::to_string(double_list.get_size()) + ";" + std::to_string(bytes), ("DoubleList_size_growth.txt"));
-                run_all_tests_for_dt(&double_list, to_find, to_add, random_position, double_list.get_size(), "DoubleList", j, r);
+            // Run tests for double list
+            fill_from_file(&double_list, 0, i, j);
+            bytes = double_list.get_byte_size();
+            // We check (and save) size for only one iteration over data sizes
+            if(j==1)
+                add_line_to_file(std::to_string(double_list.get_size()) + ";" + std::to_string(bytes), ("DoubleList_size_growth.txt"));
+            run_all_tests_for_dt(&double_list, to_find, to_add, random_position, double_list.get_size(), "DoubleList", j, repetition);
 
-                // Run tests for dynamic array
-                fill_from_file(&dyn_array, 0, i, j);
-                bytes = dyn_array.get_byte_size();
-                // We check (and save) size for only one iteration over data sizes
-                if(j==1 and r==1)
-                    add_line_to_file(std::to_string(dyn_array.get_size()) + ";" + std::to_string(bytes), ("DynamicArray_size_growth.txt"));
-                run_all_tests_for_dt(&dyn_array, to_find, to_add, random_position, dyn_array.get_size(), "DynamicArray", j, r);
-            }
+            // Run tests for dynamic array
+            fill_from_file(&dyn_array, 0, i, j);
+            bytes = dyn_array.get_byte_size();
+            // We check (and save) size for only one iteration over data sizes
+            if(j==1)
+                add_line_to_file(std::to_string(dyn_array.get_size()) + ";" + std::to_string(bytes), ("DynamicArray_size_growth.txt"));
+            run_all_tests_for_dt(&dyn_array, to_find, to_add, random_position, dyn_array.get_size(), "DynamicArray", j, repetition);
         }
     }
     
