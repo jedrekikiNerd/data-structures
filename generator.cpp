@@ -24,7 +24,7 @@ void removeFilesInFolder(const std::string& folderName) {
     }
 }
 
-int generator(int number_samples, int sample_skip, int file_number) {
+int generator(int number_samples, int number_of_data, int file_number) {
     // Initialization of the pseudorandom number generator
     srand(time(0));
     default_random_engine generator;
@@ -59,7 +59,7 @@ int generator(int number_samples, int sample_skip, int file_number) {
         }
         
         // Increasing the number of samples for the next file
-        number_samples += sample_skip; 
+        number_samples = number_samples * 2; 
     }
     return 0;
 }
