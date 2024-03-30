@@ -27,6 +27,7 @@ void removeFilesInFolder(const std::string& folderName) {
 int generator(int number_samples, int number_of_data, int file_number) {
     // Initialization of the pseudorandom number generator
     srand(time(0));
+    std::random_device rd;
     default_random_engine generator;
     uniform_int_distribution<int> distribution(-2147483647,2147483647);
 
@@ -40,6 +41,7 @@ int generator(int number_samples, int number_of_data, int file_number) {
 
         for(int x = 1; x <= number_of_data; x++) // number of data is a new variable that we add to the UI 
         {
+            generator.seed(rd());
 
 
         string nazwaPliku = folder_name + "/wyniki_" + to_string(j) + "_" + to_string(x) + ".txt";

@@ -81,7 +81,7 @@ double add_back_test(IDataStructure<int> *dt,int Value){
     return timer.elapsedSeconds();
 }
 
-double add_at_test(IDataStructure<int> *dt,int Value,int index){
+double add_at_test(IDataStructure<int> *dt,int Value,unsigned int index){
     timer.start();
     dt -> add_at(Value, index);
     timer.stop();
@@ -102,16 +102,24 @@ double remove_back_test(IDataStructure<int> *dt){
     return timer.elapsedSeconds();
 }
 
-double remove_at_test(IDataStructure<int> *dt,int index){
+double remove_at_test(IDataStructure<int> *dt,unsigned int index){
     timer.start();
     dt -> remove_at(index);
     timer.stop();
     return timer.elapsedSeconds();
 }
 
-double find_number_test(IDataStructure<int> *dt,int Value){
+double find_number_test(IDataStructure<int> *dt,unsigned int Value){
     timer.start();
     dt -> find(Value);
+    timer.stop();
+    return timer.elapsedSeconds();
+}
+
+double find_existing_number_test(IDataStructure<int> *dt, unsigned int index){
+    int find_value = dt->value_at(index);
+    timer.start();
+    dt -> find(find_value);
     timer.stop();
     return timer.elapsedSeconds();
 }
@@ -123,23 +131,23 @@ double clear_test(IDataStructure<int> *dt){
     return timer.elapsedSeconds();
 }
 
-int generate_random_number(bool symbol){
+int generate_random_number(std::default_random_engine& random_generator){
     int number;
-    std::default_random_engine generate_random_number;
-    if(symbol == 1)
-    {
-        std::uniform_int_distribution<int> distribution(0,2147483647);
-        number = distribution(generate_random_number);
-    }else{
-        std::uniform_int_distribution<int> distribution(-2147483647,2147483647);
-        number = distribution(generate_random_number);
-    }
+    std::uniform_int_distribution<int> distribution(-2147483647,2147483647);
+    number = distribution(random_generator);
+    return number;
+}
+
+unsigned int generate_random_number_unsigned(unsigned int size_dt, std::default_random_engine& random_generator){
+    unsigned int number;
+    std::uniform_int_distribution<unsigned int> distribution(0,size_dt);
+    number = distribution(random_generator);
     return number;
 }
 
 // Function that runs all tests for all data structures and saves time series to files
 // We use buffer (stream) because thats the solution we found to output more than 4 digits after decimal point to string
-int run_all_tests_for_dt(IDataStructure<int>* dt, int to_find, int to_add, int random_position, int data_size, std::string dt_name, int data_sample_number, int series_number)
+int run_all_tests_for_dt(IDataStructure<int>* dt, int to_find, int to_add, unsigned int random_position, int data_size, std::string dt_name, int data_sample_number, int series_number)
 {
     std::ostringstream stream;
     std::string measure_line;
@@ -210,6 +218,13 @@ int run_all_tests_for_dt(IDataStructure<int>* dt, int to_find, int to_add, int r
     add_line_to_file(measure_line, (dt_name + "_find_random" + data_sample + "_" + repetition + ".txt"));
     stream.str("");
 
+    // Find existing element
+    temp_double_buffor = find_existing_number_test(dt, random_position);
+    stream << std::fixed << std::setprecision(10) << temp_double_buffor;
+    measure_line = std::to_string(data_size) + ";" + stream.str();
+    add_line_to_file(measure_line, (dt_name + "_find_random_existing" + data_sample + "_" + repetition + ".txt"));
+    stream.str("");
+
     // Clear and measure
     temp_double_buffor = clear_test(dt);
     stream << std::fixed << std::setprecision(10) << temp_double_buffor;
@@ -223,6 +238,10 @@ int run_all_tests_for_dt(IDataStructure<int>* dt, int to_find, int to_add, int r
 // Function that loads data from file to each data structure and runs all tests for it
 int run_tests()
 {
+    // We create random engine
+    std::random_device rd;
+    std::default_random_engine random_generator(rd());
+
     // We create each data structure
     SingleListH<int> list;
     SingleListHT<int> list_ht;
@@ -239,13 +258,14 @@ int run_tests()
     {
         for(int j=1; j<=data_number; j++)
         {
-            int to_add = generate_random_number(0);
-            int to_find = generate_random_number(0);
-            int random_position = generate_random_number(1);
+            int to_add = generate_random_number(random_generator);
+            int to_find = generate_random_number(random_generator);
             int bytes;
 
             // Run tests for list
             fill_from_file(&list, 0, i, j);
+            // We need size for generating random position
+            unsigned int random_position = generate_random_number_unsigned(list.get_size()-1, random_generator);
             bytes = list.get_byte_size();
             // We check (and save) size for only one iteration over data sizes
             if(j==1)
