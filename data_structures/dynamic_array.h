@@ -42,6 +42,8 @@ public:
         size++;
     }
 
+
+
     void add_front(Type value)
     {
         if (size >= capacity)
@@ -103,11 +105,15 @@ public:
         }
     }
 
+
+    // Removes first element 
     void remove_front()
     {
         if (size > 0)
         {
         if(size-1 <= capacity/2 && capacity > 1 ){
+            //after removal the number of elements is less than half the capacity of the array, 
+            //reduces the capacity of the array to half.
             unsigned int newCapacity = capacity /2;
             Type *tempArr = new int[newCapacity];
             for (unsigned int i=0; i < size-1;i++){
@@ -117,6 +123,7 @@ public:
             arr = tempArr;
             capacity = newCapacity;
         } else {
+            //shif all elements by one after removing first
             for(unsigned int i=0; i < size-1; i++){
                 arr[i] = arr[i+1];
             }  
@@ -125,15 +132,18 @@ public:
         }
     }
 
+    // Removes last element
     void remove_back() 
     { 
         if (size > 0)
         {
             if (size - 1 <= capacity / 2 && capacity > 1)
+            //after removal the number of elements is less than half the capacity of the array, 
+            //reduces the capacity of the array to half.
             {
                 unsigned int newCapacity = capacity / 2;
                 Type *tempArr = new Type[newCapacity];
-                for (unsigned int i =0; i < size - 1; i++)
+                for (unsigned int i = 0 ; i < size - 1 ; i++)
                 {
                     tempArr[i] = arr[i];
                 }
@@ -145,6 +155,8 @@ public:
         }
     }
 
+
+    // Removes element at specified position counting from front or back depends in which half is element
     void remove_at(unsigned int position) 
     {
         if (size > 0 && position >= 0 && position <= size)
@@ -153,12 +165,12 @@ public:
             {
                 unsigned int newCapacity = capacity / 2;
                 Type *tempArr = new Type[newCapacity];
-
+                //assign all elements on the left side
                 for (unsigned int i = 0; i < position; i++)
                 {
                     tempArr[i] = arr[i];
                 }
-
+                //then assign all elements shifted by one on the right
                 for (unsigned int i = position; i < size - 1; i++)
                 {
                     tempArr[i] = arr[i+1];
@@ -169,6 +181,7 @@ public:
             }
             else
             {
+                //we don't need to create temp arr just shift all elements by one 
                 for (unsigned int i = position; i < size - 1;i++)
                 {
                     arr[i] = arr[i+1];
@@ -177,7 +190,7 @@ public:
             size--;
         }
     }
-
+    // clears all cells by removing array
     void clear()
     {
         delete[] arr;
@@ -185,27 +198,30 @@ public:
         size = 0;
         arr = new Type[capacity];
     }
-    
+    //returns reference to the value of the specified cell
     Type& operator[](unsigned int position)
     {
-        return &arr[position];
+        return arr[position];
     };
 
+    // Returns size of list
     unsigned int get_size()
     {
         return size;
     }
-
+    // Returns first value
     Type first_value()
     {
         return arr[0];
     }
-
+    // Returns last value
     Type last_value()
     {
         return arr[size-1];
     }
 
+
+    // Returns position of element
     unsigned int find(Type value)
     {
         for(unsigned int i = 0; i < size;i++)
@@ -216,6 +232,8 @@ public:
         return -1;
     }
 
+
+    //returns the value of the specified cell
     Type value_at(unsigned int position)
     {
         if (position < 0 || position >= size)
@@ -223,6 +241,7 @@ public:
         return arr[position];
     }
 
+    // Returns string representation of data inside list
     std::string get_as_string()
     {
         if (std::is_integral_v<Type> != true)
@@ -238,11 +257,13 @@ public:
         return output;
     }
 
+    // Return size of data structure in bytes
     unsigned int get_byte_size()
     {
         return sizeof(DynamicArray) + sizeof(Type)*capacity;
     }
 
+    // Change value at given position
     void change_at(Type value, unsigned int position)
     {
         if (position < 0 || position >= size)
