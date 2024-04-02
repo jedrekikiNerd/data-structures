@@ -31,13 +31,17 @@ public:
     void add_front(Type value)
     {
         DoubleNode<Type>* new_node = new DoubleNode<Type>(value);
+        // Check if not null
         if (head == nullptr)
         {
+            // If null set head and tail to new node
             head = new_node;
             tail = new_node;
         }
         else
         {
+            // Add new head but previously add pointer to previous head
+            // Also set prev pointer of second element
             new_node->next_element = head;
             head->previous_element = new_node;
             head = new_node;
@@ -51,11 +55,13 @@ public:
         DoubleNode<Type>* new_node = new DoubleNode<Type>(value);
         if (head == nullptr)
         {
+            // If head null then add new node to both head and tail pointer
             head = new_node;
             tail = new_node;
         }
         else
         {
+            // Add new tail but previously set previous tail next element to new node and new node previous to tail
             tail->next_element = new_node;
             new_node->previous_element = tail;
             tail = new_node;  
@@ -66,6 +72,7 @@ public:
     // Adds element on specified index starting counting from head or from tail
     void add_at(Type value, unsigned int position)
     {
+        // Check if position is valid
         if (position > size or position < 0)
         {
             std::cerr << "Position exceeds size!";
@@ -73,12 +80,14 @@ public:
         }
         else
         {
+            // If 0 just perform add head
             if (position == 0)
             {
                 add_front(value);
                 return;
             }
 
+            // If size just perform add back
             if (position == size)
             {
                 add_back(value);
@@ -86,7 +95,7 @@ public:
             }
 
             DoubleNode<Type>* new_node = new DoubleNode<Type>(value);
-
+            // Move until desired position but now we can check if start from last or first element
             if(position <= size/2)
             {
                 DoubleNode<Type>* currrent_node = head;
@@ -94,6 +103,7 @@ public:
                 {
                     currrent_node = currrent_node->next_element;
                 }
+                // Reasign pointers in order to add new element
                 new_node->next_element = currrent_node->next_element;
                 new_node->next_element->previous_element = new_node;
                 new_node->previous_element = currrent_node;
@@ -106,6 +116,7 @@ public:
                 {
                     currrent_node = currrent_node->previous_element;
                 }
+                // Reasign pointers in order to add new element
                 new_node->next_element = currrent_node;
                 new_node->previous_element = currrent_node->previous_element;
                 currrent_node->previous_element = new_node;
@@ -120,10 +131,12 @@ public:
     {
         if (head != nullptr) 
         {
+            // Deleting first element but before that we need to make second element the head element
             DoubleNode<Type>* temp = head;
             head = head->next_element;
             delete temp;
             size--;
+            // If there was only one element then set also tail to nullptr
             if(head == nullptr)
             {
                 tail = nullptr;
@@ -138,6 +151,7 @@ public:
     {
         if (head != nullptr)
         {
+            // if size 1 just delete head
             if (head == tail)
             {
                 delete head;
@@ -147,6 +161,7 @@ public:
             else
             {
                 // We delete last element and set nullptr to previous one
+                // We can do it in O(1)
                 DoubleNode<Type>* temp = tail;
                 tail = tail->previous_element;
                 tail->next_element = nullptr;
@@ -159,6 +174,7 @@ public:
     // Removes element at specified position counting from head (0)
     void remove_at(unsigned int position)
     {
+        // Check if position is valid
         if (position >= size or position < 0)
         {
             std::cerr << "Position exceeds size!";
@@ -166,11 +182,13 @@ public:
         }
         else
         {
+            // If position is zero perform remove first
             if (position == 0)
             {
                 remove_front();
                 return;
             }
+            // If position is size-1 perform remove last
             if (position == size-1)
             {
                 remove_back();
@@ -178,6 +196,7 @@ public:
             }
 
             DoubleNode<Type>* current_node = nullptr;
+            // Move to desired position but first decide if we start from first or last element
             if(position <= size/2)
             {
                 current_node = head;
@@ -194,6 +213,7 @@ public:
                 current_node = current_node->previous_element;
                 }
             }
+            // Reasign pointers of neighbours and after that delete reached node
             DoubleNode<Type>* prev_node = current_node->previous_element;
             DoubleNode<Type>* next_node = current_node->next_element;
 
@@ -210,6 +230,7 @@ public:
     // Clears all nodes stored by this list, useful for deconstructing to free all memory
     void clear()
     {
+        // Until head is not nullptr perform delete front
         while(head)
             this->remove_front();
     }
@@ -232,11 +253,13 @@ public:
 
     Type value_at(unsigned int position)
     {
-        if (position >= size)
+        // Check if position is valid
+        if (position >= size or position < 0)
             throw std::out_of_range("Index is out of range");
         else
         {
             DoubleNode<Type>* current_node = nullptr;
+            // Move until desired position starting from first or last element depending on position we want to reach
             if(position <= size/2)
             {
                 current_node = head;
@@ -307,6 +330,7 @@ public:
             //throw std::out_of_range("Position out of range");
         
         DoubleNode<Type>* current_node = nullptr;
+        // Move until desired position starting from first or last element depending on position we want to reach
         if(position <= size/2)
         {
             current_node = head;

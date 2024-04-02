@@ -4,23 +4,26 @@
 #include <chrono>
 
 
-class Timer {
+class Timer 
+{
 public:
     Timer() : running(false){}; 
-    void start() {
+    void start()
+    {
         startTime = std::chrono::high_resolution_clock::now();
-    running = true;
+        running = true;
     } 
-    void stop(){
-    endTime = std::chrono::high_resolution_clock::now();
-    running = false;
+    void stop()
+    {
+        endTime = std::chrono::high_resolution_clock::now();
+        running = false;
     }
-    double elapsedSeconds(){
-        if (running) {
-        stop();
-    }
-    std::chrono::duration<double, std::nano> elapsed = endTime - startTime;
-    return elapsed.count();
+    double elapsedSeconds()
+    {
+        if (running)
+            stop();
+        std::chrono::duration<double, std::nano> elapsed = endTime - startTime;
+        return elapsed.count();
     } 
 private:
     std::chrono::time_point<std::chrono::high_resolution_clock> startTime; 
