@@ -37,7 +37,7 @@ int add_back(IDataStructure<int> *dt)
 int add_at(IDataStructure<int> *dt)
 {
     int value = user_input_action("Podaj liczbę jaką chcesz dodać: ");
-    unsigned int pos = user_input_action("Podaj pozycję na której chcesz dodać liczbę: ");
+    unsigned int pos = user_input_action_unsigned("Podaj pozycję na której chcesz dodać liczbę: ");
     Timer timer;
     timer.start();
     dt->add_at(value, pos);
@@ -74,7 +74,7 @@ int remove_back(IDataStructure<int> *dt)
 // Agent between UI and data structure remove_at
 int remove_at(IDataStructure<int> *dt)
 {
-    unsigned int pos = user_input_action("Podaj pozycję na której chcesz usunąć liczbę: ");
+    unsigned int pos = user_input_action_unsigned("Podaj pozycję na której chcesz usunąć liczbę: ");
     Timer timer;
     timer.start();
     dt->remove_at(pos);
@@ -127,7 +127,7 @@ int last_value(IDataStructure<int> *dt)
 // Agent between UI and data structure value_at
 int value_at(IDataStructure<int> *dt)
 {
-    unsigned int pos = user_input_action("Podaj pozycję z której chcesz wyświetlić liczbę: ");
+    unsigned int pos = user_input_action_unsigned("Podaj pozycję z której chcesz wyświetlić liczbę: ");
     Timer timer;
     timer.start();
     int val = dt->value_at(pos);
@@ -156,13 +156,19 @@ int get_size(IDataStructure<int> *dt)
 // Agent between UI and data structure find
 int find(IDataStructure<int> *dt)
 {
-    int value_to_find = user_input_action("Podaj liczbę, której pozycję chcesz znaleźć (wynik -1 oznacza nie znalezienie): ");
+    int value_to_find = user_input_action("Podaj liczbę, której pozycję chcesz znaleźć: ");
     Timer timer;
     timer.start();
-    int val = dt->find(value_to_find);
+    unsigned int val = dt->find(value_to_find);
     timer.stop();
     if (val == UINT_MAX)
-        val = -1;
+    {
+        if (print_time)
+            display_action2("Nie znaleziono!", "Znalezienie indeksu zajęło " + std::to_string(timer.elapsedSeconds()) + "ns");
+        else
+            display_action("Nie znaleziono!");
+        return 0;
+    }
     if (print_time)
         display_action2(std::to_string(val), "Znalezienie indeksu zajęło " + std::to_string(timer.elapsedSeconds()) + "ns");
     else
@@ -180,7 +186,7 @@ int get_as_string(IDataStructure<int> *dt)
 // Agent bewteen UI and data structure change_at
 int change_at(IDataStructure<int> *dt)
 {
-    unsigned int position_to_change = user_input_action("Podaj indeks na którym chcesz coś zmienić: ");
+    unsigned int position_to_change = user_input_action_unsigned("Podaj indeks na którym chcesz coś zmienić: ");
     int new_value = user_input_action("Podaj liczbę jaką chcesz nadpisać podane pole: ");
 
     Timer timer;

@@ -30,10 +30,12 @@ public:
     void add_front(Type value)
     {
         Node<Type>* new_node = new Node<Type>(value);
+        // Check if not null
         if (head == nullptr)
             head = new_node;
         else
         {
+            // Add new head but previously add pointer to previous head
             new_node->next_element = head;
             head = new_node;
         }
@@ -48,11 +50,13 @@ public:
             head = new_node;
         else
         {
+            // Go through list until nullptr (last element is found)
             Node<Type>* last_node = head;
             while(last_node->next_element != nullptr)
             {
                 last_node = last_node->next_element;
             }
+            // add new last node
             last_node->next_element = new_node;
         }
         size++;
@@ -61,6 +65,7 @@ public:
     // Adds element on specified index starting counting from head
     void add_at(Type value, unsigned int position)
     {
+        // Check if position is valid
         if (position > size or position < 0)
         {
             std::cerr << "Position exceeds size!";
@@ -68,6 +73,7 @@ public:
         }
         else
         {
+            // If 0 just perform add head
             if (position == 0)
             {
                 add_front(value);
@@ -75,12 +81,13 @@ public:
             }
 
             Node<Type>* new_node = new Node<Type>(value);
-
+            // Move until desired position
             Node<Type>* currrent_node = head;
             for(unsigned int i=1; i<position; i++)
             {
                 currrent_node = currrent_node->next_element;
             }
+            // Reasign pointers in order to add new element
             new_node->next_element = currrent_node->next_element;
             currrent_node->next_element = new_node;
             size++;
@@ -92,6 +99,7 @@ public:
     {
         if (head != nullptr) 
         {
+            // Deleting first element but before that we need to make second element the head element
             Node<Type>* temp = head;
             head = head->next_element;
             delete temp;
@@ -104,6 +112,7 @@ public:
     {
         if (head != nullptr)
         {
+            // if size 1 just delete head
             if (head->next_element == nullptr)
             {
                 delete head;
@@ -112,7 +121,7 @@ public:
             else
             {
                 Node<Type>* prev_last_node = head;
-                // We have to reach last element - 1 in order to change pointers and then delete last one
+                // We have to reach last element-1 in order to change pointers and then delete last one
                 while(prev_last_node->next_element->next_element != nullptr)
                 {
                     prev_last_node = prev_last_node->next_element;
@@ -128,6 +137,7 @@ public:
     // Removes element at specified position counting from head (0)
     void remove_at(unsigned int position)
     {
+        // Check if position is valid
         if (position >= size or position < 0)
         {
             std::cerr << "Position exceeds size!";
@@ -135,17 +145,20 @@ public:
         }
         else
         {
+            // If position is zero perform remove first
             if (position == 0)
             {
                 remove_front();
                 return;
             }
 
+            // Move until desired position
             Node<Type>* currrent_node = head;
             for(unsigned int i=1; i<position; i++)
             {
                 currrent_node = currrent_node->next_element;
             }
+            // Reasign pointers of neighbours and after that delete reached node
             Node<Type>* temp = currrent_node->next_element;
             currrent_node->next_element = currrent_node->next_element->next_element;
             delete temp;
@@ -156,6 +169,7 @@ public:
     // Clears all nodes stored by this list, useful for deconstructing to free all memory
     void clear()
     {
+        // Until head is not nullptr perform delete front
         while(head)
             this->remove_front();
     }
@@ -174,6 +188,7 @@ public:
         if (head==nullptr)
             throw std::out_of_range("Index is out of range");
         Node<Type>* last_node = head;
+        // Move until last position
         while(last_node->next_element != nullptr)
         {
             last_node = last_node->next_element;
@@ -183,10 +198,12 @@ public:
 
     Type value_at(unsigned int position)
     {
+        // Check if position is valid
         if (position >= size or position < 0)
             throw std::out_of_range("Index is out of range");
         else
         {
+            // Move until desired position
             Node<Type>* current_node = head;
             for(unsigned int i=0; i<position; i++)
                 current_node=current_node->next_element;
@@ -203,6 +220,7 @@ public:
     // Returns position of element
     unsigned int find(Type value)
     {
+        // Go through every element until value is equal to given value - then return counted position
         Node<Type>* current_node = head;
         unsigned int i = 0;
         while(current_node != nullptr)
@@ -216,6 +234,7 @@ public:
     }
 
     // Returns string representation of data inside list
+    // Useful for printing inside our UI
     std::string get_as_string()
     {
         std::string output = "List[";
@@ -245,6 +264,7 @@ public:
         if (position < 0 || position >= size)
             return;
             //throw std::out_of_range("Position out of range");
+        // Reach desired position
         Node<Type>* current_node = head;
         for(unsigned int i=0; i<position; i++)
             current_node=current_node->next_element;

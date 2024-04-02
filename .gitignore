@@ -1,3 +1,8 @@
 *.exe
 generated_data/**
 test_results/**
+test_results_final/**
+test_results_final2/**
+figures1/**
+figures2/**
+figures3/**

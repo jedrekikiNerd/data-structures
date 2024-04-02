@@ -134,6 +134,7 @@ class MenuDt : public Menu
             } 
         }
 
+        // These are mostly prints but in curses library
         int display_menu()
         {
             int pressed_key;

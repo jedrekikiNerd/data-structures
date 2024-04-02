@@ -63,6 +63,24 @@ int user_input_action(std::string input_field_label)
 }
 
 /**
+ * Returns user input as unsigned int number
+ * 
+ * @return unsigned int 
+ */
+unsigned int user_input_action_unsigned(std::string input_field_label)
+{
+    echo();
+    clear();
+    unsigned int user_input;
+    mvprintw(1, 1, input_field_label.c_str());
+    refresh();
+    // Get unsigned int number provided by user from terminal window with scanw
+    scanw("%u", &user_input);
+    noecho();
+    return user_input;
+}
+
+/**
  * Returns user input as string
  * 
  * @return string 

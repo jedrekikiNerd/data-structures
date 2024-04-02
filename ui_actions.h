@@ -28,6 +28,13 @@ int launch_menu_action();
 int user_input_action(std::string input_field_label);
 
 /**
+ * Returns user input as unsigned int number
+ * 
+ * @return unsigned int 
+ */
+unsigned int user_input_action_unsigned(std::string input_field_label);
+
+/**
  * Returns user input as string
  * 
  * @return string 
