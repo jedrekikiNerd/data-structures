@@ -15,9 +15,9 @@
 #include <iostream>
 #include <string>
 #include <functional>
-#include "ui_actions.h"
-#include "ui.h"
-#include "data_structures/I_data_structure.h"
+#include "ui_actions.hpp"
+#include "ui.hpp"
+#include "data_structures/I_data_structure.hpp"
 
 
 // Constructor when label and ptr to function are not specified

@@ -1,8 +1,8 @@
 #include <iostream>
-#include "../ui_actions.h"
+#include "../ui_actions.hpp"
 #include "int_structures_manual_ui.hpp"
-#include "I_data_structure.h"
-#include "../Timer.h"
+#include "I_data_structure.hpp"
+#include "../Timer.hpp"
 #include <fstream>
 #include <limits>
 #include <iomanip>

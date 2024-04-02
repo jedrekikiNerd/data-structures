@@ -1,16 +1,16 @@
-#include "Timer.h"
-#include "data_structures/I_data_structure.h"
-#include "data_structures/list.h"
-#include "data_structures/list_ht.h"
-#include "data_structures/list_double.h"
-#include "data_structures/dynamic_array.h"
+#include "Timer.hpp"
+#include "data_structures/I_data_structure.hpp"
+#include "data_structures/list.hpp"
+#include "data_structures/list_ht.hpp"
+#include "data_structures/list_double.hpp"
+#include "data_structures/dynamic_array.hpp"
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <random>
 #include <filesystem>
 #include <sstream>
-#include "ui_actions.h"
+#include "ui_actions.hpp"
 #include <iomanip>
 
 namespace fs = std::filesystem;

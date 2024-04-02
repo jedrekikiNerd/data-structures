@@ -1,14 +1,14 @@
 #include <curses.h>
 #include <iostream>
-#include "ui.h"
-#include "generator.h"
-#include "ui_actions.h"
-#include "data_structures/list.h"
-#include "data_structures/list_ht.h"
-#include "data_structures/list_double.h"
-#include "data_structures/dynamic_array.h"
+#include "ui.hpp"
+#include "generator.hpp"
+#include "ui_actions.hpp"
+#include "data_structures/list.hpp"
+#include "data_structures/list_ht.hpp"
+#include "data_structures/list_double.hpp"
+#include "data_structures/dynamic_array.hpp"
 #include "data_structures/int_structures_manual_ui.hpp"
-#include "test.h"
+#include "test.hpp"
 
 
 // Create and return menu for list

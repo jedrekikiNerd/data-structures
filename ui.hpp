@@ -2,8 +2,8 @@
 #define UI_H
 #include <iostream>
 #include <functional>
-#include "data_structures/I_data_structure.h"
-#include "ui_actions.h"
+#include "data_structures/I_data_structure.hpp"
+#include "ui_actions.hpp"
 
 // Key definitions for handling UI interactions with keyboard
 #define MY_KEY_EXIT 27

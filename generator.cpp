@@ -5,8 +5,8 @@
 #include <string>
 #include <filesystem>
 #include <random>
-#include "ui_actions.h"
-#include "generator.h"
+#include "ui_actions.hpp"
+#include "generator.hpp"
 
 using namespace std;
 namespace fs = std::filesystem;

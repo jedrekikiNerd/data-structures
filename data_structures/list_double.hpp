@@ -3,9 +3,9 @@
 
 #include <iostream>
 #include <stdexcept>
-#include "I_data_structure.h"
+#include "I_data_structure.hpp"
 #include <type_traits>
-#include "nodes.h"
+#include "nodes.hpp"
 
 
 /**

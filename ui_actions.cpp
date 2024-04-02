@@ -16,7 +16,7 @@
  * 4 - input error
  */
 
-#include "ui_actions.h"
+#include "ui_actions.hpp"
 #include <curses.h>
 #include <iostream>
 

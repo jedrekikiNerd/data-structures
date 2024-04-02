@@ -1,29 +1,28 @@
-#ifndef LISTHT
-#define LISTHT
+#ifndef LISTH
+#define LISTH
 
 #include <iostream>
 #include <stdexcept>
-#include "I_data_structure.h"
+#include "I_data_structure.hpp"
 #include <type_traits>
-#include "nodes.h"
+#include "nodes.hpp"
 
 
 /**
- * SingleListHT class that represents a list data structure with methods
+ * SingleListH class that represents a list data structure with methodes
  * 
  */
 template <typename Type>
-class SingleListHT : public IDataStructure<Type>
+class SingleListH : public IDataStructure<Type>
 {
 private:
     Node<Type>* head;
-    Node<Type>* tail;
     unsigned int size;
 
 
 public:
-    SingleListHT() : head(nullptr), tail(nullptr), size(0) {}
-    ~SingleListHT() {
+    SingleListH() : head(nullptr), size(0) {}
+    ~SingleListH() {
         clear();
     }
 
@@ -31,12 +30,9 @@ public:
     void add_front(Type value)
     {
         Node<Type>* new_node = new Node<Type>(value);
+        // Check if not null
         if (head == nullptr)
-        {
-            // If null set head and tail to new node
             head = new_node;
-            tail = new_node;
-        }
         else
         {
             // Add new head but previously add pointer to previous head
@@ -51,17 +47,17 @@ public:
     {
         Node<Type>* new_node = new Node<Type>(value);
         if (head == nullptr)
-        {
-            // If head null then add new node to both head and tail pointer
             head = new_node;
-            tail = new_node;
-        }
         else
         {
-            // Add new tail but previously set previous tail next element to new node
-            tail->next_element = new_node;
-            tail = new_node;
-            
+            // Go through list until nullptr (last element is found)
+            Node<Type>* last_node = head;
+            while(last_node->next_element != nullptr)
+            {
+                last_node = last_node->next_element;
+            }
+            // add new last node
+            last_node->next_element = new_node;
         }
         size++;
     }
@@ -81,13 +77,6 @@ public:
             if (position == 0)
             {
                 add_front(value);
-                return;
-            }
-
-            // If size just perform add back
-            if (position == size)
-            {
-                add_back(value);
                 return;
             }
 
@@ -114,9 +103,6 @@ public:
             Node<Type>* temp = head;
             head = head->next_element;
             delete temp;
-            // If there was only one element then set also tail to nullptr
-            if(head == nullptr)
-                tail = nullptr;
             size--;
         }
     }
@@ -127,24 +113,22 @@ public:
         if (head != nullptr)
         {
             // if size 1 just delete head
-            if (head == tail)
+            if (head->next_element == nullptr)
             {
                 delete head;
-                tail = nullptr;
                 head = nullptr;
             }
             else
             {
                 Node<Type>* prev_last_node = head;
                 // We have to reach last element-1 in order to change pointers and then delete last one
-                while(prev_last_node->next_element != tail)
+                while(prev_last_node->next_element->next_element != nullptr)
                 {
                     prev_last_node = prev_last_node->next_element;
                 }
                 // We delete last element and set nullptr for prev_last
-                delete tail;
-                tail = prev_last_node;
-                tail->next_element = nullptr;
+                delete prev_last_node->next_element;
+                prev_last_node->next_element = nullptr;
             }
             size--;
         }
@@ -168,20 +152,17 @@ public:
                 return;
             }
 
+            // Move until desired position
             Node<Type>* currrent_node = head;
-            // Move to desired position
             for(unsigned int i=1; i<position; i++)
             {
                 currrent_node = currrent_node->next_element;
             }
             // Reasign pointers of neighbours and after that delete reached node
             Node<Type>* temp = currrent_node->next_element;
-            currrent_node->next_element = temp->next_element;
+            currrent_node->next_element = currrent_node->next_element->next_element;
             delete temp;
-            if (currrent_node->next_element == nullptr)
-                tail = currrent_node;
             size--;
-
         }
     }
 
@@ -204,9 +185,15 @@ public:
     // Returns last value (tail value)
     Type last_value()
     {
-        if (tail==nullptr)
+        if (head==nullptr)
             throw std::out_of_range("Index is out of range");
-        return tail->value;
+        Node<Type>* last_node = head;
+        // Move until last position
+        while(last_node->next_element != nullptr)
+        {
+            last_node = last_node->next_element;
+        }
+        return last_node->value;
     }
 
     Type value_at(unsigned int position)
@@ -216,9 +203,6 @@ public:
             throw std::out_of_range("Index is out of range");
         else
         {
-            // Return tail if position is size-1
-            if(position == size-1)
-                return tail->value;
             // Move until desired position
             Node<Type>* current_node = head;
             for(unsigned int i=0; i<position; i++)
@@ -271,7 +255,7 @@ public:
     // Return size of data structure in bytes
     unsigned int get_byte_size()
     {
-        return sizeof(SingleListHT) + sizeof(Node<Type>)*size;
+        return sizeof(SingleListH) + sizeof(Node<Type>)*size;
     }
 
     // Change value at given position
@@ -280,21 +264,12 @@ public:
         if (position < 0 || position >= size)
             return;
             //throw std::out_of_range("Position out of range");
-    
-        if(position == size-1)
-        {
-            tail->value = value;
-            return;
-        }
-
         // Reach desired position
         Node<Type>* current_node = head;
-
         for(unsigned int i=0; i<position; i++)
             current_node=current_node->next_element;
-        
-        // Perform value change
         current_node->value = value;
+        
     }
 };
 #endif
