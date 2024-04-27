@@ -118,14 +118,12 @@ public:
 
     unsigned int find(Type value) override
     {
-        // We don't support finding element
-        throw std::logic_error("Finding value in heap is not supported.");
+        return heap[0];
     }
 
     void change_at(Type value, unsigned int position) override
     {
-        // We don't support change at
-        throw std::logic_error("Changing value at a specific position in heap is not supported.");
+        heap.change_at(value, position);
     }
 
     std::string get_as_string() override
