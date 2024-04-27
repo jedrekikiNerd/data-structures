@@ -27,7 +27,7 @@ public:
     }
 
     // Adds element where head ptr is pointing
-    void add_front(Type value)
+    void add_front(Type value) override
     {
         Node<Type>* new_node = new Node<Type>(value);
         // Check if not null
@@ -43,7 +43,7 @@ public:
     }
 
     // Adds element to the tail of the list
-    void add_back(Type value)
+    void add_back(Type value) override
     {
         Node<Type>* new_node = new Node<Type>(value);
         if (head == nullptr)
@@ -63,7 +63,7 @@ public:
     }
 
     // Adds element on specified index starting counting from head
-    void add_at(Type value, unsigned int position)
+    void add_at(Type value, unsigned int position) override
     {
         // Check if position is valid
         if (position > size or position < 0)
@@ -95,7 +95,7 @@ public:
     }
 
     // Removes first element - based on head pointer
-    void remove_front()
+    void remove_front() override
     {
         if (head != nullptr) 
         {
@@ -108,7 +108,7 @@ public:
     }
 
     // Removes last element - needs to iterate from head to tail
-    void remove_back()
+    void remove_back() override
     {
         if (head != nullptr)
         {
@@ -135,7 +135,7 @@ public:
     }
 
     // Removes element at specified position counting from head (0)
-    void remove_at(unsigned int position)
+    void remove_at(unsigned int position) override
     {
         // Check if position is valid
         if (position >= size or position < 0)
@@ -167,7 +167,7 @@ public:
     }
 
     // Clears all nodes stored by this list, useful for deconstructing to free all memory
-    void clear()
+    void clear() override
     {
         // Until head is not nullptr perform delete front
         while(head)
@@ -175,7 +175,7 @@ public:
     }
 
     // Returns first value (head value)
-    Type first_value()
+    Type first_value() override
     {
         if (head==nullptr)
             throw std::out_of_range("Index is out of range");
@@ -183,7 +183,7 @@ public:
     }
 
     // Returns last value (tail value)
-    Type last_value()
+    Type last_value() override
     {
         if (head==nullptr)
             throw std::out_of_range("Index is out of range");
@@ -196,7 +196,7 @@ public:
         return last_node->value;
     }
 
-    Type value_at(unsigned int position)
+    Type value_at(unsigned int position) override
     {
         // Check if position is valid
         if (position >= size or position < 0)
@@ -212,13 +212,13 @@ public:
     }
 
     // Returns size of list
-    unsigned int get_size()
+    unsigned int get_size() override
     {
         return size;
     }
 
     // Returns position of element
-    unsigned int find(Type value)
+    unsigned int find(Type value) override
     {
         // Go through every element until value is equal to given value - then return counted position
         Node<Type>* current_node = head;
@@ -235,7 +235,7 @@ public:
 
     // Returns string representation of data inside list
     // Useful for printing inside our UI
-    std::string get_as_string()
+    std::string get_as_string() override
     {
         std::string output = "List[";
         Node<Type>* current_node = head;
@@ -253,13 +253,13 @@ public:
     }
 
     // Return size of data structure in bytes
-    unsigned int get_byte_size()
+    unsigned int get_byte_size() override
     {
         return sizeof(SingleListH) + sizeof(Node<Type>)*size;
     }
 
     // Change value at given position
-    void change_at(Type value, unsigned int position)
+    void change_at(Type value, unsigned int position) override
     {
         if (position < 0 || position >= size)
             return;
