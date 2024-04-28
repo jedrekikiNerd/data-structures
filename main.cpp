@@ -7,9 +7,31 @@
 #include "data_structures/list_ht.hpp"
 #include "data_structures/list_double.hpp"
 #include "data_structures/dynamic_array.hpp"
+#include "data_structures/heap.hpp"
 #include "data_structures/int_structures_manual_ui.hpp"
 #include "test.hpp"
 
+
+// Create and return menu for list
+MenuDt<int>* setup_heap_menu()
+{
+    MenuDt<int> *heap_menu = new MenuDt<int>(new SingleListH<int>);
+    heap_menu->add_item_dt("|Dodaj z przodu", add_front);
+    heap_menu->add_item_dt("|Dodaj z tyłu", add_back);
+    heap_menu->add_item_dt("|Dodaj na wybranej pozycji", add_at);
+    heap_menu->add_item_dt("|Usuń z przodu", remove_front);
+    heap_menu->add_item_dt("|Usuń z tyłu", remove_back);
+    heap_menu->add_item_dt("|Usuń na pozycji", remove_at);
+    heap_menu->add_item_dt("|Wyczyść", clear_dt);
+    heap_menu->add_item_dt("|Znajdź element", find);
+    heap_menu->add_item_dt("|Zmień wartość na danym polu", change_at);
+    heap_menu->add_item_dt("|Wypisz rozmiar", get_size);
+    heap_menu->add_item_dt("|Wczytaj z pliku", fill_from_file);
+    heap_menu->add_item("|Wyświetlanie czasu", change_print_flag);
+    heap_menu->add_item("|Wróć do wyboru struktur", exit_action);
+
+    return heap_menu;
+}
 
 // Create and return menu for list
 MenuDt<int>* setup_list_menu()

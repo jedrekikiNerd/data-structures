@@ -144,7 +144,16 @@ public:
 
     std::string get_as_string() override
     {
-        // We don't support getting as string
-        return "";
+        std::string output = "Heap[";
+        if (std::is_integral_v<Type> != true)
+            return "ERROR: typename of this list is not supported by this method!";
+        for(int i=0; i<heap.get_size(); i++)
+        {
+            output += std::to_string(heap.value_at(i));
+            if (i != heap.get_size()-1)
+                output += ", ";
+        }
+        output += "]";
+        return output;
     }
 };
