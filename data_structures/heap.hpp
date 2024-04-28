@@ -44,6 +44,7 @@ public:
 
         while (index > 0 and heap[(index - 1) / 2] < heap[index])
         {
+            // We go up the heap
             Type tmp = heap[index];
             heap[index] = heap[(index - 1) / 2];
             heap[(index - 1) / 2] = tmp;
@@ -123,7 +124,22 @@ public:
 
     void change_at(Type value, unsigned int position) override
     {
-        heap.change_at(value, position);
+    if (position >= heap.get_size())
+        throw std::out_of_range("Index out of range.");
+    Type old_value = heap[position];
+    heap[position] = value;
+    if (value > old_value)
+        while (position > 0 and heap[(position - 1) / 2] < heap[position])
+        {
+            // We go up the heap
+            Type tmp = heap[position];
+            heap[position] = heap[(position - 1) / 2]
+            heap[(index - 1) / 2] = tmp;
+            position = (position - 1) / 2;
+        }
+    else
+        // Heapify
+        heapify(position);
     }
 
     std::string get_as_string() override
