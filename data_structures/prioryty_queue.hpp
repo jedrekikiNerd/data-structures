@@ -30,7 +30,7 @@ void add_back(Type element, int priority) override
         list.add_back(item);
     } else {
         // Znajdź odpowiednie miejsce dla nowego elementu według priorytetu
-        DoubleNode<PriorityItem<Type>>* current = list.head;
+        DoubleNode<PriorityItem<Type>>* current = list.get_head() ;
         while (current != nullptr) {
             current = current->next_element;
         }
@@ -81,7 +81,7 @@ void change_at(unsigned int position, int newPriority) override
     if (position >= list.size) {
         throw std::out_of_range("Position out of range");
     }
-        Node<Type>* current = list.head;
+        Node<Type>* current = list.get_head();
     for (unsigned int i = 0; i < position; ++i) 
     {
         current = current->next;
@@ -99,15 +99,15 @@ void change_at(unsigned int position, int newPriority) override
         if (next) {
             next->prev = prev;
         } else {
-            list.tail = prev;
+            list.get_tail() = prev;
         }
         prev->next = next;
 
         // Umieszczenie aktualnego węzła na początku listy (głowa)
         current->prev = nullptr;
-        current->next = list.head;
-        list.head->prev = current;
-        list.head = current;
+        current->next = list.get_head();
+        list.get_head()->prev = current;
+        list.get_head() = current;
     }
 
     while (current->next && current->next->priority > newPriority) {
@@ -120,13 +120,13 @@ void change_at(unsigned int position, int newPriority) override
         next->prev = prev;
 
         // Umieszczenie aktualnego węzła na końcu listy (ogon)
-        current->prev = list.tail;
+        current->prev = list.get_tail();
         current->next = nullptr;
 
-        if ( list.tail) {
-            tail->next = current;
+        if ( list.get_tail()) {
+            list.get_tai()->next = current;
         }
-        list.tail = current;
+        list.get_tail() = current;
     }
 }
 // extreact-max
