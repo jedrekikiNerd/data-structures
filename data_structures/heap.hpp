@@ -1,3 +1,6 @@
+#ifndef HEAP
+#define HEAP
+
 #include "dynamic_array.hpp"
 #include "I_data_structure.hpp"
 
@@ -37,7 +40,7 @@ public:
         throw std::logic_error("Adding at the front of heap is not supported.");
     }
 
-    void add_back(Type value) override
+    void add_back(Type value, int additional = 0) override
     {
         heap.add_back(value);
         int index = heap.get_size() - 1;
@@ -113,8 +116,7 @@ public:
 
     unsigned int get_byte_size() override
     {
-        // We don't support getting byte size
-        throw std::logic_error("Getting byte size of heap is not supported.");
+        return sizeof(Heap) + sizeof(heap);
     }
 
     unsigned int find(Type value) override
@@ -122,7 +124,7 @@ public:
         return heap[0];
     }
 
-    void change_at(Type value, unsigned int position) override
+    void change_at(Type value, unsigned int position, int additional = 0) override
     {
     if (position >= heap.get_size())
         throw std::out_of_range("Index out of range.");
@@ -133,8 +135,8 @@ public:
         {
             // We go up the heap
             Type tmp = heap[position];
-            heap[position] = heap[(position - 1) / 2]
-            heap[(index - 1) / 2] = tmp;
+            heap[position] = heap[(position - 1) / 2];
+            heap[(position - 1) / 2] = tmp;
             position = (position - 1) / 2;
         }
     else
@@ -157,3 +159,5 @@ public:
         return output;
     }
 };
+
+#endif

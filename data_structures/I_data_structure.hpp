@@ -14,7 +14,7 @@ public:
     // Adds value on first index
     virtual void add_front(Type value) = 0;
     // Adds value on last index
-    virtual void add_back(Type value) = 0;
+    virtual void add_back(Type value, int additional=0) = 0;
     // Adds value on given index
     virtual void add_at(Type value, unsigned int position) = 0;
 
@@ -40,8 +40,10 @@ public:
     virtual unsigned int get_byte_size() = 0;
     // Returns index at which first occurrence of given value is found
     virtual unsigned int find(Type value) = 0;
+    // Returns max priority element
+    virtual Type find_max(Type value) {};
     // Changes value at given index
-    virtual void change_at(Type value, unsigned int position) = 0;
+    virtual void change_at(Type value, unsigned int position, int additional=0) = 0;
     // Returns data structure representation as string (useful for displaying)
     virtual std::string get_as_string() = 0;
 

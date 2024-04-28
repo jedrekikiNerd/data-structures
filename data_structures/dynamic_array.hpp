@@ -1,3 +1,6 @@
+#ifndef DYNARRAY
+#define DYNARRAY
+
 #include "I_data_structure.hpp"
 #include <iostream>
 #include <type_traits>
@@ -23,7 +26,7 @@ public:
         delete[] arr;
     }
 
-    void add_back(Type value) 
+    void add_back(Type value, int additional = 0) 
     {
         if (size >= capacity)
         {
@@ -115,7 +118,7 @@ public:
             //after removal the number of elements is less than half the capacity of the array, 
             //reduces the capacity of the array to half.
             unsigned int newCapacity = capacity /2;
-            Type *tempArr = new int[newCapacity];
+            Type *tempArr = new Type[newCapacity];
             for (unsigned int i=0; i < size-1;i++){
                 tempArr[i] = arr[i+1];
             }
@@ -264,7 +267,7 @@ public:
     }
 
     // Change value at given position
-    void change_at(Type value, unsigned int position)
+    void change_at(Type value, unsigned int position, int additional = 0)
     {
         if (position < 0 || position >= size)
             return;
@@ -272,3 +275,5 @@ public:
         arr[position] = value;
     }
 };
+
+#endif

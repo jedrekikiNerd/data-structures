@@ -50,4 +50,18 @@ int fill_from_file(IDataStructure<int> *dt);
 // Agent bewteen UI and data structure change_at
 int change_at(IDataStructure<int> *dt);
 
+// Agent between UI and data structure add_back
+int insert(IDataStructure<int> *dt);
+
+// Agent between UI and data structure first_value
+int extract(IDataStructure<int> *dt);
+
+// Agent between UI and data structure find
+int findmax_q(IDataStructure<int> *dt);
+
+// Agent bewteen UI and data structure change_at
+int change_at_q(IDataStructure<int> *dt);
+
+int fill_from_file_q(IDataStructure<int> *dt);
+
 #endif

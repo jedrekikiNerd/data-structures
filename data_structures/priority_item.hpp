@@ -2,6 +2,7 @@
 template <typename Type>
 class PriorityItem
 {
+public:
     Type value;
     int priority;
 
