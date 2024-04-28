@@ -5,88 +5,165 @@
 
 using namespace std;
 
+
+
+// struct Node {
+//     Type data;
+//     int priority;
+//     Node* prev;
+//     Node* next;
+
+//     Node(Type value, int prio, Node* p = nullptr, Node* n = nullptr)
+//         : data(value), priority(prio), prev(p), next(n) {}
+// };
 template <typename Type>
 class PriorityQueue : public IDataStructure<Type>
 {
 private:
-    DoubleListHT<pair<Type, int>> queue; // Używamy DoubleListHT do przechowywania par (element, priorytet)
+    Node<Type>* head;
+    Node<Type>* tail;
 public:
+ PriorityQueue() : head(nullptr), tail(nullptr) {}
+    
+void insert(Type element, int priority) 
+{
+    Node<Type>* newNode = new Node<Type>(element, priority);
 
-    // insert
-    void add_back(Type element, int priority)
+    if (!head) 
     {
-        // Dodawanie elementu do kolejki przy użyciu listy dwukierunkowej
-        queue.add_back(make_pair(element, priority));
-    }
-
-    // extractFirst
-    pair<Type, int> first_value() override
-    {
-        // Usuwanie i zwracanie maksymalnego elementu z kolejki
-        // Wykorzystujemy odpowiednią operację z implementacji listy dwukierunkowej
-        pair<Type, int> maxElement = queue.last_value();
-        queue.remove_back();
-        return maxElement;
-    }
-
-    // findMax
-    pair<Type, int> find() override
-    {
-        // Znajdowanie i zwracanie maksymalnego elementu z kolejki
-        // Wykorzystujemy odpowiednią operację z implementacji listy dwukierunkowej
-        return queue.last_value();
-    }
-
-    // modifyPriority
-    void change_at(Type element, int newPriority) override
-    {
-        // Modyfikowanie priorytetu elementu w kolejce
-        // Wykorzystujemy odpowiednią operację z implementacji listy dwukierunkowej
-        unsigned int index = 0;
-        while (index < queue.get_size())
+        // Lista jest pusta
+        head = tail = newNode;
+    } 
+     else 
         {
-            if (queue.value_at(index).first == element)
-            {
-                queue.change_at(make_pair(element, newPriority), index);
-                return;
-            }
-            index++;
+            // Wstawianie elementu w odpowiednie miejsce według priorytetu (malejąco)
+        Node<Type>* current = head;
+        while (current && current->priority >= priority) 
+        {
+            current = current->next;
         }
+
+            if (!current) 
+            {
+                // Wstawianie na końcu listy (najniższy priorytet)
+                newNode->prev = tail;
+                tail->next = newNode;
+                tail = newNode;
+            } else 
+            {
+                // Wstawianie przed bieżącym węzłem
+                newNode->prev = current->prev;
+                newNode->next = current;
+                if (current == head) 
+                {
+                    head = newNode;
+                } else 
+                {
+                    current->prev->next = newNode;
+                }
+                current->prev = newNode;
+            }
+        }
+}
+
+
+Type extractMax() 
+{
+    if (!head)
+    {
+        return 0;
     }
 
-    int size()
+    Type element = head->data;
+    Node<Type>* temp = head;
+
+    if (head == tail) 
     {
-        return queue.get_size();
+        // Jedyny element w kolejce
+        head = tail = nullptr;
+    } else
+    {
+        // Usuwanie pierwszego elementu
+        head = head->next;
+        head->prev = nullptr;
     }
 
-    void add_front(Type value) override
-    {
-        // We don't support heap add_front
-        throw std::logic_error("Adding at the front of heap is not supported.");
-    }
+    delete temp;
+    return element;
+}
 
-    void add_at(Type value, unsigned int position) override
-    {
-        // We don't support heap add_at
-        throw std::logic_error("Adding at a specific position in heap is not supported.");
-    }
+void modify_key(Type element, int newPriority) 
+{
+        Node<Type>* current = head;
+        while (current) 
+        {
+            if (current->data == element) 
+            {
+                current->priority = newPriority;
+                // Przywróć porządek listy po zmianie priorytetu
+                if (current != head) 
+                {
+                    // Przesuń węzeł w górę lub w dół, aby zachować porządek
+                    if (current->prev->priority < newPriority) 
+                    {
+                        // Węzeł ma wyższy priorytet niż poprzedni, przesuń w górę
+                        Node<Type>* prev = current->prev;
+                        Node<Type>* next = current->next;
+                        prev->next = next;
+                        if (next) 
+                        {
+                            next->prev = prev;
+                        } else 
+                        {
+                            tail = prev;
+                        }
+                        current->prev = nullptr;
+                        current->next = head;
+                        head->prev = current;
+                        head = current;
+                    } else if (current->next && current->next->priority > newPriority) 
+                    {
+                        // Węzeł ma niższy priorytet niż następny, przesuń w dół
+                        Node<Type>* next = current->next;
+                        current->prev->next = next;
+                        next->prev = current->prev;
+                        current->prev = tail;
+                        current->next = nullptr;
+                        tail->next = current;
+                        tail = current;
+                    }
+                }
+                break;
+            }
+            current = current->next;
+        }
+}
 
-    void remove_back() override
-    {
-        // We don't support remove_back
-        throw std::logic_error("Removing from the back of heap is not supported.");
-    }
 
-    void remove_front() override
-    {
-        // We don't support remove_back
-        throw std::logic_error("Removing from the back of heap is not supported.");
-    }
 
-    void remove_at(unsigned int position) override
+bool empty() const 
+{
+    return head == nullptr;
+}
+
+
+Type find_max() const {
+    if (!head) 
     {
-        // We don't support remove_at
-        throw std::logic_error("Removing from a specific position in heap is not supported.");
+     return 0;
+    }
+    return head->data;
+}
+
+    int return_size() const {
+        int size = 0;
+        Node<Type>* current = head;
+    while (current) 
+    {
+        size++;
+        current = current->next;
+    }
+        return size;
     }
 
     void clear() override
@@ -94,43 +171,5 @@ public:
         queue.clear();
     }
 
-    Type last_value() override
-    {
-        // We don't support getting last value
-        throw std::logic_error("Getting last value of heap is not supported.");
-    }
-
-    Type value_at(unsigned int position) override
-    {
-        // We don't support value at
-        throw std::logic_error("Getting value at a specific position in heap is not supported.");
-    }
-
-    unsigned int get_byte_size() override
-    {
-        // We don't support getting byte size
-        throw std::logic_error("Getting byte size of heap is not supported.");
-    }
-
-    void change_at(Type value, unsigned int position) override
-    {
-        // We don't support change at
-        throw std::logic_error("Changing value at a specific position in heap is not supported.");
-    }
-
-    std::string get_as_string() override
-    {
-        std::string output = "PriorQueueOnList[";
-        if (std::is_integral_v<Type> != true)
-            return "ERROR: typename of this list is not supported by this method!";
-        for(int i=0; i<queue.get_size(); i++)
-        {
-            output += std::to_string(queue.value_at(i));
-            if (i != queue.get_size()-1)
-                output += ", ";
-        }
-        output += "]";
-        return output;
-    }
 };
 #endif
