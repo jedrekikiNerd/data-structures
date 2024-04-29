@@ -263,7 +263,7 @@ int findmax_q(IDataStructure<int> *dt)
     Timer timer;
     timer.start();
     PriorityItem<int> element(0, 0);
-    unsigned int val = dt->find(0);
+    unsigned int val = dt->find_max(0);
     timer.stop();
     if (val == UINT_MAX)
     {

@@ -3,6 +3,7 @@
 
 #include "dynamic_array.hpp"
 #include "I_data_structure.hpp"
+#include "to_string_functions.hpp"
 
 
 // Heap class with some methods, but most of them is still not supported
@@ -12,7 +13,8 @@ class Heap : public IDataStructure<Type>
 private:
     DynamicArray<Type> heap;
 
-    void heapify(int index)
+    //heapify a subtree that starts at index
+    void heapify_down(int index)
     {
         int largest = index;
         int left = 2 * index + 1;
@@ -29,7 +31,23 @@ private:
             Type tmp = heap[index];
             heap[index] = heap[largest];
             heap[largest] = tmp;
-            heapify(largest);
+            heapify_down(largest);
+        }
+    }
+
+    //heapify up until everything is at its place
+    void heapify_up(int index)
+    {
+        int parent_index = (index - 1) / 2;
+        if (parent_index >= 0)
+        {
+            if (heap[index] > heap[parent_index])
+            {
+                Type tmp = heap[index];
+                heap[index] = heap[parent_index];
+                heap[parent_index] = tmp;
+                heapify_up(parent_index); 
+            }
         }
     }
 
@@ -43,16 +61,7 @@ public:
     void add_back(Type value, int additional = 0) override
     {
         heap.add_back(value);
-        int index = heap.get_size() - 1;
-
-        while (index > 0 and heap[(index - 1) / 2] < heap[index])
-        {
-            // We go up the heap
-            Type tmp = heap[index];
-            heap[index] = heap[(index - 1) / 2];
-            heap[(index - 1) / 2] = tmp;
-            index = (index - 1) / 2;
-        }
+        heapify_up(heap.get_size()-1);
     }
 
     void add_at(Type value, unsigned int position) override
@@ -70,7 +79,7 @@ public:
 
         heap[0] = heap.last_value();
         heap.remove_back();
-        heapify(0);
+        heapify_down(0);
     }
 
     void remove_back() override
@@ -105,8 +114,7 @@ public:
 
     Type value_at(unsigned int position) override
     {
-        // We don't support value at
-        throw std::logic_error("Getting value at a specific position in heap is not supported.");
+        return heap[position];
     }
 
     unsigned int get_size() override
@@ -121,27 +129,21 @@ public:
 
     unsigned int find(Type value) override
     {
-        return heap[0];
+        // We don't support value at
+        throw std::logic_error("Find on heap is not supported.");
     }
 
     void change_at(Type value, unsigned int position, int additional = 0) override
     {
-    if (position >= heap.get_size())
-        throw std::out_of_range("Index out of range.");
-    Type old_value = heap[position];
-    heap[position] = value;
-    if (value > old_value)
-        while (position > 0 and heap[(position - 1) / 2] < heap[position])
-        {
-            // We go up the heap
-            Type tmp = heap[position];
-            heap[position] = heap[(position - 1) / 2];
-            heap[(position - 1) / 2] = tmp;
-            position = (position - 1) / 2;
-        }
-    else
-        // Heapify
-        heapify(position);
+        if (position >= heap.get_size())
+            throw std::out_of_range("Index out of range.");
+        Type old_value = heap[position];
+        heap[position] = value;
+        if (value > old_value)
+           heapify_up(position);
+        else
+            // Heapify down after change to maintain order
+            heapify_down(position);
     }
 
     std::string get_as_string() override
@@ -151,7 +153,7 @@ public:
             return "ERROR: typename of this list is not supported by this method!";
         for(int i=0; i<heap.get_size(); i++)
         {
-            output += std::to_string(heap.value_at(i));
+            output += choose_to_string(heap.value_at(i));
             if (i != heap.get_size()-1)
                 output += ", ";
         }

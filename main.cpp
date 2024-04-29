@@ -1,5 +1,6 @@
 #include <curses.h>
 #include <iostream>
+#include "data_structures/priority_item.hpp"
 #include "ui.hpp"
 #include "generator.hpp"
 #include "ui_actions.hpp"

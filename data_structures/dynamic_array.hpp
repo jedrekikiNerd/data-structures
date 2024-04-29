@@ -2,6 +2,7 @@
 #define DYNARRAY
 
 #include "I_data_structure.hpp"
+#include "to_string_functions.hpp"
 #include <iostream>
 #include <type_traits>
 
@@ -252,7 +253,7 @@ public:
         std::string output = "DynamicArray[";
         for (unsigned int i = 0; i < size; i++)
         {
-            output += std::to_string(arr[i]);
+            output += choose_to_string(arr[i]);
             if ( i < size-1 )
                 output += ", ";
         }

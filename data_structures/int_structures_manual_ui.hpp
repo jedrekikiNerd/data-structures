@@ -39,7 +39,7 @@ int value_at(IDataStructure<int> *dt);
 int get_size(IDataStructure<int> *dt);
 
 // Agent between UI and data structure find
-int find(IDataStructure<int> *dt);
+int find_index(IDataStructure<int> *dt);
 
 // Agent between UI and data structure get_as_string
 int get_as_string(IDataStructure<int> *dt);

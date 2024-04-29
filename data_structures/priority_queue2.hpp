@@ -4,8 +4,6 @@
 #include "heap.hpp"
 #include "priority_item.hpp" 
 
-using namespace std;
-
 template <typename Type>
 class PriorityQueueHeap : public IDataStructure<Type>
 {
@@ -57,31 +55,31 @@ public:
     void add_front(Type value) override
     {
         // We don't support heap add_front
-        throw std::logic_error("Adding at the front of heap is not supported.");
+        throw std::logic_error("Adding at the front of priority queue is not supported.");
     }
 
     void add_at(Type value, unsigned int position) override
     {
         // We don't support heap add_at
-        throw std::logic_error("Adding at a specific position in heap is not supported.");
+        throw std::logic_error("Adding at a specific position in priority queue is not supported.");
     }
 
     void remove_back() override
     {
         // We don't support remove_back
-        throw std::logic_error("Removing from the back of heap is not supported.");
+        throw std::logic_error("Removing from the back of priority queue is not supported.");
     }
 
     void remove_front() override
     {
         // We don't support remove_back
-        throw std::logic_error("Removing from the back of heap is not supported.");
+        throw std::logic_error("Removing from the back of priority queue is not supported.");
     }
 
     void remove_at(unsigned int position) override
     {
         // We don't support remove_at
-        throw std::logic_error("Removing from a specific position in heap is not supported.");
+        throw std::logic_error("Removing from a specific position in priority queue is not supported.");
     }
 
     void clear() override
@@ -93,19 +91,19 @@ public:
     unsigned int find(Type value) override
     {
         // We don't support index of searched value
-        throw std::logic_error("Getting last value of heap is not supported.");
+        throw std::logic_error("Getting last value of priority queue is not supported.");
     }
 
     Type last_value() override
     {
         // We don't support getting last value
-        throw std::logic_error("Getting last value of heap is not supported.");
+        throw std::logic_error("Getting last value of priority queue is not supported.");
     }
 
     Type value_at(unsigned int position) override
     {
         // We don't support value at
-        throw std::logic_error("Getting value at a specific position in heap is not supported.");
+        throw std::logic_error("Getting value at a specific position in priority queue is not supported.");
     }
 
     unsigned int get_byte_size() override
