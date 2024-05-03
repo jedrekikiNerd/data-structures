@@ -70,7 +70,7 @@ void change_at(unsigned int position, int newPriority) override
     if (position < list.get_size())
     {
         // Usuwamy element na określonej pozycji i dodajemy go ponownie z nowym priorytetem
-        Type element_value = list.value_at(position).getValue();
+        Type element_value = list.value_at(position);
         list.remove_at(position);
         insert(element_value, new_priority);
     }

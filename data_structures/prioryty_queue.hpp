@@ -76,7 +76,7 @@ void remove_back() override
     }
 
 
-void change_at(unsigned int position, int newPriority) override
+void change_at(Type value,unsigned int position, int newPriority=0) override
 {
     if (position >= list.size) {
         throw std::out_of_range("Position out of range");
@@ -88,7 +88,7 @@ void change_at(unsigned int position, int newPriority) override
     }
         // Zmiana priorytetu węzła na nowy priorytet
     current->priority = newPriority;
-
+    current->value = value
     // Przywróć porządek listy po zmianie priorytetu
     while (current->prev && current->prev->priority < newPriority) {
         // Węzeł ma wyższy priorytet niż poprzedni, przesuń w górę
@@ -132,23 +132,16 @@ void change_at(unsigned int position, int newPriority) override
 // extreact-max
 Type first_value() override 
 {
-    Type maxValue = list.head->value;
+    Type maxValue = list.gethead()->value;
     list.remove_front();
     return maxValue;
 }
 
 unsigned int find() override
     {
-        int Value = list.head->value;
+        int Value = list.gethead()->value;
         return Value;
     }
-
-
-bool empty() 
-{
-    return head == nullptr;
-}
-
 
 Type find_max() {
     if (get_size() > 1);
@@ -168,5 +161,43 @@ unsigned int  get_size() override
         throw std::logic_error("Getting byte size of heap is not supported.");
     }
 
+void clear() override
+    {
+        list.clear();
+    }
+
+std::string get_as_string() override
+    {
+        std::string output = "PriorQueueOnList[";
+        if (std::is_integral_v<Type> != true)
+            return "ERROR: typename of this list is not supported by this method!";
+        for(int i=0; i<list.get_size(); i++)
+        {
+            output += std::to_string(list.value_at(i));
+            if (i != list.get_size()-1)
+                output += ", ";
+        }
+        output += "]";
+        return output;
+    }
+
+
+
+Type value_at(unsigned int position) override
+    {
+        // We don't support value at
+        throw std::logic_error("Getting value at a specific position in heap is not supported.");
+    }
+
+pair<Type, int> find() override
+    {
+        // We don't support value at
+        throw std::logic_error("Getting value at a specific position in heap is not supported.");
+    }
+Type last_value() override
+    {
+        // We don't support getting last value
+        throw std::logic_error("Getting last value of heap is not supported.");
+    }
 };
 #endif
