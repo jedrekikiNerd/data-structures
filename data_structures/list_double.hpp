@@ -50,7 +50,7 @@ public:
     }
 
     // Adds element to the tail of the list
-    void add_back(Type value) override
+    void add_back(Type value, int additional = 0) override
     {
         DoubleNode<Type>* new_node = new DoubleNode<Type>(value);
         if (head == nullptr)
@@ -323,7 +323,7 @@ public:
     }
 
     // Change value at given position
-    void change_at(Type value, unsigned int position) override
+    void change_at(Type value, unsigned int position, int additional = 0) override
     {
         if (position < 0 || position >= size)
             return;

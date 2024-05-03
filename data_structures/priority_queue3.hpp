@@ -8,7 +8,7 @@ using namespace std;
 
 
 template <typename Type>
-class PriorityQueue : public IDataStructure<Type>
+class PriorityQueue3 : public IDataStructure<Type>
 {
 private:
    DoubleListHT<PriorityItem<Type>> list;

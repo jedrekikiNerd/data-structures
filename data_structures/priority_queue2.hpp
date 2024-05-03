@@ -4,8 +4,6 @@
 #include "heap.hpp"
 #include "priority_item.hpp" 
 
-using namespace std;
-
 template <typename Type>
 class PriorityQueueHeap : public IDataStructure<Type>
 {
@@ -14,48 +12,42 @@ private:
 public:
 
     // insert
-    void add_back(Type element, int priority)
+    void add_back(Type value, int priority=0)
     {
-        // Dodawanie elementu do kolejki przy użyciu listy dwukierunkowej
-        queue.add_back(PriorityItem(element, priority));
+        // Adding element
+       PriorityItem<Type> element(value, priority);
+       queue.add_back(element);
     }
 
     // extractFirst
-    pair<Type, int> first_value() override
+    Type first_value() override
     {
-        // Usuwanie i zwracanie maksymalnego elementu z kolejki
-        // Wykorzystujemy odpowiednią operację z implementacji listy dwukierunkowej
-        pair<Type, int> maxElement = queue.last_value();
-        queue.remove_back();
-        return maxElement;
+       if (queue.get_size() == 0)
+           throw std::out_of_range("Priority Queue is empty.");
+
+       PriorityItem<Type> first = queue.first_value();
+       queue.remove_front();
+       return first.value;
     }
 
     // findMax
-    pair<Type, int> find() override
+    Type find_max(Type value) override
     {
-        // Znajdowanie i zwracanie maksymalnego elementu z kolejki
-        // Wykorzystujemy odpowiednią operację z implementacji listy dwukierunkowej
-        return queue.last_value();
+       if (queue.get_size() == 0)
+           throw std::out_of_range("Priority Queue is empty.");
+
+       return queue.first_value().value;
     }
 
     // modifyPriority
-    void change_at(Type element, int newPriority) override
+    void change_at(Type value, unsigned int position, int priority=0) override
     {
-        // Modyfikowanie priorytetu elementu w kolejce
-        // Wykorzystujemy odpowiednią operację z implementacji listy dwukierunkowej
-        unsigned int index = 0;
-        while (index < queue.get_size())
-        {
-            if (queue.value_at(index).first == element)
-            {
-                queue.change_at(make_pair(element, newPriority), index);
-                return;
-            }
-            index++;
-        }
+        PriorityItem<Type> element(value, priority);
+        queue.change_at(element, position);
+        return;
     }
 
-    int size()
+    unsigned int get_size() override
     {
         return queue.get_size();
     }
@@ -63,31 +55,31 @@ public:
     void add_front(Type value) override
     {
         // We don't support heap add_front
-        throw std::logic_error("Adding at the front of heap is not supported.");
+        throw std::logic_error("Adding at the front of priority queue is not supported.");
     }
 
     void add_at(Type value, unsigned int position) override
     {
         // We don't support heap add_at
-        throw std::logic_error("Adding at a specific position in heap is not supported.");
+        throw std::logic_error("Adding at a specific position in priority queue is not supported.");
     }
 
     void remove_back() override
     {
         // We don't support remove_back
-        throw std::logic_error("Removing from the back of heap is not supported.");
+        throw std::logic_error("Removing from the back of priority queue is not supported.");
     }
 
     void remove_front() override
     {
         // We don't support remove_back
-        throw std::logic_error("Removing from the back of heap is not supported.");
+        throw std::logic_error("Removing from the back of priority queue is not supported.");
     }
 
     void remove_at(unsigned int position) override
     {
         // We don't support remove_at
-        throw std::logic_error("Removing from a specific position in heap is not supported.");
+        throw std::logic_error("Removing from a specific position in priority queue is not supported.");
     }
 
     void clear() override
@@ -95,38 +87,41 @@ public:
         queue.clear();
     }
 
+    // find index - we don't implement it in queue
+    unsigned int find(Type value) override
+    {
+        // We don't support index of searched value
+        throw std::logic_error("Getting last value of priority queue is not supported.");
+    }
+
     Type last_value() override
     {
         // We don't support getting last value
-        throw std::logic_error("Getting last value of heap is not supported.");
+        throw std::logic_error("Getting last value of priority queue is not supported.");
     }
 
     Type value_at(unsigned int position) override
     {
         // We don't support value at
-        throw std::logic_error("Getting value at a specific position in heap is not supported.");
+        throw std::logic_error("Getting value at a specific position in priority queue is not supported.");
     }
 
     unsigned int get_byte_size() override
     {
-        // We don't support getting byte size
-        throw std::logic_error("Getting byte size of heap is not supported.");
-    }
-
-    void change_at(Type value, unsigned int position) override
-    {
-        // We don't support change at
-        throw std::logic_error("Changing value at a specific position in heap is not supported.");
+        return sizeof(PriorityQueueHeap) + sizeof(queue);
     }
 
     std::string get_as_string() override
     {
-        std::string output = "PriorQueueOnList[";
+        std::string output = "PriorQueueOnHeap[";
         if (std::is_integral_v<Type> != true)
             return "ERROR: typename of this list is not supported by this method!";
         for(int i=0; i<queue.get_size(); i++)
         {
-            output += std::to_string(queue.value_at(i));
+            output += "<";
+            output += std::to_string(queue.value_at(i).priority);
+            output += ", " + std::to_string(queue.value_at(i).value);
+            output += ">";
             if (i != queue.get_size()-1)
                 output += ", ";
         }
