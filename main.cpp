@@ -10,9 +10,28 @@
 #include "data_structures/priority_queue2.hpp"
 #include "data_structures/dynamic_array.hpp"
 #include "data_structures/heap.hpp"
+#include "data_structures/priority_queue.hpp"
+#include "data_structures/priority_queue3.hpp"
 #include "data_structures/int_structures_manual_ui.hpp"
 #include "test.hpp"
 
+
+// Create and return menu for list
+MenuDt<int>* setup_queue_menu()
+{
+    MenuDt<int> *queue_menu = new MenuDt<int>(new PriorityQueue<int>);
+    queue_menu->add_item_dt("|Włóż do kolejki", insert);
+    queue_menu->add_item_dt("|Wyjmij z kolejki", extract);
+    queue_menu->add_item_dt("|Wyczyść", clear_dt);
+    queue_menu->add_item_dt("|Podejrzyj element o największym priorytecie", findmax_q);
+    queue_menu->add_item_dt("|Zmień wartość i priorytet na danym polu", change_at_q);
+    queue_menu->add_item_dt("|Wypisz rozmiar", get_size);
+    queue_menu->add_item_dt("|Wczytaj z pliku", fill_from_file_q);
+    queue_menu->add_item("|Wyświetlanie czasu", change_print_flag);
+    queue_menu->add_item("|Wróć do wyboru struktur", exit_action);
+
+    return queue_menu;
+}
 
 // Create and return menu for list
 MenuDt<int>* setup_heapq_menu()
@@ -120,6 +139,7 @@ Menu* setup_structures_menu()
 {
     Menu *structures_menu = new Menu();
     structures_menu->add_item("|Kolejka priorytetowa na kopcu", setup_heapq_menu());
+    structures_menu->add_item("|Kolejka priorytetowa na liście", setup_queue_menu());
     structures_menu->add_item("|Tablica dynamiczna", setup_dynarray_menu());
     structures_menu->add_item("|Lista jednokierunkowa (head)", setup_list_menu());
     structures_menu->add_item("|Lista jednokierunkowa (head, tail)", setup_list_ht_menu());
