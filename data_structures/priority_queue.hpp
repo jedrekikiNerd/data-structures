@@ -15,10 +15,10 @@ private:
 public:
  
  void add_front(Type value) override
-    {
-        // We don't support heap add_front
-        throw std::logic_error("Adding at the front of heap is not supported.");
-    }
+{
+    // We don't support heap add_front
+    throw std::logic_error("Adding at the front of heap is not supported.");
+}
     
 // Insert an element with its priority into the priority queue
 void add_back(Type element, int priority) override
@@ -69,11 +69,11 @@ void remove_back() override
         throw std::logic_error("Removing from the back of heap is not supported.");
     }
 
-    void remove_at(unsigned int position) override
-    {
-        // We don't support remove_at
-        throw std::logic_error("Removing from a specific position in heap is not supported.");
-    }
+void remove_at(unsigned int position) override
+{
+    // We don't support remove_at
+    throw std::logic_error("Removing from a specific position in heap is not supported.");
+}
 
 
 void change_at(Type value,unsigned int position, int newPriority=0) override
@@ -129,6 +129,7 @@ void change_at(Type value,unsigned int position, int newPriority=0) override
         list.get_tail() = current;
     }
 }
+
 // extreact-max
 Type first_value() override 
 {
@@ -138,12 +139,13 @@ Type first_value() override
 }
 
 unsigned int find() override
-    {
-        int Value = list.gethead()->value;
-        return Value;
-    }
+{
+    int Value = list.gethead()->value;
+    return Value;
+}
 
-Type find_max() {
+Type find_max()
+{
     if (get_size() > 1);
     {
         return list.first_value();
@@ -156,48 +158,49 @@ unsigned int  get_size() override
 }
 
   unsigned int get_byte_size() override
-    {
-        // We don't support getting byte size
-        throw std::logic_error("Getting byte size of heap is not supported.");
-    }
+{
+    // We don't support getting byte size
+    throw std::logic_error("Getting byte size of heap is not supported.");
+}
 
 void clear() override
-    {
-        list.clear();
-    }
+{
+    list.clear();
+}
 
 std::string get_as_string() override
+{
+    std::string output = "PriorQueueOnList[";
+    if (std::is_integral_v<Type> != true)
+        return "ERROR: typename of this list is not supported by this method!";
+    for(int i=0; i<list.get_size(); i++)
     {
-        std::string output = "PriorQueueOnList[";
-        if (std::is_integral_v<Type> != true)
-            return "ERROR: typename of this list is not supported by this method!";
-        for(int i=0; i<list.get_size(); i++)
-        {
-            output += std::to_string(list.value_at(i));
-            if (i != list.get_size()-1)
-                output += ", ";
-        }
-        output += "]";
-        return output;
+        output += std::to_string(list.value_at(i));
+        if (i != list.get_size()-1)
+            output += ", ";
     }
+    output += "]";
+    return output;
+}
 
 
 
 Type value_at(unsigned int position) override
-    {
-        // We don't support value at
-        throw std::logic_error("Getting value at a specific position in heap is not supported.");
-    }
+{
+    // We don't support value at
+    throw std::logic_error("Getting value at a specific position in heap is not supported.");
+}
 
-pair<Type, int> find() override
-    {
-        // We don't support value at
-        throw std::logic_error("Getting value at a specific position in heap is not supported.");
-    }
+unsigned int find(Type value) override
+{
+    // We don't support value at
+    throw std::logic_error("Finding value is not supported.");
+}
+
 Type last_value() override
-    {
-        // We don't support getting last value
-        throw std::logic_error("Getting last value of heap is not supported.");
-    }
+{
+    // We don't support getting last value
+    throw std::logic_error("Getting last value of heap is not supported.");
+}
 };
 #endif

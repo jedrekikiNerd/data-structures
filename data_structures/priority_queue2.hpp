@@ -113,14 +113,17 @@ public:
 
     std::string get_as_string() override
     {
+        Heap<PriorityItem<Type>> tmp = queue;
         std::string output = "PriorQueueOnHeap[";
         if (std::is_integral_v<Type> != true)
             return "ERROR: typename of this list is not supported by this method!";
         for(int i=0; i<queue.get_size(); i++)
         {
             output += "<";
-            output += std::to_string(queue.value_at(i).priority);
-            output += ", " + std::to_string(queue.value_at(i).value);
+            PriorityItem<Type> first = tmp.first_value();
+            tmp.remove_front();
+            output += std::to_string(first.priority);
+            output += ", " + std::to_string(first.value);
             output += ">";
             if (i != queue.get_size()-1)
                 output += ", ";
