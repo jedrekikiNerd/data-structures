@@ -20,7 +20,7 @@
 /*
 MenuDt<int>* setup_queue_menu()
 {
-    MenuDt<int> *queue_menu = new MenuDt<int>(new PriorityQueue<int>);
+    MenuDt<int> *queue_menu = new MenuDt<int>(new PriorityQueue3<int>);
     queue_menu->add_item_dt("|Włóż do kolejki", insert);
     queue_menu->add_item_dt("|Wyjmij z kolejki", extract);
     queue_menu->add_item_dt("|Wyczyść", clear_dt);
