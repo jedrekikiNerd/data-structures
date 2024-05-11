@@ -4,6 +4,7 @@
 #include "data_structures/list_ht.hpp"
 #include "data_structures/list_double.hpp"
 #include "data_structures/dynamic_array.hpp"
+#include "data_structures/priority_queue2.hpp"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -54,6 +55,31 @@ int fill_from_file(IDataStructure<int> *dt, bool direction,int file_index, int f
     return 0;
 }
 
+// Function that loads one file into given data structure of queue type with priority
+int fill_from_file2(IDataStructure<int> *dt, int file_index, int file_index2)
+{
+    std::string folderPath = "generated_data";
+    const std::string filePre = "wyniki_";
+    const std::string fileExt = ".txt";
+    std::string file_name = folderPath + "/" + filePre + std::to_string(file_index) + "_" + std::to_string(file_index2) + fileExt;
+
+    std::ifstream file(file_name);
+    if (file.is_open()) {
+        int value;
+        int priority;
+        while (file >> value)
+        {
+            file >> priority;
+            dt->add_back(value, priority);
+        }
+        file.close();
+    } else {
+        std::cerr << "Unable to open file: " << file_name << std::endl;
+        return -1;
+    }
+    return 0;
+}
+
 // Adds one line to given file
 int add_line_to_file(std::string line, std::string filePath)
 {
@@ -67,56 +93,104 @@ int add_line_to_file(std::string line, std::string filePath)
     return 0;
 }
 
-double add_first_test(IDataStructure<int> *dt,int Value){
+double add_first_test(IDataStructure<int> *dt,int Value)
+{
     timer.start();
     dt->add_front(Value);
     timer.stop();
     return timer.elapsedSeconds();
 }
 
-double add_back_test(IDataStructure<int> *dt,int Value){
+double add_back_test(IDataStructure<int> *dt,int Value)
+{
     timer.start();
     dt->add_back(Value);
     timer.stop();
     return timer.elapsedSeconds();
 }
 
-double add_at_test(IDataStructure<int> *dt,int Value,unsigned int index){
+double add_at_test(IDataStructure<int> *dt,int Value,unsigned int index)
+{
     timer.start();
     dt -> add_at(Value, index);
     timer.stop();
     return timer.elapsedSeconds();
 }
 
-double remove_front_test(IDataStructure<int> *dt){
+double insert_test(IDataStructure<int> *dt, int Value, int priority)
+{
+    timer.start();
+    dt->add_back(Value, priority);
+    timer.stop();
+    return timer.elapsedSeconds();
+}
+
+double get_size_test(IDataStructure<int> *dt)
+{
+    timer.start();
+    dt->get_size();
+    timer.stop();
+    return timer.elapsedSeconds();
+}
+
+double remove_front_test(IDataStructure<int> *dt)
+{
     timer.start();
     dt -> remove_front();
     timer.stop();
     return timer.elapsedSeconds();
 }
 
-double remove_back_test(IDataStructure<int> *dt){
+double remove_back_test(IDataStructure<int> *dt)
+{
     timer.start();
     dt -> remove_back();
     timer.stop();
     return timer.elapsedSeconds();
 }
 
-double remove_at_test(IDataStructure<int> *dt,unsigned int index){
+double remove_at_test(IDataStructure<int> *dt,unsigned int index)
+{
     timer.start();
     dt -> remove_at(index);
     timer.stop();
     return timer.elapsedSeconds();
 }
 
-double find_number_test(IDataStructure<int> *dt,unsigned int Value){
+double extract_test(IDataStructure<int> *dt)
+{
+    timer.start();
+    dt->first_value();
+    timer.stop();
+    return timer.elapsedSeconds();
+}
+
+double modify_test(IDataStructure<int> *dt, int value, int priority, int position_to_change)
+{
+    timer.start();
+    dt->change_at(value, position_to_change, priority);
+    timer.stop();
+    return timer.elapsedSeconds();
+}
+
+double find_max_test(IDataStructure<int> *dt)
+{
+    timer.start();
+    dt->find_max();
+    timer.stop();
+    return timer.elapsedSeconds();
+}
+
+double find_number_test(IDataStructure<int> *dt,unsigned int Value)
+{
     timer.start();
     dt -> find(Value);
     timer.stop();
     return timer.elapsedSeconds();
 }
 
-double find_existing_number_test(IDataStructure<int> *dt, unsigned int index){
+double find_existing_number_test(IDataStructure<int> *dt, unsigned int index)
+{
     int find_value = dt->value_at(index);
     timer.start();
     dt -> find(find_value);
@@ -124,21 +198,32 @@ double find_existing_number_test(IDataStructure<int> *dt, unsigned int index){
     return timer.elapsedSeconds();
 }
 
-double clear_test(IDataStructure<int> *dt){
+double clear_test(IDataStructure<int> *dt)
+{
     timer.start();
     dt -> clear();
     timer.stop();
     return timer.elapsedSeconds();
 }
 
-int generate_random_number(std::default_random_engine& random_generator){
+int generate_random_number(std::default_random_engine& random_generator)
+{
     int number;
     std::uniform_int_distribution<int> distribution(-2147483647,2147483647);
     number = distribution(random_generator);
     return number;
 }
 
-unsigned int generate_random_number_unsigned(unsigned int size_dt, std::default_random_engine& random_generator){
+int generate_random_number_range(std::default_random_engine& random_generator, int from, int to)
+{
+    int number;
+    std::uniform_int_distribution<int> distribution(from, to);
+    number = distribution(random_generator);
+    return number;
+}
+
+unsigned int generate_random_number_unsigned(unsigned int size_dt, std::default_random_engine& random_generator)
+{
     unsigned int number;
     std::uniform_int_distribution<unsigned int> distribution(0,size_dt);
     number = distribution(random_generator);
@@ -235,6 +320,60 @@ int run_all_tests_for_dt(IDataStructure<int>* dt, int to_find, int to_add, unsig
     return 0;
 }
 
+int run_all_tests_for_queue(IDataStructure<int>* dt, int to_find, int to_add, int to_add_p, unsigned int random_position, int data_size, std::string dt_name, int data_sample_number, int series_number)
+{
+    std::ostringstream stream;
+    std::string measure_line;
+    std::string data_sample = std::to_string(data_sample_number);
+    std::string repetition = std::to_string(series_number);
+    double temp_double_buffor;
+
+    
+    // Insert to queue
+    temp_double_buffor = insert_test(dt, to_add, to_add_p);
+    stream << std::fixed << std::setprecision(10) << temp_double_buffor;
+    measure_line = std::to_string(data_size) + ";" + stream.str();
+    add_line_to_file(measure_line, (dt_name + "_insert" + data_sample + "_" + repetition + ".txt"));
+    stream.str("");
+    std::cout << "Insert passed\n";
+
+    // Extract from queue
+    temp_double_buffor = extract_test(dt);
+    stream << std::fixed << std::setprecision(10) << temp_double_buffor;
+    measure_line = std::to_string(data_size) + ";" + stream.str();
+    add_line_to_file(measure_line, (dt_name + "_extract" + data_sample + "_" + repetition + ".txt"));
+    stream.str("");
+    std::cout << "Extract passed\n";
+
+    // See max
+    temp_double_buffor = find_max_test(dt);
+    stream << std::fixed << std::setprecision(10) << temp_double_buffor;
+    measure_line = std::to_string(data_size) + ";" + stream.str();
+    add_line_to_file(measure_line, (dt_name + "_seemax" + data_sample + "_" + repetition + ".txt"));
+    stream.str("");
+    std::cout << "SeeMax passed\n";
+
+    // get size
+    temp_double_buffor = get_size_test(dt);
+    stream << std::fixed << std::setprecision(10) << temp_double_buffor;
+    measure_line = std::to_string(data_size) + ";" + stream.str();
+    add_line_to_file(measure_line, (dt_name + "_getsize" + data_sample + "_" + repetition + ".txt"));
+    stream.str("");
+    std::cout << "Get size passed\n";
+
+    // change at given position
+    temp_double_buffor = modify_test(dt, to_add, to_add_p, random_position);
+    stream << std::fixed << std::setprecision(10) << temp_double_buffor;
+    measure_line = std::to_string(data_size) + ";" + stream.str();
+    add_line_to_file(measure_line, (dt_name + "_modifytest" + data_sample + "_" + repetition + ".txt"));
+    stream.str("");
+    std::cout << "Modify passed\n";
+
+    dt->clear();
+
+    return 0;
+}
+
 // Function that loads data from file to each data structure and runs all tests for it
 int run_tests()
 {
@@ -247,56 +386,80 @@ int run_tests()
     SingleListHT<int> list_ht;
     DoubleListHT<int> double_list;
     DynamicArray<int> dyn_array;
+    PriorityQueueHeap<int> queue_heap;
 
     removeFilesInFolder2("test_results");
 
     int file_number = user_input_action("Podaj ilość różnych wielkości danych, które zostały wygenerowane w katalogu generated_data: ");
     int data_number = user_input_action("Podaj ilość wygenerowanych instancji dla jednej wielkości: ");
-    int repetition = user_input_action("Podaj numer serii pomiarowej (przydatne jeżeli nie chcesz utracić wyników poprzedniego pomiaru, ale dokonać kolejnego): ");
+    int repetition = user_input_action("Podaj ilość powtórzeń dla każdej próbki: ");
+    int what_to_test = user_input_action("Podaj co testować (1: pierwszy projekt, 2: drugi projekt): ");
 
-    for(int i=1; i<=file_number; i++)
-    {
-        for(int j=1; j<=data_number; j++)
+    if (what_to_test == 1)
+        for(int i=1; i<=file_number; i++)
         {
-            int to_add = generate_random_number(random_generator);
-            int to_find = generate_random_number(random_generator);
-            int bytes;
+            for(int j=1; j<=data_number; j++)
+            {
+                int to_add = generate_random_number(random_generator);
+                int to_find = generate_random_number(random_generator);
+                int bytes;
 
-            // Run tests for list
-            fill_from_file(&list, 0, i, j);
-            // We need size for generating random position
-            unsigned int random_position = generate_random_number_unsigned(list.get_size()-1, random_generator);
-            bytes = list.get_byte_size();
-            // We check (and save) size for only one iteration over data sizes
-            if(j==1)
-                add_line_to_file(std::to_string(list.get_size()) + ";" + std::to_string(bytes), ("SingleList_size_growth.txt"));
-            run_all_tests_for_dt(&list, to_find, to_add, random_position, list.get_size(), "SingleList", j, repetition);
+                // Run tests for list
+                fill_from_file(&list, 0, i, j);
+                // We need size for generating random position
+                unsigned int random_position = generate_random_number_unsigned(list.get_size()-1, random_generator);
+                bytes = list.get_byte_size();
+                // We check (and save) size for only one iteration over data sizes
+                if(j==1)
+                    add_line_to_file(std::to_string(list.get_size()) + ";" + std::to_string(bytes), ("SingleList_size_growth.txt"));
+                run_all_tests_for_dt(&list, to_find, to_add, random_position, list.get_size(), "SingleList", j, repetition);
 
-            // Run tests for list with head and tail
-            fill_from_file(&list_ht, 0, i, j);
-            bytes = list_ht.get_byte_size();
-            // We check (and save) size for only one iteration over data sizes
-            if(j==1)
-                add_line_to_file(std::to_string(list_ht.get_size()) + ";" + std::to_string(bytes), ("SingleListHeadTail_size_growth.txt"));
-            run_all_tests_for_dt(&list_ht, to_find, to_add, random_position, list_ht.get_size(), "SingleListHeadTail", j, repetition);
+                // Run tests for list with head and tail
+                fill_from_file(&list_ht, 0, i, j);
+                bytes = list_ht.get_byte_size();
+                // We check (and save) size for only one iteration over data sizes
+                if(j==1)
+                    add_line_to_file(std::to_string(list_ht.get_size()) + ";" + std::to_string(bytes), ("SingleListHeadTail_size_growth.txt"));
+                run_all_tests_for_dt(&list_ht, to_find, to_add, random_position, list_ht.get_size(), "SingleListHeadTail", j, repetition);
 
-            // Run tests for double list
-            fill_from_file(&double_list, 0, i, j);
-            bytes = double_list.get_byte_size();
-            // We check (and save) size for only one iteration over data sizes
-            if(j==1)
-                add_line_to_file(std::to_string(double_list.get_size()) + ";" + std::to_string(bytes), ("DoubleList_size_growth.txt"));
-            run_all_tests_for_dt(&double_list, to_find, to_add, random_position, double_list.get_size(), "DoubleList", j, repetition);
+                // Run tests for double list
+                fill_from_file(&double_list, 0, i, j);
+                bytes = double_list.get_byte_size();
+                // We check (and save) size for only one iteration over data sizes
+                if(j==1)
+                    add_line_to_file(std::to_string(double_list.get_size()) + ";" + std::to_string(bytes), ("DoubleList_size_growth.txt"));
+                run_all_tests_for_dt(&double_list, to_find, to_add, random_position, double_list.get_size(), "DoubleList", j, repetition);
 
-            // Run tests for dynamic array
-            fill_from_file(&dyn_array, 0, i, j);
-            bytes = dyn_array.get_byte_size();
-            // We check (and save) size for only one iteration over data sizes
-            if(j==1)
-                add_line_to_file(std::to_string(dyn_array.get_size()) + ";" + std::to_string(bytes), ("DynamicArray_size_growth.txt"));
-            run_all_tests_for_dt(&dyn_array, to_find, to_add, random_position, dyn_array.get_size(), "DynamicArray", j, repetition);
+                // Run tests for dynamic array
+                fill_from_file(&dyn_array, 0, i, j);
+                bytes = dyn_array.get_byte_size();
+                // We check (and save) size for only one iteration over data sizes
+                if(j==1)
+                    add_line_to_file(std::to_string(dyn_array.get_size()) + ";" + std::to_string(bytes), ("DynamicArray_size_growth.txt"));
+                run_all_tests_for_dt(&dyn_array, to_find, to_add, random_position, dyn_array.get_size(), "DynamicArray", j, repetition);
+            }
         }
-    }
-    
+    else if (what_to_test == 2)
+        for(int i=1; i<=file_number; i++)
+        {
+            for(int j=1; j<=data_number; j++)
+            {
+                int to_add = generate_random_number(random_generator);
+                int to_find = generate_random_number(random_generator);
+                int bytes;
+
+                // Run tests for list
+                fill_from_file2(&queue_heap, i, j);
+                int to_add_p = generate_random_number_range(random_generator, 0, queue_heap.get_size()*2);
+                // We need size for generating random position
+                unsigned int random_position = generate_random_number_unsigned(queue_heap.get_size()-1, random_generator);
+                bytes = queue_heap.get_byte_size();
+                // We check (and save) size for only one iteration over data sizes
+                if(j==1)
+                    add_line_to_file(std::to_string(queue_heap.get_size()) + ";" + std::to_string(bytes), ("QueueHeap_size_growth.txt"));
+                run_all_tests_for_queue(&queue_heap, to_find, to_add, to_add_p, random_position, queue_heap.get_size(), "QueueHeap", j, repetition);
+                std::cout << "ALL PASSED!\n";
+            }
+        }
     return 0;
 }

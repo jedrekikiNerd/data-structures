@@ -41,7 +41,7 @@ public:
     // Returns index at which first occurrence of given value is found
     virtual unsigned int find(Type value) = 0;
     // Returns max priority element
-    virtual Type find_max(Type value) {};
+    virtual Type find_max() {};
     // Changes value at given index
     virtual void change_at(Type value, unsigned int position, int additional=0) = 0;
     // Returns data structure representation as string (useful for displaying)

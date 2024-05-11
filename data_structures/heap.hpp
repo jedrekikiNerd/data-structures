@@ -11,8 +11,6 @@ template <typename Type>
 class Heap : public IDataStructure<Type>
 {
 private:
-    DynamicArray<Type> heap;
-
     //heapify a subtree that starts at index
     void heapify_down(int index)
     {
@@ -52,6 +50,21 @@ private:
     }
 
 public:
+    DynamicArray<Type> heap;
+
+    Heap() {}
+
+    ~Heap()
+    {
+        this->clear();
+    }
+
+    // Coping constructor
+    Heap(const Heap<Type>& other)
+    {
+        heap = other.heap;
+    }
+
     void add_front(Type value) override
     {
         // We don't support heap add_front
@@ -129,8 +142,7 @@ public:
 
     unsigned int find(Type value) override
     {
-        // We don't support value at
-        throw std::logic_error("Find on heap is not supported.");
+        return heap.find(value);
     }
 
     void change_at(Type value, unsigned int position, int additional = 0) override

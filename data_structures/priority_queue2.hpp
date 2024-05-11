@@ -31,7 +31,7 @@ public:
     }
 
     // findMax
-    Type find_max(Type value) override
+    Type find_max() override
     {
        if (queue.get_size() == 0)
            throw std::out_of_range("Priority Queue is empty.");
@@ -87,11 +87,17 @@ public:
         queue.clear();
     }
 
-    // find index - we don't implement it in queue
+    // find index
     unsigned int find(Type value) override
     {
-        // We don't support index of searched value
-        throw std::logic_error("Getting last value of priority queue is not supported.");
+        for (int i=0; i<queue.get_size(); i++)
+        {
+            if (queue.heap[i].value == value)
+            {
+                return i;
+            }
+        }
+        return -1;
     }
 
     Type last_value() override
@@ -113,15 +119,14 @@ public:
 
     std::string get_as_string() override
     {
-        Heap<PriorityItem<Type>> tmp = queue;
         std::string output = "PriorQueueOnHeap[";
         if (std::is_integral_v<Type> != true)
             return "ERROR: typename of this list is not supported by this method!";
         for(int i=0; i<queue.get_size(); i++)
         {
+            std::cout << i << " ";
             output += "<";
-            PriorityItem<Type> first = tmp.first_value();
-            tmp.remove_front();
+            PriorityItem<Type> first = queue.value_at(i);
             output += std::to_string(first.priority);
             output += ", " + std::to_string(first.value);
             output += ">";
