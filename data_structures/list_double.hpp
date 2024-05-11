@@ -6,7 +6,7 @@
 #include "I_data_structure.hpp"
 #include <type_traits>
 #include "nodes.hpp"
-
+#include "to_string_functions.hpp"
 
 /**
  * LinkedListHT class that represents a list data structure with methods
@@ -307,7 +307,7 @@ public:
             return "ERROR: typename of this list is not supported by this method!";
         while(current_node != nullptr)
         {
-            output += std::to_string(current_node->value);
+            output += choose_to_string(current_node->value);
             current_node = current_node->next_element;
             if (current_node != nullptr)
                 output += ", ";

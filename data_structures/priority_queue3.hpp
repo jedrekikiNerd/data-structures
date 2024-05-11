@@ -53,26 +53,30 @@ void remove_front() override
 }
 
 void remove_back() override
-    {
+{
         // We don't support remove_back
         throw std::logic_error("Removing from the back of heap is not supported.");
-    }
+}
 
-    void remove_at(unsigned int position) override
-    {
+void remove_at(unsigned int position) override
+{
         // We don't support remove_at
         throw std::logic_error("Removing from a specific position in heap is not supported.");
-    }
+}
+Type last_value() override
+{
+        // We don't support getting last value
+        throw std::logic_error("Getting last value of priority queue is not supported.");
+}
 
 
-void change_at(unsigned int position, int newPriority) override
+void change_at(Type value,unsigned int position, int newPriority) override
 {
     if (position < list.get_size())
     {
         // Usuwamy element na określonej pozycji i dodajemy go ponownie z nowym priorytetem
-        Type element_value = list.value_at(position);
-        list.remove_at(position);
-        insert(element_value, new_priority);
+        PriorityItem<Type> element(value, newPriority);
+        list.change_at(element,position);
     }
     else
     {
@@ -82,28 +86,37 @@ void change_at(unsigned int position, int newPriority) override
 // extreact-max
 Type first_value() override 
 {
-   if (!is_empty())
+   if (get_size() >= 1)
     {
-        Type max_value = list.first_value();  // Pobieramy wartość pierwszego elementu (o najwyższym priorytecie)
+        PriorityItem<Type> first = list.first_value();  // Pobieramy wartość pierwszego elementu (o najwyższym priorytecie)
         list.remove_front();  // Usuwamy pierwszy element
-        return max_value;
+        return first.value;
     }
-    return;
 }
 
-unsigned int find() override
-     if (!is_empty())
-    {
-        return list.first_value();  // Zwracamy wartość pierwszego elementu (o najwyższym priorytecie)
-    }
-
+ unsigned int find(Type value) override
+{
+    // We don't support index of searched value
+    throw std::logic_error("Getting last value of priority queue is not supported.");
+}
 
 
 Type find_max() {
-    if (get_size() > 1);
+    if (get_size() > 1)
     {
         return list.first_value();
     }
+}
+
+Type value_at(unsigned int position) override
+{
+        // We don't support value at
+        throw std::logic_error("Getting value at a specific position in priority queue is not supported.");
+}
+
+void clear() override
+{
+    list.clear();
 }
 
 unsigned int  get_size() override
@@ -111,11 +124,29 @@ unsigned int  get_size() override
     return list.get_size();
 }
 
-  unsigned int get_byte_size() override
-    {
+unsigned int get_byte_size() override
+{
         // We don't support getting byte size
         throw std::logic_error("Getting byte size of heap is not supported.");
+}
+
+
+std::string get_as_string() override
+{
+    std::string output = "PriorQueueOnList[";
+    if (std::is_integral_v<Type> != true)
+        return "ERROR: typename of this list is not supported by this method!";
+    for(int i=0; i<list.get_size(); i++)
+    {
+        output += std::to_string(list.value_at(i));
+        if (i != list.get_size()-1)
+            output += ", ";
     }
+    output += "]";
+    return output;
+}
+
+
 
 };
 #endif
