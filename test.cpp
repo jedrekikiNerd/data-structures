@@ -58,7 +58,7 @@ int fill_from_file(IDataStructure<int> *dt, bool direction,int file_index, int f
 // Function that loads one file into given data structure of queue type with priority
 int fill_from_file2(IDataStructure<int> *dt, int file_index, int file_index2)
 {
-    std::string folderPath = "generated_data";
+    std::string folderPath = "generated_data_queues";
     const std::string filePre = "wyniki_";
     const std::string fileExt = ".txt";
     std::string file_name = folderPath + "/" + filePre + std::to_string(file_index) + "_" + std::to_string(file_index2) + fileExt;
