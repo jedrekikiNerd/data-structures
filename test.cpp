@@ -345,7 +345,6 @@ int run_all_tests_for_queue(IDataStructure<int>* dt, int to_find, int to_add, in
     measure_line = std::to_string(data_size) + ";" + stream.str();
     add_line_to_file(measure_line, (dt_name + "_insert" + data_sample + ".txt"));
     stream.str("");
-    std::cout << "Insert passed\n";
 
     // Extract from queue
     temp_double_buffor = extract_test(dt);
@@ -353,7 +352,6 @@ int run_all_tests_for_queue(IDataStructure<int>* dt, int to_find, int to_add, in
     measure_line = std::to_string(data_size) + ";" + stream.str();
     add_line_to_file(measure_line, (dt_name + "_extract" + data_sample + ".txt"));
     stream.str("");
-    std::cout << "Extract passed\n";
 
     // See max
     temp_double_buffor = 0.0;
@@ -364,7 +362,6 @@ int run_all_tests_for_queue(IDataStructure<int>* dt, int to_find, int to_add, in
     measure_line = std::to_string(data_size) + ";" + stream.str();
     add_line_to_file(measure_line, (dt_name + "_seemax" + data_sample + ".txt"));
     stream.str("");
-    std::cout << "SeeMax passed\n";
 
     // Find value that exists 
     temp_double_buffor = 0.0;
@@ -374,7 +371,6 @@ int run_all_tests_for_queue(IDataStructure<int>* dt, int to_find, int to_add, in
     measure_line = std::to_string(data_size) + ";" + stream.str();
     add_line_to_file(measure_line, (dt_name + "_find" + data_sample + ".txt"));
     stream.str("");
-    std::cout << "Find existing passed\n";
 
     // get size
     temp_double_buffor = 0.0;
@@ -384,7 +380,6 @@ int run_all_tests_for_queue(IDataStructure<int>* dt, int to_find, int to_add, in
     measure_line = std::to_string(data_size) + ";" + stream.str();
     add_line_to_file(measure_line, (dt_name + "_getsize" + data_sample + ".txt"));
     stream.str("");
-    std::cout << "Get size passed\n";
 
     // change at given position
     temp_double_buffor = 0.0;
@@ -394,7 +389,6 @@ int run_all_tests_for_queue(IDataStructure<int>* dt, int to_find, int to_add, in
     measure_line = std::to_string(data_size) + ";" + stream.str();
     add_line_to_file(measure_line, (dt_name + "_modifytest" + data_sample + ".txt"));
     stream.str("");
-    std::cout << "Modify passed\n";
 
     // Clear operation
     temp_double_buffor = 0.0;
@@ -500,7 +494,6 @@ int run_tests()
                 if(j==1)
                     add_line_to_file(std::to_string(queue_list.get_size()) + ";" + std::to_string(bytes), ("QueueList_size_growth.txt"));
                 run_all_tests_for_queue(&queue_list, to_find, to_add, to_add_p, random_position, queue_list.get_size(), "QueueList", j, repetition);
-                std::cout << "ALL PASSED!\n";
             }
         }
     return 0;
