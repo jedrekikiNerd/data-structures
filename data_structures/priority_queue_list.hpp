@@ -112,8 +112,16 @@ Type first_value() override
 
  unsigned int find(Type value) override
 {
-    // We don't support index of searched value
-    throw std::logic_error("Getting last value of priority queue is not supported.");
+    DoubleNode<PriorityItem<Type>>* hp = list.get_head_ptr();
+    for(int i = 0; i < list.get_size();i++)
+    {
+        while(hp->value.priority = value)
+        {
+        return i;
+        }
+        hp = hp->next_element;
+    }
+    return -1;
 }
 
 Type find_max()
