@@ -6,6 +6,7 @@
 #include "data_structures/dynamic_array.hpp"
 #include "data_structures/priority_queue_heap.hpp"
 #include "data_structures/priority_queue_list.hpp"
+#include "data_structures/priority_queue_array.hpp"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -347,7 +348,10 @@ int run_all_tests_for_queue(IDataStructure<int>* dt, int to_find, int to_add, in
     stream.str("");
 
     // Extract from queue
-    temp_double_buffor = extract_test(dt);
+    temp_double_buffor = 0.0;
+    for(int i=1; i<=repetition; i++)
+        temp_double_buffor += extract_test(dt);
+    temp_double_buffor /= repetition;
     stream << std::fixed << std::setprecision(10) << temp_double_buffor;
     measure_line = std::to_string(data_size) + ";" + stream.str();
     add_line_to_file(measure_line, (dt_name + "_extract" + data_sample + ".txt"));
@@ -367,6 +371,7 @@ int run_all_tests_for_queue(IDataStructure<int>* dt, int to_find, int to_add, in
     temp_double_buffor = 0.0;
     for(int i=1; i<=repetition; i++)
         temp_double_buffor += find_existing_number_test(dt, random_position);
+    temp_double_buffor /= repetition;
     stream << std::fixed << std::setprecision(10) << temp_double_buffor;
     measure_line = std::to_string(data_size) + ";" + stream.str();
     add_line_to_file(measure_line, (dt_name + "_find" + data_sample + ".txt"));
@@ -376,6 +381,7 @@ int run_all_tests_for_queue(IDataStructure<int>* dt, int to_find, int to_add, in
     temp_double_buffor = 0.0;
     for(int i=1; i<=repetition; i++)
         temp_double_buffor += get_size_test(dt);
+    temp_double_buffor /= repetition;
     stream << std::fixed << std::setprecision(10) << temp_double_buffor;
     measure_line = std::to_string(data_size) + ";" + stream.str();
     add_line_to_file(measure_line, (dt_name + "_getsize" + data_sample + ".txt"));
@@ -385,15 +391,15 @@ int run_all_tests_for_queue(IDataStructure<int>* dt, int to_find, int to_add, in
     temp_double_buffor = 0.0;
     for(int i=1; i<=repetition; i++)
         temp_double_buffor += modify_test(dt, to_add, to_add_p, random_position);
+    temp_double_buffor /= repetition;
     stream << std::fixed << std::setprecision(10) << temp_double_buffor;
     measure_line = std::to_string(data_size) + ";" + stream.str();
     add_line_to_file(measure_line, (dt_name + "_modifytest" + data_sample + ".txt"));
     stream.str("");
 
     // Clear operation
-    temp_double_buffor = 0.0;
-    for(int i=1; i<=repetition; i++)
-        temp_double_buffor += clear_test(dt);
+     temp_double_buffor = 0.0;
+    temp_double_buffor += clear_test(dt);
     stream << std::fixed << std::setprecision(10) << temp_double_buffor;
     measure_line = std::to_string(data_size) + ";" + stream.str();
     add_line_to_file(measure_line, (dt_name + "_clear" + data_sample + ".txt"));
@@ -415,7 +421,7 @@ int run_tests()
     DoubleListHT<int> double_list;
     DynamicArray<int> dyn_array;
     PriorityQueueHeap<int> queue_heap;
-    PriorityQueueList<int> queue_list;
+    PriorityQueuearray<int> queue_list;
 
     removeFilesInFolder2("test_results");
 

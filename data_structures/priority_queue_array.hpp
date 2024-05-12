@@ -1,10 +1,9 @@
-#ifndef PRIOQUE2
-#define PRIOQUE2
+#ifndef PRIOQUE3
+#define PRIOQUE3
 
 #include <iostream>
 #include "dynamic_array.hpp"
 #include "priority_item.hpp"
-#include "nodes.hpp"
 
 using namespace std;
 
@@ -26,16 +25,28 @@ void add_back(Type value, int priority)
 {
     PriorityItem<Type> item(value, priority);  // Tworzymy obiekt PriorityItem
 
-    // Dodajemy do listy w odpowiednim miejscu względem priorytetu
-    unsigned int position = 0;
-    // Przeszukujemy listę, aby znaleźć odpowiednie miejsce na element zgodnie z priorytetem
-    while (position < array.get_size() && item.priority < priority)
+    unsigned int low = 0;
+    unsigned int high = array.get_size() - 1;
+    unsigned int insert_position = array.get_size();  // Domyślnie wstawiamy na koniec
+
+    // Wyszukiwanie binarne w posortowanej liście względem priorytetów
+    while (low <= high)
     {
-        position++;
+        unsigned int mid = low + (high - low) / 2;
+
+        if (array[mid].priority >= priority)
+        {
+            insert_position = mid;  // Zapamiętujemy pozycję, gdzie możemy wstawić nowy element
+            high = mid - 1;  // Szukamy dalej w lewej części, aby potencjalnie znaleźć lepszą pozycję
+        }
+        else
+        {
+            low = mid + 1;  // Szukamy w prawej części
+        }
     }
 
     // Dodajemy element na znalezionej pozycji
-    array.add_at(item, position);
+    array.add_at(item, insert_position);
 }
 
 
@@ -87,8 +98,8 @@ Type first_value() override
 {
    if (get_size())
     {
-        PriorityItem<Type> first = array.first_value();  // Pobieramy wartość pierwszego elementu (o najwyższym priorytecie)
-        array.remove_front();  // Usuwamy pierwszy element
+        PriorityItem<Type> first = array.last_value();  // Pobieramy wartość pierwszego elementu (o najwyższym priorytecie)
+        array.remove_back();  // Usuwamy pierwszy element
         return first.value;
     }
     throw std::out_of_range("Index out of range");
@@ -110,7 +121,7 @@ Type find_max()
 {
     if (array.get_size())
     {
-        return array.first_value().value;
+        return array.last_value().value;
     }
     throw std::out_of_range("Index out of range");
 }
