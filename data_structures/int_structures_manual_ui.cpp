@@ -246,36 +246,50 @@ int insert(IDataStructure<int> *dt)
 // Agent between UI and data structure first_value
 int extract(IDataStructure<int> *dt)
 {
-    Timer timer;
-    timer.start();
-    int val = dt->first_value();
-    timer.stop();
-    if (print_time)
-        display_action2(std::to_string(val), "Pobranie wartości zajęło " + std::to_string(timer.elapsedSeconds()) + "ns");
-    else
-        display_action(std::to_string(val));
+    try
+    {
+        Timer timer;
+        timer.start();
+        int val = dt->first_value();
+        timer.stop();
+        if (print_time)
+            display_action2(std::to_string(val), "Pobranie wartości zajęło " + std::to_string(timer.elapsedSeconds()) + "ns");
+        else
+            display_action(std::to_string(val));
+    }
+    catch (const std::out_of_range& e)
+    {
+        display_action("Kolejka jest pusta!");
+    }
+
     return 0;
 }
 
 // Agent between UI and data structure find
 int findmax_q(IDataStructure<int> *dt)
 {
-    Timer timer;
-    timer.start();
-    unsigned int val = dt->find_max();
-    timer.stop();
-    if (val == UINT_MAX)
+    try
     {
+        Timer timer;
+        timer.start();
+        unsigned int val = dt->find_max();
+        timer.stop();
+        if (val == UINT_MAX)
+        {
+            if (print_time)
+                display_action2("Nie znaleziono!", "Szukanie zajęło " + std::to_string(timer.elapsedSeconds()) + "ns");
+            else
+                display_action("Nie znaleziono!");
+        }
         if (print_time)
-            display_action2("Nie znaleziono!", "Szukanie zajęło " + std::to_string(timer.elapsedSeconds()) + "ns");
+            display_action2(std::to_string(val), "Znalezienie wartości o największym priorytecie zajęło " + std::to_string(timer.elapsedSeconds()) + "ns");
         else
-            display_action("Nie znaleziono!");
-        return 0;
+            display_action(std::to_string(val));
     }
-    if (print_time)
-        display_action2(std::to_string(val), "Znalezienie wartości o największym priorytecie zajęło " + std::to_string(timer.elapsedSeconds()) + "ns");
-    else
-        display_action(std::to_string(val));
+    catch (const std::out_of_range& e)
+    {
+        display_action("Kolejka jest pusta!");
+    }
     return 0;
 }
 

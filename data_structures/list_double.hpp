@@ -126,6 +126,21 @@ public:
         }
     }
 
+    // Adds element on specified pointer to node
+    void add_at_ptr(Type value,  DoubleNode<Type>* currrent_node)
+    {
+        if (currrent_node == nullptr)
+            return;
+        
+        DoubleNode<Type>* new_node = new DoubleNode<Type>(value);
+        // Reasign pointers in order to add new element
+        new_node->next_element = currrent_node;
+        new_node->previous_element = currrent_node->previous_element;
+        currrent_node->previous_element = new_node;
+        new_node->previous_element->next_element = new_node;
+        size++;
+    }
+
     // Removes first element - based on head pointer
     void remove_front() override
     {
@@ -233,6 +248,12 @@ public:
         // Until head is not nullptr perform delete front
         while(head)
             this->remove_front();
+    }
+
+    // Returns first value (head value)
+    DoubleNode<Type>* get_head_ptr()
+    {
+        return head;
     }
 
     // Returns first value (head value)

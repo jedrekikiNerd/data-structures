@@ -1,4 +1,5 @@
 #ifndef PRIOQUE
+#define PRIOQUE
 
 #include <iostream>
 #include "heap.hpp"
@@ -23,7 +24,7 @@ public:
     Type first_value() override
     {
        if (queue.get_size() == 0)
-           throw std::out_of_range("Priority Queue is empty.");
+           throw std::out_of_range("Index out of range");
 
        PriorityItem<Type> first = queue.first_value();
        queue.remove_front();
@@ -34,7 +35,7 @@ public:
     Type find_max() override
     {
        if (queue.get_size() == 0)
-           throw std::out_of_range("Priority Queue is empty.");
+           throw std::out_of_range("Index out of range");
 
        return queue.first_value().value;
     }
@@ -114,7 +115,7 @@ public:
 
     unsigned int get_byte_size() override
     {
-        return sizeof(PriorityQueueHeap) + sizeof(queue);
+        return sizeof(PriorityQueueHeap) + queue.get_byte_size();
     }
 
     std::string get_as_string() override
@@ -124,7 +125,6 @@ public:
             return "ERROR: typename of this list is not supported by this method!";
         for(int i=0; i<queue.get_size(); i++)
         {
-            std::cout << i << " ";
             output += "<";
             PriorityItem<Type> first = queue.value_at(i);
             output += std::to_string(first.priority);

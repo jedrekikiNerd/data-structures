@@ -137,7 +137,7 @@ public:
 
     unsigned int get_byte_size() override
     {
-        return sizeof(Heap) + sizeof(heap);
+        return sizeof(Heap) + heap.get_byte_size();
     }
 
     unsigned int find(Type value) override

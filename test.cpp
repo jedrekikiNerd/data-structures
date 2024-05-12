@@ -4,7 +4,8 @@
 #include "data_structures/list_ht.hpp"
 #include "data_structures/list_double.hpp"
 #include "data_structures/dynamic_array.hpp"
-#include "data_structures/priority_queue2.hpp"
+#include "data_structures/priority_queue_heap.hpp"
+#include "data_structures/priority_queue_list.hpp"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -18,13 +19,17 @@ namespace fs = std::filesystem;
 Timer timer;
 
 //clearing the folder before adding files
-void removeFilesInFolder2(const std::string folderName) {
-    if (!fs::exists(folderName)) {
+void removeFilesInFolder2(const std::string folderName)
+{
+    if (!fs::exists(folderName))
+    {
         fs::create_directories(folderName);
     }
 
-    for (const auto& entry : fs::directory_iterator(folderName)) {
-        if (entry.is_regular_file()) {
+    for (const auto& entry : fs::directory_iterator(folderName))
+    {
+        if (entry.is_regular_file())
+        {
             fs::remove(entry.path());
         }
     }
@@ -39,7 +44,8 @@ int fill_from_file(IDataStructure<int> *dt, bool direction,int file_index, int f
     std::string file_name = folderPath + "/" + filePre + std::to_string(file_index) + "_" + std::to_string(file_index2) + fileExt;
 
     std::ifstream file(file_name);
-    if (file.is_open()) {
+    if (file.is_open())
+    {
         int value;
         while (file >> value) {
             if (direction)
@@ -48,7 +54,9 @@ int fill_from_file(IDataStructure<int> *dt, bool direction,int file_index, int f
                 dt->add_front(value);
         }
         file.close();
-    } else {
+    }
+    else
+    {
         std::cerr << "Unable to open file: " << file_name << std::endl;
         return -1;
     }
@@ -387,6 +395,7 @@ int run_tests()
     DoubleListHT<int> double_list;
     DynamicArray<int> dyn_array;
     PriorityQueueHeap<int> queue_heap;
+    PriorityQueueList<int> queue_list;
 
     removeFilesInFolder2("test_results");
 
@@ -458,6 +467,13 @@ int run_tests()
                 if(j==1)
                     add_line_to_file(std::to_string(queue_heap.get_size()) + ";" + std::to_string(bytes), ("QueueHeap_size_growth.txt"));
                 run_all_tests_for_queue(&queue_heap, to_find, to_add, to_add_p, random_position, queue_heap.get_size(), "QueueHeap", j, repetition);
+
+                fill_from_file2(&queue_list, i, j);
+                bytes = queue_list.get_byte_size();
+                // We check (and save) size for only one iteration over data sizes
+                if(j==1)
+                    add_line_to_file(std::to_string(queue_list.get_size()) + ";" + std::to_string(bytes), ("QueueList_size_growth.txt"));
+                run_all_tests_for_queue(&queue_list, to_find, to_add, to_add_p, random_position, queue_list.get_size(), "QueueList", j, repetition);
                 std::cout << "ALL PASSED!\n";
             }
         }
