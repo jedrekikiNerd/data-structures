@@ -109,8 +109,7 @@ public:
 
     Type value_at(unsigned int position) override
     {
-        // We don't support value at
-        throw std::logic_error("Getting value at a specific position in priority queue is not supported.");
+        return queue.value_at(position).value;
     }
 
     unsigned int get_byte_size() override

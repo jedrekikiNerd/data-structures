@@ -8,7 +8,6 @@
 
 using namespace std;
 
-
 template <typename Type>
 class PriorityQueueList : public IDataStructure<Type>
 {
@@ -110,16 +109,18 @@ Type first_value() override
     throw std::out_of_range("Index out of range");
 }
 
- unsigned int find(Type value) override
+unsigned int find(Type value) override
 {
     DoubleNode<PriorityItem<Type>>* hp = list.get_head_ptr();
-    for(int i = 0; i < list.get_size();i++)
+    unsigned int position = 0;
+    while(hp->value.value != value and hp != nullptr)
     {
-        while(hp->value.priority = value)
-        {
-        return i;
-        }
         hp = hp->next_element;
+        position++;
+    }
+    if (hp != nullptr)
+    {
+        return position;
     }
     return -1;
 }
@@ -135,8 +136,7 @@ Type find_max()
 
 Type value_at(unsigned int position) override
 {
-        // We don't support value at
-        throw std::logic_error("Getting value at a specific position in priority queue is not supported.");
+    return list.value_at(position).value;
 }
 
 void clear() override

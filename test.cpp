@@ -328,20 +328,22 @@ int run_all_tests_for_dt(IDataStructure<int>* dt, int to_find, int to_add, unsig
     return 0;
 }
 
-int run_all_tests_for_queue(IDataStructure<int>* dt, int to_find, int to_add, int to_add_p, unsigned int random_position, int data_size, std::string dt_name, int data_sample_number, int series_number)
+int run_all_tests_for_queue(IDataStructure<int>* dt, int to_find, int to_add, int to_add_p, unsigned int random_position, int data_size, std::string dt_name, int data_sample_number, int repetition)
 {
     std::ostringstream stream;
     std::string measure_line;
     std::string data_sample = std::to_string(data_sample_number);
-    std::string repetition = std::to_string(series_number);
     double temp_double_buffor;
 
     
     // Insert to queue
-    temp_double_buffor = insert_test(dt, to_add, to_add_p);
+    temp_double_buffor = 0.0;
+    for(int i=1; i<=repetition; i++)
+        temp_double_buffor += insert_test(dt, to_add, to_add_p);
+    temp_double_buffor /= repetition;
     stream << std::fixed << std::setprecision(10) << temp_double_buffor;
     measure_line = std::to_string(data_size) + ";" + stream.str();
-    add_line_to_file(measure_line, (dt_name + "_insert" + data_sample + "_" + repetition + ".txt"));
+    add_line_to_file(measure_line, (dt_name + "_insert" + data_sample + ".txt"));
     stream.str("");
     std::cout << "Insert passed\n";
 
@@ -349,35 +351,59 @@ int run_all_tests_for_queue(IDataStructure<int>* dt, int to_find, int to_add, in
     temp_double_buffor = extract_test(dt);
     stream << std::fixed << std::setprecision(10) << temp_double_buffor;
     measure_line = std::to_string(data_size) + ";" + stream.str();
-    add_line_to_file(measure_line, (dt_name + "_extract" + data_sample + "_" + repetition + ".txt"));
+    add_line_to_file(measure_line, (dt_name + "_extract" + data_sample + ".txt"));
     stream.str("");
     std::cout << "Extract passed\n";
 
     // See max
-    temp_double_buffor = find_max_test(dt);
+    temp_double_buffor = 0.0;
+    for(int i=1; i<=repetition; i++)
+        temp_double_buffor += find_max_test(dt);
+    temp_double_buffor /= repetition;
     stream << std::fixed << std::setprecision(10) << temp_double_buffor;
     measure_line = std::to_string(data_size) + ";" + stream.str();
-    add_line_to_file(measure_line, (dt_name + "_seemax" + data_sample + "_" + repetition + ".txt"));
+    add_line_to_file(measure_line, (dt_name + "_seemax" + data_sample + ".txt"));
     stream.str("");
     std::cout << "SeeMax passed\n";
 
-    // get size
-    temp_double_buffor = get_size_test(dt);
+    // Find value that exists 
+    temp_double_buffor = 0.0;
+    for(int i=1; i<=repetition; i++)
+        temp_double_buffor += find_existing_number_test(dt, random_position);
     stream << std::fixed << std::setprecision(10) << temp_double_buffor;
     measure_line = std::to_string(data_size) + ";" + stream.str();
-    add_line_to_file(measure_line, (dt_name + "_getsize" + data_sample + "_" + repetition + ".txt"));
+    add_line_to_file(measure_line, (dt_name + "_find" + data_sample + ".txt"));
+    stream.str("");
+    std::cout << "Find existing passed\n";
+
+    // get size
+    temp_double_buffor = 0.0;
+    for(int i=1; i<=repetition; i++)
+        temp_double_buffor += get_size_test(dt);
+    stream << std::fixed << std::setprecision(10) << temp_double_buffor;
+    measure_line = std::to_string(data_size) + ";" + stream.str();
+    add_line_to_file(measure_line, (dt_name + "_getsize" + data_sample + ".txt"));
     stream.str("");
     std::cout << "Get size passed\n";
 
     // change at given position
-    temp_double_buffor = modify_test(dt, to_add, to_add_p, random_position);
+    temp_double_buffor = 0.0;
+    for(int i=1; i<=repetition; i++)
+        temp_double_buffor += modify_test(dt, to_add, to_add_p, random_position);
     stream << std::fixed << std::setprecision(10) << temp_double_buffor;
     measure_line = std::to_string(data_size) + ";" + stream.str();
-    add_line_to_file(measure_line, (dt_name + "_modifytest" + data_sample + "_" + repetition + ".txt"));
+    add_line_to_file(measure_line, (dt_name + "_modifytest" + data_sample + ".txt"));
     stream.str("");
     std::cout << "Modify passed\n";
 
-    dt->clear();
+    // Clear operation
+    temp_double_buffor = 0.0;
+    for(int i=1; i<=repetition; i++)
+        temp_double_buffor += clear_test(dt);
+    stream << std::fixed << std::setprecision(10) << temp_double_buffor;
+    measure_line = std::to_string(data_size) + ";" + stream.str();
+    add_line_to_file(measure_line, (dt_name + "_clear" + data_sample + ".txt"));
+    stream.str("");
 
     return 0;
 }

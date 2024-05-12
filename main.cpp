@@ -22,6 +22,7 @@ MenuDt<int>* setup_queue_menu()
     queue_menu->add_item_dt("|Włóż do kolejki", insert);
     queue_menu->add_item_dt("|Wyjmij z kolejki", extract);
     queue_menu->add_item_dt("|Wyczyść", clear_dt);
+    queue_menu->add_item_dt("|Wyszukaj pozycję", find_index);
     queue_menu->add_item_dt("|Podejrzyj element o największym priorytecie", findmax_q);
     queue_menu->add_item_dt("|Zmień wartość i priorytet na danym polu", change_at_q);
     queue_menu->add_item_dt("|Wypisz rozmiar", get_size);
@@ -39,6 +40,7 @@ MenuDt<int>* setup_heapq_menu()
     heapq_menu->add_item_dt("|Włóż do kolejki", insert);
     heapq_menu->add_item_dt("|Wyjmij z kolejki", extract);
     heapq_menu->add_item_dt("|Wyczyść", clear_dt);
+    heapq_menu->add_item_dt("|Wyszukaj pozycję", find_index);
     heapq_menu->add_item_dt("|Podejrzyj element o największym priorytecie", findmax_q);
     heapq_menu->add_item_dt("|Zmień wartość i priorytet na danym polu", change_at_q);
     heapq_menu->add_item_dt("|Wypisz rozmiar", get_size);

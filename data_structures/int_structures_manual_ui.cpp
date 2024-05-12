@@ -322,11 +322,10 @@ int fill_from_file_q(IDataStructure<int> *dt)
     {
         int value;
         int priority;
-        //std::string line;
         while (file) 
         {
-            file >> priority;
             file >> value;
+            file >> priority;
             dt->add_back(value, priority);
         }
         file.close();
