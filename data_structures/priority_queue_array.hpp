@@ -13,67 +13,84 @@ class PriorityQueuearray : public IDataStructure<Type>
 private:
    DynamicArray<PriorityItem<Type>> array; // for stroing priority items
 public:
+
+ PriorityQueuearray() {}
+ 
+ ~PriorityQueuearray()
+ {
+ 	array.clear();
+ }
  
  void add_front(Type value) override
     {
-        // We don't support heap add_front
-        throw std::logic_error("Adding at the front of heap is not supported.");
+        // We don't support queue_array add_front
+        throw std::logic_error("Adding at the front of queue_array is not supported.");
     }
     
 // Insert an element with its priority into the priority queue
 void add_back(Type value, int priority)
 {
-    PriorityItem<Type> item(value, priority);  // Tworzymy obiekt PriorityItem
+    PriorityItem<Type> item(value, priority);  // New priority item object
 
-    unsigned int low = 0;
-    unsigned int high = array.get_size() - 1;
-    unsigned int insert_position = array.get_size() - 1;  // Domyślnie wstawiamy na koniec
-    
+    unsigned int low = 0; //First element as left border
+    unsigned int high = array.get_size() - 1; // Last element as right border
+    unsigned int insert_position = array.get_size() - 1;  // Defult insert is on high
+    bool found = false;
+
     if (array.get_size() == 0)
+    {
+    	array.add_front(item);
+    	return;
+    }
+
+    if (array[0].priority >= priority)
     {
         array.add_front(item);
         return;
     }
 
-    // Wyszukiwanie binarne w posortowanej liście względem priorytetów
+    if (array[array.get_size()-1].priority < priority)
+    {
+        array.add_back(item);
+        return;  
+    }
+
+    // Bin search where to put new value
     while (low <= high)
     {
-        unsigned int mid = low + (high - low) / 2;
-        
-        if(mid < 0 or mid > array.get_size())
-            break;
+        unsigned int mid = (high + low) / 2;
 
-        if (array[mid].priority < priority)
+        if (array[mid].priority == priority)
         {
-            insert_position = mid;  // Zapamiętujemy pozycję, gdzie możemy wstawić nowy element
-            high = mid - 1;  // Szukamy dalej w lewej części, aby potencjalnie znaleźć lepszą pozycję
+            insert_position = mid;
+            found = true;
+            break;
+        }
+        else if (array[mid].priority > priority)
+        {
+            high = mid - 1;
         }
         else
         {
-            low = mid + 1;  // Szukamy w prawej części
+            low = mid + 1;  // We continue bin search on right side
         }
     }
-    
-    if (insert_position == -1)
+    if (!found)
+        insert_position = low;
+
+    while(array[insert_position-1].priority == priority and insert_position != 1)
     {
-        array.add_front(item);
-        return;    
-    }
-    else if (insert_position == array.get_size())
-    {
-        array.add_back(item);
-        return;    
+        insert_position--;
     }
 
-    // Dodajemy element na znalezionej pozycji
+    // Else if position is valid add at specified index
     array.add_at(item, insert_position);
 }
 
-
 void add_at(Type value, unsigned int position) override
     {
-        // We don't support heap add_at
-        throw std::logic_error("Adding at a specific position in heap is not supported.");
+        // We don't support queue_array add_at
+        throw std::logic_error("Adding at a specific position in queue_array is not supported.");
     }
 
 void remove_front() override
@@ -85,13 +102,13 @@ void remove_front() override
 void remove_back() override
 {
         // We don't support remove_back
-        throw std::logic_error("Removing from the back of heap is not supported.");
+        throw std::logic_error("Removing from the back of queue_array is not supported.");
 }
 
 void remove_at(unsigned int position) override
 {
         // We don't support remove_at
-        throw std::logic_error("Removing from a specific position in heap is not supported.");
+        throw std::logic_error("Removing from a specific position in queue_array is not supported.");
 }
 Type last_value() override
 {
@@ -99,12 +116,14 @@ Type last_value() override
         throw std::logic_error("Getting last value of priority queue is not supported.");
 }
 
-void change_at(Type value, unsigned int position, int newPriority) override
+// Modify whole element
+void change_at(Type value, unsigned int position, int new_priority=0) override
 {
     if (position < array.get_size())
     {
+        position = array.get_size() - position - 1;
         array.remove_at(position);
-        this->add_back(value, newPriority);
+        this->add_back(value, new_priority);
     }
     else
     {
@@ -112,7 +131,7 @@ void change_at(Type value, unsigned int position, int newPriority) override
     }
 }
 
-// extreact-max
+// extract-max
 Type first_value() override 
 {
    if (get_size())
@@ -140,7 +159,7 @@ Type find_max()
 {
     if (array.get_size())
     {
-        return array.first_value().value;
+        return array.last_value().value;
     }
     throw std::out_of_range("Index out of range");
 }
@@ -170,14 +189,14 @@ std::string get_as_string() override
     std::string output = "PriorQueueOnarray[";
     if (std::is_integral_v<Type> != true)
         return "ERROR: typename of this array is not supported by this method!";
-    for(int i=0; i<array.get_size(); i++)
+    for(int i=array.get_size()-1; i>=0; i--)
     {
             output += "<";
             PriorityItem<Type> first = array.value_at(i);
             output += std::to_string(first.priority);
             output += ", " + std::to_string(first.value);
             output += ">";
-            if (i != array.get_size()-1)
+            if (i != 0)
                 output += ", ";
     }
     output += "]";

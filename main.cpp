@@ -9,6 +9,7 @@
 #include "data_structures/list_double.hpp"
 #include "data_structures/priority_queue_heap.hpp"
 #include "data_structures/priority_queue_list.hpp"
+#include "data_structures/priority_queue_array.hpp"
 #include "data_structures/dynamic_array.hpp"
 #include "data_structures/heap.hpp"
 #include "data_structures/int_structures_manual_ui.hpp"
@@ -18,7 +19,7 @@
 // Create and return menu for list
 MenuDt<int>* setup_queue_menu()
 {
-    MenuDt<int> *queue_menu = new MenuDt<int>(new PriorityQueueList<int>);
+    MenuDt<int> *queue_menu = new MenuDt<int>(new PriorityQueuearray<int>);
     queue_menu->add_item_dt("|Włóż do kolejki", insert);
     queue_menu->add_item_dt("|Wyjmij z kolejki", extract);
     queue_menu->add_item_dt("|Wyczyść", clear_dt);
@@ -140,7 +141,7 @@ Menu* setup_structures_menu()
 {
     Menu *structures_menu = new Menu();
     structures_menu->add_item("|Kolejka priorytetowa na kopcu", setup_heapq_menu());
-    structures_menu->add_item("|Kolejka priorytetowa na liście", setup_queue_menu());
+    structures_menu->add_item("|Kolejka priorytetowa na tablicy dynamicznej", setup_queue_menu());
     structures_menu->add_item("|Tablica dynamiczna", setup_dynarray_menu());
     structures_menu->add_item("|Lista jednokierunkowa (head)", setup_list_menu());
     structures_menu->add_item("|Lista jednokierunkowa (head, tail)", setup_list_ht_menu());
