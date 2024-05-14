@@ -335,29 +335,27 @@ int run_all_tests_for_queue(IDataStructure<int>* dt, int to_find, int to_add, in
     std::string measure_line;
     std::string data_sample = std::to_string(data_sample_number);
     double temp_double_buffor;
+    double temp_double_buffor2;
 
     
     // Insert to queue
     temp_double_buffor = 0.0;
+    temp_double_buffor2 = 0.0;
     for(int i=1; i<=repetition; i++)
         temp_double_buffor += insert_test(dt, to_add, to_add_p);
+        temp_double_buffor2 += extract_test(dt);
     temp_double_buffor /= repetition;
     stream << std::fixed << std::setprecision(10) << temp_double_buffor;
     measure_line = std::to_string(data_size) + ";" + stream.str();
     add_line_to_file(measure_line, (dt_name + "_insert" + data_sample + ".txt"));
     stream.str("");
-    std::cout << "insert passed!\n";
 
     // Extract from queue
-    temp_double_buffor = 0.0;
-    for(int i=1; i<=repetition; i++)
-        temp_double_buffor += extract_test(dt);
-    temp_double_buffor /= repetition;
+    temp_double_buffor2 /= repetition;
     stream << std::fixed << std::setprecision(10) << temp_double_buffor;
     measure_line = std::to_string(data_size) + ";" + stream.str();
     add_line_to_file(measure_line, (dt_name + "_extract" + data_sample + ".txt"));
     stream.str("");
-    std::cout << "extract passed!\n";
 
     // See max
     temp_double_buffor = 0.0;
@@ -368,7 +366,6 @@ int run_all_tests_for_queue(IDataStructure<int>* dt, int to_find, int to_add, in
     measure_line = std::to_string(data_size) + ";" + stream.str();
     add_line_to_file(measure_line, (dt_name + "_seemax" + data_sample + ".txt"));
     stream.str("");
-    std::cout << "peek passed!\n";
 
     // Find value that exists 
     temp_double_buffor = 0.0;
@@ -379,7 +376,6 @@ int run_all_tests_for_queue(IDataStructure<int>* dt, int to_find, int to_add, in
     measure_line = std::to_string(data_size) + ";" + stream.str();
     add_line_to_file(measure_line, (dt_name + "_find" + data_sample + ".txt"));
     stream.str("");
-    std::cout << "find_value passed!\n";
 
     // get size
     temp_double_buffor = 0.0;
@@ -390,7 +386,6 @@ int run_all_tests_for_queue(IDataStructure<int>* dt, int to_find, int to_add, in
     measure_line = std::to_string(data_size) + ";" + stream.str();
     add_line_to_file(measure_line, (dt_name + "_getsize" + data_sample + ".txt"));
     stream.str("");
-    std::cout << "get_size passed!\n";
 
     // change at given position
     temp_double_buffor = 0.0;
@@ -401,7 +396,6 @@ int run_all_tests_for_queue(IDataStructure<int>* dt, int to_find, int to_add, in
     measure_line = std::to_string(data_size) + ";" + stream.str();
     add_line_to_file(measure_line, (dt_name + "_modifytest" + data_sample + ".txt"));
     stream.str("");
-    std::cout << "change_at passed!\n";
 
     // Clear operation
      temp_double_buffor = 0.0;
@@ -410,7 +404,6 @@ int run_all_tests_for_queue(IDataStructure<int>* dt, int to_find, int to_add, in
     measure_line = std::to_string(data_size) + ";" + stream.str();
     add_line_to_file(measure_line, (dt_name + "_clear" + data_sample + ".txt"));
     stream.str("");
-    std::cout << "clear passed!\n";
 
     return 0;
 }
