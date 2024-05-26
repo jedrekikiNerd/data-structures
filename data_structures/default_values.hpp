@@ -1,0 +1,28 @@
+#ifndef DEFAULTV
+#define DEFAULTV
+
+#include <iostream>
+
+
+// Function to get default value for a type
+template <typename T>
+T default_value()
+{
+    return T();
+}
+
+// Specialization for int
+template <>
+int default_value<int>()
+{
+    return 0;
+}
+
+// Specialization for std::string
+template <>
+std::string default_value<std::string>()
+{
+    return "";
+}
+
+#endif

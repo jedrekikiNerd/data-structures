@@ -2,12 +2,12 @@
 #define TO_STRINGS
 
 #include <iostream>
-#include "priority_item.hpp"
+#include "I_hash_table.hpp"
 
 template <typename Type>
-std::string my_to_string(const PriorityItem<Type>& item)
+std::string my_to_string2(const Bucket<Type>& bucket)
 {
-    return "<" + std::to_string(item.priority) + ", " + std::to_string(item.value) + ">";
+    return "<" + bucket.key + " -> " + std::to_string(bucket.value) + ">";
 }
 
 // Funkcja wybierająca odpowiednią konwersję w zależności od typu
@@ -18,9 +18,9 @@ std::string choose_to_string(const Type& value)
     {
         return std::to_string(value);
     }
-    else
+    else if constexpr (std::is_same_v<Type, Bucket<int>>)
     {
-        return my_to_string(value);
+        return my_to_string2(value);
     }
 }
 

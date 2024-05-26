@@ -319,13 +319,60 @@ public:
         return -1;
     }
 
+    // Returns position of element
+    bool find_and_replace(Type to_change, Type new_value)
+    {
+        DoubleNode<Type>* current_node = head;
+        while(current_node != nullptr)
+        {
+            if (current_node->value == to_change)
+            {
+                current_node->value = new_value;
+                return 1;
+            }
+            current_node = current_node->next_element;
+        }
+        return 0;
+    }
+
+    // Returns position of element
+    bool find_and_remove(Type to_remove)
+    {
+        DoubleNode<Type>* current_node = head;
+        while(current_node != nullptr)
+        {
+            if (current_node->value == to_remove)
+            {
+                if (current_node == head)
+                {
+                    remove_front();
+                    return 1;
+                }
+                
+                // Reasign pointers of neighbours and after that delete reached node
+                DoubleNode<Type>* prev_node = current_node->previous_element;
+                DoubleNode<Type>* next_node = current_node->next_element;
+
+                if (prev_node != nullptr)
+                    prev_node->next_element = next_node;
+                if (next_node != nullptr)
+                    next_node->previous_element = prev_node;
+
+                delete current_node;
+                size--;
+
+                return 1;
+            }
+            current_node = current_node->next_element;
+        }
+        return 0;
+    }
+
     // Returns string representation of data inside list
     std::string get_as_string() override
     {
         std::string output = "List[";
         DoubleNode<Type>* current_node = head;
-        if (std::is_integral_v<Type> != true)
-            return "ERROR: typename of this list is not supported by this method!";
         while(current_node != nullptr)
         {
             output += choose_to_string(current_node->value);

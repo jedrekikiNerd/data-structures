@@ -12,9 +12,32 @@
 #include "data_structures/priority_queue_array.hpp"
 #include "data_structures/dynamic_array.hpp"
 #include "data_structures/heap.hpp"
+#include "data_structures/hash_table_chain.hpp"
+#include "data_structures/I_hash_table.hpp"
+#include "data_structures/hash_functions.hpp"
 #include "data_structures/int_structures_manual_ui.hpp"
+#include "data_structures/int_hashtables_manual_ui.hpp"
 #include "test.hpp"
 
+
+// Create and return menu for list
+MenuHt<int>* setup_hashchain_menu()
+{
+    MenuHt<int> *hashchain_menu = new MenuHt<int>(new HashTableSeperateChaining<int>(hash_modulo));
+    hashchain_menu->add_item_dt("|Włóż element", insert_ht);
+    hashchain_menu->add_item_dt("|Usuń element", remove_ht);
+    hashchain_menu->add_item_dt("|Wyczyść", clear_ht);
+    hashchain_menu->add_item_dt("|Wyszukaj klucz", find_ht);
+    hashchain_menu->add_item_dt("|Zobacz wartość o danym kluczu", value_at_ht);
+    hashchain_menu->add_item_dt("|Wyświetl współczynnik zajętości", get_load_factor_ht);
+    hashchain_menu->add_item_dt("|Sprawdź czy klucz istnieje", has_key_ht);
+    hashchain_menu->add_item_dt("|Wypisz rozmiar", get_size_ht);
+    hashchain_menu->add_item_dt("|Wczytaj z pliku", fill_from_file_ht);
+    hashchain_menu->add_item("|Wyświetlanie czasu", change_print_flag);
+    hashchain_menu->add_item("|Wróć do wyboru struktur", exit_action);
+
+    return hashchain_menu;
+}
 
 // Create and return menu for list
 MenuDt<int>* setup_queue_menu()
@@ -140,6 +163,7 @@ MenuDt<int>* setup_dynarray_menu()
 Menu* setup_structures_menu()
 {
     Menu *structures_menu = new Menu();
+    structures_menu->add_item("|Tablica mieszająca łańcuchowa", setup_hashchain_menu());
     structures_menu->add_item("|Kolejka priorytetowa na kopcu", setup_heapq_menu());
     structures_menu->add_item("|Kolejka priorytetowa na tablicy dynamicznej", setup_queue_menu());
     structures_menu->add_item("|Tablica dynamiczna", setup_dynarray_menu());
