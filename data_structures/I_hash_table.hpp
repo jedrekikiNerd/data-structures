@@ -13,6 +13,8 @@ public:
     Type value;
     bool taken;
 
+    Bucket() : key(""), value(Type()), taken(false) {} // Domyślny konstruktor
+
     Bucket(std::string k, Type v, bool t) : key(k), value(v), taken(t) {}
     ~Bucket() {}
 
@@ -21,6 +23,21 @@ public:
         return key == other.key;
     }
 };
+// class Bucket
+// {
+// public:
+//     std::string key;
+//     Type value;
+//     bool taken;
+
+//     Bucket(std::string k, Type v, bool t) : key(k), value(v), taken(t) {}
+//     ~Bucket() {}
+
+//     bool operator==(const Bucket& other) const
+//     {
+//         return key == other.key;
+//     }
+// };
 
 
 /**

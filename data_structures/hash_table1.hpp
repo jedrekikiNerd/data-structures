@@ -1,184 +1,197 @@
-#ifndef HASH_TABLE_OPEN_ADDRESSING
-#define HASH_TABLE_OPEN_ADDRESSING
+#ifndef I_HASH_OPEN_ADDRESSING
+#define I_HASH_OPEN_ADDRESSING
 
-#include "dynamic_array.hpp"
+#include "I_hash_table.hpp"
+#include "default_values.hpp"
 #include <functional>
-#include <sstream>
-#include <type_traits>
+#include <stdexcept>
 
-template <typename Key, typename Type>
-class HashTableOpenAddressing {
+/**
+ * Hash Table with Open Addressing
+ * 
+ */
+template <typename Type>
+class HashTableOpenAddressing : public IHashTable<Type>
+{
 private:
-    struct Entry {
-        Key key;
-        Type value;
-        bool occupied;
-        bool deleted;
+    // Table that contains buckets - we set initial value as 16
+    unsigned int table_size = 16;
+    Bucket<Type>* table;
 
-        Entry() : occupied(false), deleted(false) {}
-    };
-
-    DynamicArray<Entry> table;
-    unsigned int num_elements;
-
-    unsigned int hash(Key key) {
-        return std::hash<Key>{}(key) % table.get_size();
+    // Get the index for a given key
+    unsigned int get_index(std::string& key)
+    {
+        return this->hash_function(key, table_size);
     }
 
-    void resize() {
-        DynamicArray<Entry> old_table = table;
-        table = DynamicArray<Entry>(old_table.get_size() * 2);
+    // Resize the table (increase or decrease) based on the load factor
+    void resize_table()
+    {
+        float load_factor = static_cast<float>(this->size) / table_size;
 
-        for (unsigned int i = 0; i < old_table.get_size(); ++i) {
-            if (old_table[i].occupied && !old_table[i].deleted) {
-                insert(old_table[i].key, old_table[i].value);
-            }
+        if (load_factor > 0.5)
+        {
+            resize_table(table_size * 2);
+        }
+        else if (load_factor < 0.125 and table_size > 16)
+        {
+            resize_table(table_size / 2);
         }
     }
+
+    // Resize the table to a new size
+    // Resize the table to a new size
+void resize_table(unsigned int new_size)
+{
+    Bucket<Type>* new_table = new Bucket<Type>[new_size]();
+    for (unsigned int i = 0; i < table_size; ++i)
+    {
+        if (table[i].taken)
+        {
+            unsigned int index = get_index(table[i].key);
+            while (new_table[index].taken)
+            {
+                index = (index + 1) % new_size;
+            }
+            new_table[index] = table[i];
+        }
+    }
+
+    delete[] table;
+    table = new_table;
+    table_size = new_size;
+}
+
 
 public:
-    HashTableOpenAddressing() : num_elements(0) {
-        table = DynamicArray<Entry>(8);
+    HashTableOpenAddressing(std::function<unsigned int(const std::string&, unsigned int)> hash_func) : IHashTable<Type>(hash_func)
+    {
+        table = new Bucket<Type>[16];
     }
 
-    void insert(Key key, Type value) {
-        if (num_elements >= table.get_size() / 2) {
-            resize();
-        }
+    ~HashTableOpenAddressing()
+    {
+        delete[] table;
+    }
 
-        unsigned int index = hash(key);
-        while (table[index].occupied && !table[index].deleted) {
-            if (table[index].key == key) {
-                table[index].value = value;
-                return;
+    // Insert value with given key
+    void insert(std::string key, Type value)
+{
+    resize_table(); // Before inserting new element, check if we need to resize the table
+
+    unsigned int index = get_index(key);
+    unsigned int original_index = index;
+    while (table[index].taken)
+    {
+        if (table[index].key == key) {
+            table[index].value = value; // Update value if key already exists
+            return;
+        }
+        index = (index + 1) % table_size;
+        if (index == original_index) // If we have traversed the whole table and found no empty slot, resize the table
+        {
+            resize_table(table_size * 2);
+            original_index = get_index(key);
+            index = original_index;
+        }
+    }
+    table[index] = Bucket<Type>(key, value, true);
+    this->size++;
+}
+
+// Remove value with given key
+void remove(std::string key)
+{
+    unsigned int index = get_index(key);
+    unsigned int original_index = index;
+    while (table[index].taken)
+    {
+        if (table[index].key == key)
+        {
+            table[index].taken = false;
+            this->size--;
+            resize_table(); // After removing check if we need to resize the table
+            return;
+        }
+        index = (index + 1) % table_size;
+        if (index == original_index) // If we have traversed the whole table and found no entry with the given key, exit
+            return;
+    }
+}
+
+    // Clears/removes all values from hash table bringing it to initial state
+    void clear()
+    {
+        delete[] table;
+        table_size = 16;
+        table = new Bucket<Type>[table_size];
+        this->size = 0;
+    }
+
+    // Returns value with given key
+    Type value_at(std::string key)
+    {
+        unsigned int index = get_index(key);
+        while (table[index].taken)
+        {
+            if (table[index].key == key)
+                return table[index].value;
+            index = (index + 1) % table_size;
+        }
+        throw std::runtime_error("Key not found");
+    }
+
+    // Returns size of hash table in bytes
+    unsigned int get_byte_size()
+    {
+        return sizeof(*this) + sizeof(Bucket<Type>) * table_size;
+    }
+
+    // Returns key at which first occurrence of given value is found - if it doesnt exist it returns "-1"
+    std::string find(Type value)
+    {
+        for (unsigned int i = 0; i < table_size; ++i)
+        {
+            if (table[i].taken && table[i].value == value)
+                return table[i].key;
+        }
+        return "-1";
+    }
+
+    // Returns data structure representation as string (useful for displaying)
+    std::string get_as_string()
+    {
+        std::string output;
+        for (unsigned int i = 0; i < table_size; ++i)
+        {
+            if (table[i].taken)
+            {
+                output += "Index " + std::to_string(i) + ": ";
+                output += table[i].key + " -> " + std::to_string(table[i].value);
+                output += "\n";
             }
-            index = (index + 1) % table.get_size();
         }
-
-        table[index].key = key;
-        table[index].value = value;
-        table[index].occupied = true;
-        table[index].deleted = false;
-        num_elements++;
+        return output;
     }
 
-    bool find(Key key, Type &value) {
-        unsigned int index = hash(key);
-        unsigned int start_index = index;
-
-        while (table[index].occupied) {
-            if (table[index].key == key && !table[index].deleted) {
-                value = table[index].value;
+    // Checks if a key exists in the hash table
+    bool has_key(std::string key)
+    {
+        unsigned int index = get_index(key);
+        while (table[index].taken)
+        {
+            if (table[index].key == key)
                 return true;
-            }
-            index = (index + 1) % table.get_size();
-            if (index == start_index) {
-                break;
-            }
+            index = (index + 1) % table_size;
         }
         return false;
     }
 
-    void remove(Key key) {
-        unsigned int index = hash(key);
-        unsigned int start_index = index;
-
-        while (table[index].occupied) {
-            if (table[index].key == key && !table[index].deleted) {
-                table[index].deleted = true;
-                num_elements--;
-                return;
-            }
-            index = (index + 1) % table.get_size();
-            if (index == start_index) {
-                break;
-            }
-        }
-    }
-
-    unsigned int get_size() const {
-        return num_elements;
-    }
-
-    std::string get_as_string() const {
-        std::ostringstream output;
-        output << "HashTableOpenAddressing[";
-
-        bool first = true;
-        for (unsigned int i = 0; i < table.get_size(); ++i) {
-            if (table[i].occupied && !table[i].deleted) {
-                if (!first) {
-                    output << ", ";
-                }
-                output << "<" << std::to_string(table[i].key) << ", " << choose_to_string(table[i].value) << ">";
-                first = false;
-            }
-        }
-        output << "]";
-        return output.str();
-    }
-
-    unsigned int get_size() {
-        return table.get_size;
-    }
-
-    void clear() override
+    // Returns load factor
+    float get_load_factor()
     {
-        table.clear();
+        return static_cast<float>(this->size) / table_size;
     }
-
-    unsigned int get_byte_size() override
-    {
-        return sizeof(HashTableOpenAddressing) + array.get_byte_size();
-    }
-
-
-
-    void add_front(Type value) override
-    {
-        // We don't support queue_array add_front
-        throw std::logic_error("Adding at the front of queue_array is not supported.");
-    }
-
-    void add_back(Type value) override
-    {
-        // We don't support queue_array add_front
-        throw std::logic_error("Adding at the front of queue_array is not supported.");
-    }
-
-    void remove_front() override
-    {
-        // We don't support remove_back
-        throw std::logic_error("Removing from the front of queue is not supported.");
-    }
-
-    void remove_back() override
-    {
-        // We don't support remove_back
-        throw std::logic_error("Removing from the back of queue_array is not supported.");
-    }
-
-    Type last_value() override
-    {
-        // We don't support getting last value
-        throw std::logic_error("Getting last value of priority queue is not supported.");
-    }
-
-    void change_at(Type value, unsigned int position, int new_priority=0) override
-    {
-     throw std::logic_error("Getting last value of priority queue is not supported.");
-    }
-
-    Type first_value() override 
-    {
-    throw std::logic_error("Getting last value of priority queue is not supported.");
-    }
-
-    Type value_at(unsigned int position) override
-    {
-    throw std::logic_error("Getting last value of priority queue is not supported.");
-    }
-
-
 };
+
 #endif
