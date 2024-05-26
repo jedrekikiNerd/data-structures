@@ -92,7 +92,7 @@ int get_load_factor_ht(IHashTable<int> *ht)
 {
     Timer timer;
     timer.start();
-    int val = ht->get_load_factor();
+    float val = ht->get_load_factor();
     timer.stop();
     if (print_time)
         display_action2(std::to_string(val), "Wyświetlenie współczynnika zajętości " + std::to_string(timer.elapsedSeconds()) + "ns");
@@ -109,7 +109,7 @@ int has_key_ht(IHashTable<int> *ht)
     std::string val = "True";
     timer.start();
     if (!ht->has_key(key))
-        std::string val = "False";
+        val = "False";
     timer.stop();
     if (print_time)
         display_action2(val, "Sprawdzenie zajęło " + std::to_string(timer.elapsedSeconds()) + "ns");
