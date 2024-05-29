@@ -1,5 +1,7 @@
 *.exe
 generated_data/**
+generated_data_hash/**
+generated_data_queues/**
 test_results/**
 test_results_final/**
 test_results_final2/**

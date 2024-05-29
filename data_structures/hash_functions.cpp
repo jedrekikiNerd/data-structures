@@ -1,6 +1,6 @@
 #include "hash_functions.hpp"
 
-unsigned int hash_modulo(std::string key, unsigned int table_size)
+unsigned int hash_modulo_str(std::string key, unsigned int table_size)
 {
     unsigned int sum = 0;
     
@@ -14,5 +14,5 @@ unsigned int hash_modulo(std::string key, unsigned int table_size)
 
 unsigned int hash_modulo(int key, unsigned int table_size)
 {
-    return key % table_size;
+    return std::abs(key) % table_size;
 }

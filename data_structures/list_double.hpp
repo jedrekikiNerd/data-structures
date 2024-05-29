@@ -348,6 +348,12 @@ public:
                     remove_front();
                     return 1;
                 }
+
+                if(current_node == tail)
+                {
+                    remove_back();
+                    return 1;
+                }
                 
                 // Reasign pointers of neighbours and after that delete reached node
                 DoubleNode<Type>* prev_node = current_node->previous_element;

@@ -117,7 +117,7 @@ int generator3(int number_samples, int number_of_data, int file_number) {
     default_random_engine generator;
     uniform_int_distribution<int> distribution(-2147483647,2147483647);
 
-    string folder_name = "generated_data_queues";
+    string folder_name = "generated_data_hash";
 
     removeFilesInFolder(folder_name);
 
@@ -162,6 +162,7 @@ int ui_run_generator()
     int number_of_data = user_input_action("Podaj ile próbek każdej wielkości wygenerować: ");
     generator(first_sample_size, number_of_data, number_files);
     generator2(first_sample_size, number_of_data, number_files);
+    generator3(first_sample_size, number_of_data, number_files);
     display_action("Dane zostały wygenerowane!");
     return 0;
 }

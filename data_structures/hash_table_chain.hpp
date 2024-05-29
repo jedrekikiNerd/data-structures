@@ -44,9 +44,11 @@ private:
     void resize_table(unsigned int new_size)
     {
         DoubleListHT<Bucket<Type>>* new_table = new DoubleListHT<Bucket<Type>>[new_size];
+        unsigned int old_size = table_size;
+        table_size = new_size;
 
         // Rehash all elements into the new table
-        for (unsigned int i = 0; i < table_size; i++)
+        for (unsigned int i = 0; i < old_size; i++)
         {
             DoubleNode<Bucket<Type>>* current_node = table[i].get_head_ptr();
         
@@ -60,7 +62,6 @@ private:
 
         delete[] table;
         table = new_table;
-        table_size = new_size;
     }
 
 public:

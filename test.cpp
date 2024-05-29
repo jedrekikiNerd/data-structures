@@ -529,7 +529,7 @@ int run_all_tests_for_hashtable(IHashTable<int>* dt, int to_find, int to_add, in
     temp_double_buffor /= repetition;
     stream << std::fixed << std::setprecision(10) << temp_double_buffor;
     measure_line = std::to_string(data_size) + ";" + stream.str();
-    add_line_to_file(measure_line, (dt_name + "_find" + data_sample + ".txt"));
+    add_line_to_file(measure_line, (dt_name + "_haskey" + data_sample + ".txt"));
     stream.str("");
 
     // Clear operation
