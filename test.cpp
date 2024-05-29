@@ -7,6 +7,10 @@
 #include "data_structures/priority_queue_heap.hpp"
 #include "data_structures/priority_queue_array.hpp"
 #include "data_structures/priority_queue_array.hpp"
+#include "data_structures/I_hash_table.hpp"
+#include "data_structures/hash_table_chain.hpp"
+#include "data_structures/hash_table_open.hpp"
+#include "data_structures/hash_functions.hpp"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -82,7 +86,37 @@ int fill_from_file2(IDataStructure<int> *dt, int file_index, int file_index2)
             dt->add_back(value, priority);
         }
         file.close();
-    } else {
+    }
+    else
+    {
+        std::cerr << "Unable to open file: " << file_name << std::endl;
+        return -1;
+    }
+    return 0;
+}
+
+int fill_from_file_ht(IHashTable<int> *ht, int file_index, int file_index2)
+{
+    std::string folderPath = "generated_data_hash";
+    const std::string filePre = "wyniki_";
+    const std::string fileExt = ".txt";
+    std::string file_name = folderPath + "/" + filePre + std::to_string(file_index) + "_" + std::to_string(file_index2) + fileExt;
+
+    std::ifstream file(file_name);
+    if (file.is_open()) 
+    {
+        int key;
+        int value;
+        while (file) 
+        {
+            file >> key;
+            file >> value;
+            ht->insert(key, value);
+        }
+        file.close();
+    }
+    else
+    {
         std::cerr << "Unable to open file: " << file_name << std::endl;
         return -1;
     }
@@ -211,6 +245,48 @@ double clear_test(IDataStructure<int> *dt)
 {
     timer.start();
     dt -> clear();
+    timer.stop();
+    return timer.elapsedSeconds();
+}
+
+// Here are functions for hash table testing:
+
+double insert_test_hash(IHashTable<int> *dt, int Value, int key)
+{
+    timer.start();
+    dt->insert(key, Value);
+    timer.stop();
+    return timer.elapsedSeconds();
+}
+
+double remove_test_hash(IHashTable<int> *dt, int key)
+{
+    timer.start();
+    dt->remove(key);
+    timer.stop();
+    return timer.elapsedSeconds();
+}
+
+double find_test_hash(IHashTable<int> *dt, int Value)
+{
+    timer.start();
+    dt->find(Value);
+    timer.stop();
+    return timer.elapsedSeconds();
+}
+
+double haskey_test_hash(IHashTable<int> *dt, int key)
+{
+    timer.start();
+    dt->has_key(key);
+    timer.stop();
+    return timer.elapsedSeconds();
+}
+
+double clear_test_hash(IHashTable<int> *dt)
+{
+    timer.start();
+    dt->clear();
     timer.stop();
     return timer.elapsedSeconds();
 }
@@ -408,6 +484,65 @@ int run_all_tests_for_queue(IDataStructure<int>* dt, int to_find, int to_add, in
     return 0;
 }
 
+int run_all_tests_for_hashtable(IHashTable<int>* dt, int to_find, int to_add, int to_add_key, int random_key, int data_size, std::string dt_name, int data_sample_number, int repetition)
+{
+    std::ostringstream stream;
+    std::string measure_line;
+    std::string data_sample = std::to_string(data_sample_number);
+    double temp_double_buffor;
+    double temp_double_buffor2;
+
+    
+    // Insert to hash table
+    temp_double_buffor = 0.0;
+    temp_double_buffor2 = 0.0;
+    for(int i=1; i<=repetition; i++)
+        temp_double_buffor += insert_test_hash(dt, to_add, to_add_key);
+        temp_double_buffor2 += remove_test_hash(dt, to_add_key);
+    temp_double_buffor /= repetition;
+    stream << std::fixed << std::setprecision(10) << temp_double_buffor;
+    measure_line = std::to_string(data_size) + ";" + stream.str();
+    add_line_to_file(measure_line, (dt_name + "_insert" + data_sample + ".txt"));
+    stream.str("");
+
+    // Remove from hash table
+    temp_double_buffor2 /= repetition;
+    stream << std::fixed << std::setprecision(10) << temp_double_buffor;
+    measure_line = std::to_string(data_size) + ";" + stream.str();
+    add_line_to_file(measure_line, (dt_name + "_remove" + data_sample + ".txt"));
+    stream.str("");
+
+    // Find key for value
+    temp_double_buffor = 0.0;
+    for(int i=1; i<=repetition; i++)
+        temp_double_buffor += find_test_hash(dt, to_find);
+    temp_double_buffor /= repetition;
+    stream << std::fixed << std::setprecision(10) << temp_double_buffor;
+    measure_line = std::to_string(data_size) + ";" + stream.str();
+    add_line_to_file(measure_line, (dt_name + "_find" + data_sample + ".txt"));
+    stream.str("");
+
+    // Check if key is present
+    temp_double_buffor = 0.0;
+    for(int i=1; i<=repetition; i++)
+        temp_double_buffor += haskey_test_hash(dt, to_find);
+    temp_double_buffor /= repetition;
+    stream << std::fixed << std::setprecision(10) << temp_double_buffor;
+    measure_line = std::to_string(data_size) + ";" + stream.str();
+    add_line_to_file(measure_line, (dt_name + "_find" + data_sample + ".txt"));
+    stream.str("");
+
+    // Clear operation
+     temp_double_buffor = 0.0;
+    temp_double_buffor += clear_test_hash(dt);
+    stream << std::fixed << std::setprecision(10) << temp_double_buffor;
+    measure_line = std::to_string(data_size) + ";" + stream.str();
+    add_line_to_file(measure_line, (dt_name + "_clear" + data_sample + ".txt"));
+    stream.str("");
+
+    return 0;
+}
+
 // Function that loads data from file to each data structure and runs all tests for it
 int run_tests()
 {
@@ -422,13 +557,15 @@ int run_tests()
     DynamicArray<int> dyn_array;
     PriorityQueueHeap<int> queue_heap;
     PriorityQueuearray<int> queue_array;
+    HashTableSeperateChaining<int> hash_chain(hash_modulo);
+    HashTableOpenAddressing<int> hash_open(hash_modulo);
 
     removeFilesInFolder2("test_results");
 
     int file_number = user_input_action("Podaj ilość różnych wielkości danych, które zostały wygenerowane w katalogu generated_data: ");
     int data_number = user_input_action("Podaj ilość wygenerowanych instancji dla jednej wielkości: ");
     int repetition = user_input_action("Podaj ilość powtórzeń dla każdej próbki: ");
-    int what_to_test = user_input_action("Podaj co testować (1: pierwszy projekt, 2: drugi projekt): ");
+    int what_to_test = user_input_action("Podaj co testować (1: pierwszy projekt, 2: drugi projekt, 3: trzeci projekt): ");
 
     if (what_to_test == 1)
         for(int i=1; i<=file_number; i++)
@@ -500,6 +637,34 @@ int run_tests()
                 if(j==1)
                     add_line_to_file(std::to_string(queue_array.get_size()) + ";" + std::to_string(bytes), ("QueueList_size_growth.txt"));
                 run_all_tests_for_queue(&queue_array, to_find, to_add, to_add_p, random_position, queue_array.get_size(), "QueueArray", j, repetition);
+            }
+        }
+    else if (what_to_test == 3)
+        for(int i=1; i<=file_number; i++)
+        {
+            for(int j=1; j<=data_number; j++)
+            {
+                int to_add = generate_random_number(random_generator);
+                int to_find = generate_random_number(random_generator);
+                int bytes;
+
+                // Run tests for list
+                fill_from_file_ht(&hash_chain, i, j);
+                int to_add_key = generate_random_number_range(random_generator, -hash_chain.get_size()*2, hash_chain.get_size()*2);
+                // We need size for generating random position
+                unsigned int random_key = generate_random_number_unsigned(hash_chain.get_size()-1, random_generator);
+                bytes = hash_chain.get_byte_size();
+                // We check (and save) size for only one iteration over data sizes
+                if(j==1)
+                    add_line_to_file(std::to_string(hash_chain.get_size()) + ";" + std::to_string(bytes), ("HashChain_size_growth.txt"));
+                run_all_tests_for_hashtable(&hash_chain, to_find, to_add, to_add_key, random_key, hash_chain.get_size(), "HashChain", j, repetition);
+
+                fill_from_file_ht(&hash_open, i, j);
+                bytes = hash_open.get_byte_size();
+                // We check (and save) size for only one iteration over data sizes
+                if(j==1)
+                    add_line_to_file(std::to_string(hash_open.get_size()) + ";" + std::to_string(bytes), ("HashOpen_size_growth.txt"));
+                run_all_tests_for_hashtable(&hash_open, to_find, to_add, to_add_key, random_key, hash_open.get_size(), "HashOpen", j, repetition);
             }
         }
     return 0;

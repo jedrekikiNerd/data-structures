@@ -6,21 +6,21 @@
 
 // Function to get default value for a type
 template <typename T>
-T default_value()
+inline T default_value()
 {
     return T();
 }
 
 // Specialization for int
 template <>
-int default_value<int>()
+inline int default_value<int>()
 {
     return 0;
 }
 
 // Specialization for std::string
 template <>
-std::string default_value<std::string>()
+inline std::string default_value<std::string>()
 {
     return "";
 }

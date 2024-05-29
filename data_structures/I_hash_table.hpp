@@ -6,16 +6,35 @@
 
 
 template <typename Type>
-class Bucket
+class BucketString
 {
 public:
     std::string key;
     Type value;
     bool taken;
 
-    Bucket() : key(""), value(Type()), taken(false) {} // Domyślny konstruktor
+    BucketString() : key(""), value(Type()), taken(false) {} // Domyślny konstruktor
 
-    Bucket(std::string k, Type v, bool t) : key(k), value(v), taken(t) {}
+    BucketString(std::string k, Type v, bool t) : key(k), value(v), taken(t) {}
+    ~BucketString() {}
+
+    bool operator==(const BucketString& other) const
+    {
+        return key == other.key;
+    }
+};
+
+template <typename Type>
+class Bucket
+{
+public:
+    int key;
+    Type value;
+    bool taken;
+
+    Bucket() : key(0), value(Type()), taken(false) {} // Domyślny konstruktor
+
+    Bucket(int k, Type v, bool t) : key(k), value(v), taken(t) {}
     ~Bucket() {}
 
     bool operator==(const Bucket& other) const
@@ -23,22 +42,6 @@ public:
         return key == other.key;
     }
 };
-// class Bucket
-// {
-// public:
-//     std::string key;
-//     Type value;
-//     bool taken;
-
-//     Bucket(std::string k, Type v, bool t) : key(k), value(v), taken(t) {}
-//     ~Bucket() {}
-
-//     bool operator==(const Bucket& other) const
-//     {
-//         return key == other.key;
-//     }
-// };
-
 
 /**
  * HASH TABLE Interface
@@ -52,23 +55,29 @@ protected:
     unsigned int size;
 
     // Pointer to the hashing function
-    std::function<unsigned int(const std::string&, unsigned int)> hash_function;
+    std::function<unsigned int(const std::string&, unsigned int)> hash_function_str;
+    std::function<unsigned int(int, unsigned int)> hash_function;
 
 public:
-    IHashTable(std::function<unsigned int(const std::string&, unsigned int)> hash_func) : hash_function(hash_func) {}
+    IHashTable(std::function<unsigned int(const std::string&, unsigned int)> hash_func) : hash_function_str(hash_func) {}
+    IHashTable(std::function<unsigned int(int, unsigned int)> hash_func) : hash_function(hash_func) {}
     ~IHashTable() {}
 
     // Insert value with given key
-    virtual void insert(std::string key, Type value) = 0;
+    virtual void insert(std::string key, Type value) {}
+    virtual void insert(int key, Type value) {}
+
 
     // Remove value with given key
-    virtual void remove(std::string key) = 0;
+    virtual void remove(std::string key) {}
+    virtual void remove(int key) {}
 
     // Clears/removes all values from hash table bringing it to initial state
-    virtual void clear() = 0;
+    virtual void clear() {}
 
     // Returns value with given key
-    virtual Type value_at(std::string key) = 0;
+    virtual Type value_at(std::string key) {}
+    virtual Type value_at(int key) {}
 
     // Returns size of hash table - only full buckets
     unsigned int get_size()
@@ -77,19 +86,21 @@ public:
     }
 
     // Returns size of hash table in bytes
-    virtual unsigned int get_byte_size() = 0;
+    virtual unsigned int get_byte_size() {}
 
-    // Returns index at which first occurrence of given value is found
-    virtual std::string find(Type value) = 0;
+    // Returns index/key at which first occurrence of given value is found
+    virtual std::string find2(Type value) {}
+    virtual int find(Type value) {}
 
     // Returns data structure representation as string (useful for displaying)
-    virtual std::string get_as_string() = 0;
+    virtual std::string get_as_string() {}
 
     // Checks if a key exists in the hash table
-    virtual bool has_key(std::string key) = 0;
+    virtual bool has_key(std::string key) {}
+    virtual bool has_key(int key) {}
 
     // Returns load factor
-    virtual float get_load_factor() = 0;
+    virtual float get_load_factor() {}
 
 };
 #endif

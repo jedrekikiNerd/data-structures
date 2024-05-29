@@ -8,7 +8,7 @@
 // Agent between UI and data structure insert
 int insert_ht(IHashTable<int> *ht)
 {
-    std::string key = user_input_action_string("Podaj klucz: ");
+    int key = user_input_action("Podaj klucz: ");
     int value = user_input_action("Podaj liczbę jaką chcesz dodać: ");
     Timer timer;
     timer.start();
@@ -22,7 +22,7 @@ int insert_ht(IHashTable<int> *ht)
 // Agent between UI and data structure remove
 int remove_ht(IHashTable<int> *ht)
 {
-    std::string key = user_input_action_string("Podaj klucz: ");
+    int key = user_input_action("Podaj klucz: ");
     Timer timer;
     timer.start();
     ht->remove(key);
@@ -52,9 +52,9 @@ int find_ht(IHashTable<int> *ht)
     int value_to_find = user_input_action("Podaj liczbę, której klucz chcesz znaleźć: ");
     Timer timer;
     timer.start();
-    std::string val = ht->find(value_to_find);
+    int val = ht->find(value_to_find);
     timer.stop();
-    if (val == "-1")
+    if (val == UINT_MAX)
     {
         if (print_time)
             display_action2("Nie znaleziono!", "Wyszkuiwanie zajęło " + std::to_string(timer.elapsedSeconds()) + "ns");
@@ -63,16 +63,16 @@ int find_ht(IHashTable<int> *ht)
         return 0;
     }
     if (print_time)
-        display_action2(val, "Znalezienie klucza zajęło " + std::to_string(timer.elapsedSeconds()) + "ns");
+        display_action2(std::to_string(val), "Znalezienie klucza zajęło " + std::to_string(timer.elapsedSeconds()) + "ns");
     else
-        display_action(val);
+        display_action(std::to_string(val));
     return 0;
 }
 
 // Agent between UI and data structure value_at
 int value_at_ht(IHashTable<int> *ht)
 {
-    std::string key = user_input_action_string("Podaj klucz: ");
+    int key = user_input_action("Podaj klucz: ");
     Timer timer;
     timer.start();
     if (!ht->has_key(key))
@@ -105,7 +105,7 @@ int get_load_factor_ht(IHashTable<int> *ht)
 int has_key_ht(IHashTable<int> *ht)
 {
     Timer timer;
-    std::string key = user_input_action_string("Podaj klucz: ");
+    int key = user_input_action("Podaj klucz: ");
     std::string val = "True";
     timer.start();
     if (!ht->has_key(key))
@@ -139,7 +139,7 @@ int fill_from_file_ht(IHashTable<int> *ht)
     std::ifstream file(file_name);
     if (file.is_open()) 
     {
-        std::string key;
+        int key;
         int value;
         while (file) 
         {

@@ -13,6 +13,8 @@
 #include "data_structures/dynamic_array.hpp"
 #include "data_structures/heap.hpp"
 #include "data_structures/hash_table_chain.hpp"
+#include "data_structures/hash_table_cuckoo.hpp"
+#include "data_structures/hash_table_open.hpp"
 #include "data_structures/I_hash_table.hpp"
 #include "data_structures/hash_functions.hpp"
 #include "data_structures/int_structures_manual_ui.hpp"
@@ -20,7 +22,7 @@
 #include "test.hpp"
 
 
-// Create and return menu for list
+// Create and return menu for hash table chain
 MenuHt<int>* setup_hashchain_menu()
 {
     MenuHt<int> *hashchain_menu = new MenuHt<int>(new HashTableSeperateChaining<int>(hash_modulo));
@@ -39,7 +41,47 @@ MenuHt<int>* setup_hashchain_menu()
     return hashchain_menu;
 }
 
-// Create and return menu for list
+// Create and return menu for hash table open
+MenuHt<int>* setup_hashopen_menu()
+{
+    MenuHt<int> *hashopen_menu = new MenuHt<int>(new HashTableOpenAddressing<int>(hash_modulo));
+    hashopen_menu->add_item_dt("|Włóż element", insert_ht);
+    hashopen_menu->add_item_dt("|Usuń element", remove_ht);
+    hashopen_menu->add_item_dt("|Wyczyść", clear_ht);
+    hashopen_menu->add_item_dt("|Wyszukaj klucz", find_ht);
+    hashopen_menu->add_item_dt("|Zobacz wartość o danym kluczu", value_at_ht);
+    hashopen_menu->add_item_dt("|Wyświetl współczynnik zajętości", get_load_factor_ht);
+    hashopen_menu->add_item_dt("|Sprawdź czy klucz istnieje", has_key_ht);
+    hashopen_menu->add_item_dt("|Wypisz rozmiar", get_size_ht);
+    hashopen_menu->add_item_dt("|Wczytaj z pliku", fill_from_file_ht);
+    hashopen_menu->add_item("|Wyświetlanie czasu", change_print_flag);
+    hashopen_menu->add_item("|Wróć do wyboru struktur", exit_action);
+
+    return hashopen_menu;
+}
+
+// Create and return menu for hash table open
+/*
+MenuHt<int>* setup_hashcuckoo_menu()
+{
+    MenuHt<int> *hashcuckoo_menu = new MenuHt<int>(new HashTableCuckoo<int>(hash_modulo));
+    hashcuckoo_menu->add_item_dt("|Włóż element", insert_ht);
+    hashcuckoo_menu->add_item_dt("|Usuń element", remove_ht);
+    hashcuckoo_menu->add_item_dt("|Wyczyść", clear_ht);
+    hashcuckoo_menu->add_item_dt("|Wyszukaj klucz", find_ht);
+    hashcuckoo_menu->add_item_dt("|Zobacz wartość o danym kluczu", value_at_ht);
+    hashcuckoo_menu->add_item_dt("|Wyświetl współczynnik zajętości", get_load_factor_ht);
+    hashcuckoo_menu->add_item_dt("|Sprawdź czy klucz istnieje", has_key_ht);
+    hashcuckoo_menu->add_item_dt("|Wypisz rozmiar", get_size_ht);
+    hashcuckoo_menu->add_item_dt("|Wczytaj z pliku", fill_from_file_ht);
+    hashcuckoo_menu->add_item("|Wyświetlanie czasu", change_print_flag);
+    hashcuckoo_menu->add_item("|Wróć do wyboru struktur", exit_action);
+
+    return hashcuckoo_menu;
+}
+*/
+
+// Create and return menu for queue
 MenuDt<int>* setup_queue_menu()
 {
     MenuDt<int> *queue_menu = new MenuDt<int>(new PriorityQueuearray<int>);
@@ -57,7 +99,7 @@ MenuDt<int>* setup_queue_menu()
     return queue_menu;
 }
 
-// Create and return menu for list
+// Create and return menu for queue on heap
 MenuDt<int>* setup_heapq_menu()
 {
     MenuDt<int> *heapq_menu = new MenuDt<int>(new PriorityQueueHeap<int>);
@@ -164,6 +206,7 @@ Menu* setup_structures_menu()
 {
     Menu *structures_menu = new Menu();
     structures_menu->add_item("|Tablica mieszająca łańcuchowa", setup_hashchain_menu());
+    structures_menu->add_item("|Tablica mieszająca otwarta", setup_hashopen_menu());
     structures_menu->add_item("|Kolejka priorytetowa na kopcu", setup_heapq_menu());
     structures_menu->add_item("|Kolejka priorytetowa na tablicy dynamicznej", setup_queue_menu());
     structures_menu->add_item("|Tablica dynamiczna", setup_dynarray_menu());

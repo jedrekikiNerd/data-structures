@@ -3,7 +3,7 @@
 
 #include "I_hash_table.hpp"
 #include "list_double.hpp"
-#include "default_values.hpp"
+//#include "default_values.hpp"
 #include "nodes.hpp"
 
 
@@ -12,17 +12,17 @@
  * 
  */
 template <typename Type>
-class HashTableSeperateChaining : public IHashTable<Type>
+class HashTableSeperateChainingSTR : public IHashTable<Type>
 {
 private:
-    // Table that contains buckets - we set initial value as 16
+    // Table that contains BucketStrings - we set initial value as 16
     unsigned int table_size = 16;
-    DoubleListHT<Bucket<Type>>* table;
+    DoubleListHT<BucketString<Type>>* table;
 
     // Get the index for a given key
-    unsigned int get_index(int key)
+    unsigned int get_index(std::string& key)
     {
-        return this->hash_function(key, table_size);
+        return this->hash_function_str(key, table_size);
     }
 
     // Resize the table (increase or decrease) based on the load factor
@@ -43,12 +43,12 @@ private:
     // Resize the table to a new size
     void resize_table(unsigned int new_size)
     {
-        DoubleListHT<Bucket<Type>>* new_table = new DoubleListHT<Bucket<Type>>[new_size];
+        DoubleListHT<BucketString<Type>>* new_table = new DoubleListHT<BucketString<Type>>[new_size];
 
         // Rehash all elements into the new table
         for (unsigned int i = 0; i < table_size; i++)
         {
-            DoubleNode<Bucket<Type>>* current_node = table[i].get_head_ptr();
+            DoubleNode<BucketString<Type>>* current_node = table[i].get_head_ptr();
         
             while(current_node != nullptr)
             {
@@ -64,7 +64,7 @@ private:
     }
 
 public:
-    HashTableSeperateChaining(std::function<unsigned int(int, unsigned int)> hash_func) : IHashTable<Type>(hash_func) {table = new DoubleListHT<Bucket<Type>>[16];}
+    HashTableSeperateChainingSTR(std::function<unsigned int(const std::string&, unsigned int)> hash_func) : IHashTable<Type>(hash_func) {table = new DoubleListHT<BucketString<Type>>[16];}
 
     ~HashTableSeperateChaining()
     {
@@ -72,46 +72,46 @@ public:
     }
 
     // Insert value with given key
-    void insert(int key, Type value) override
+    void insert(std::string key, Type value)
     {
         resize_table(); // Before inserting new_element check if we need to resize the table
 
         unsigned int index = get_index(key);
-        Bucket<Type> new_bucket(key, value, true);
+        BucketString<Type> new_BucketString(key, value, true);
         
-        if (!table[index].find_and_replace(new_bucket, new_bucket))
+        if (!table[index].find_and_replace(new_BucketString, new_BucketString))
         {
-            table[index].add_back(new_bucket);
+            table[index].add_back(new_BucketString);
             this->size++;
         }
     }
 
     // Remove value with given key
-    void remove(int key) override
+    void remove(std::string key)
     {
         unsigned int index = get_index(key);
-        Bucket<Type> remove_bucket(key, default_value<Type>(), true);
+        BucketString<Type> remove_BucketString(key, default_value<Type>(), true);
         
-        if (table[index].find_and_remove(remove_bucket))
+        if (table[index].find_and_remove(remove_BucketString))
             this->size--;
         
         resize_table(); // After removing check if we need to resize the table
     }
 
     // Clears/removes all values from hash table bringing it to initial state
-    void clear() override
+    void clear()
     {
         delete[] table;
         table_size = 16;
-        table = new DoubleListHT<Bucket<Type>>[table_size];
+        table = new DoubleListHT<BucketString<Type>>[table_size];
         this->size = 0;
     }
 
     // Returns value with given key
-    Type value_at(int key) override
+    Type value_at(std::string key)
     {
         unsigned int index = get_index(key);
-        DoubleNode<Bucket<Type>> * current_node = table[index].get_head_ptr();
+        DoubleNode<BucketString<Type>> * current_node = table[index].get_head_ptr();
         
         while(current_node != nullptr)
         {
@@ -119,11 +119,12 @@ public:
                 return current_node->value.value;
             current_node = current_node->next_element;
         }
+        return "";
         throw std::runtime_error("Key not present");
     }
 
     // Returns size of hash table in bytes
-    unsigned int get_byte_size() override
+    unsigned int get_byte_size()
     {
         unsigned int byte_size = sizeof(*this);
         for (unsigned int i = 0; i < table_size; i++)
@@ -134,13 +135,13 @@ public:
     }
 
     // Returns key at which first occurrence of given value is found - if it doesnt existr it returns -1 as string
-    int find(Type value) override
+    std::string find2(Type value)
     {
         int i=0;
         int i2 = 0;
         while(i<this->size)
         {
-            DoubleNode<Bucket<Type>>* current_node = table[i2].get_head_ptr();
+            DoubleNode<BucketString<Type>>* current_node = table[i2].get_head_ptr();
             
             while(current_node != nullptr)
             {
@@ -151,11 +152,12 @@ public:
             }
             i2++;
         }
-        return UINT_MAX;
+        return "-1";
+        throw std::runtime_error("Key not found");
     }
 
     // Returns data structure representation as string (useful for displaying)
-    std::string get_as_string() override
+    std::string get_as_string()
     {
         std::string output;
         unsigned int i2 = 0;
@@ -164,7 +166,7 @@ public:
         {
             if (table[i].get_size())
             {
-                output += "Bucket " + std::to_string(i) + ": ";
+                output += "BucketString " + std::to_string(i) + ": ";
                 output += table[i].get_as_string();
                 i2 += table[i].get_size();
                 output += "\n";
@@ -175,25 +177,16 @@ public:
     }
 
     // Checks if a key exists in the hash table
-    bool has_key(int key) override
+    bool has_key(std::string key)
     {
         unsigned int index = get_index(key);
         if (table[index].get_size())
-        {
-            DoubleNode<Bucket<Type>>* current_node = table[index].get_head_ptr();
-            while(current_node != nullptr)
-            {
-                if (current_node->value.key == key)
-                    return true;
-                current_node = current_node->next_element;
-            }
-            return false;
-        }
+            return true;
         return false;
     }
 
     // Returns load factor
-    float get_load_factor() override
+    float get_load_factor()
     {
         return static_cast<float>(this->size) / table_size;
     }

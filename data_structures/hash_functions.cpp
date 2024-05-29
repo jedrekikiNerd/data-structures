@@ -11,3 +11,8 @@ unsigned int hash_modulo(std::string key, unsigned int table_size)
 
     return sum % table_size;
 }
+
+unsigned int hash_modulo(int key, unsigned int table_size)
+{
+    return key % table_size;
+}
