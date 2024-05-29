@@ -61,10 +61,9 @@ MenuHt<int>* setup_hashopen_menu()
 }
 
 // Create and return menu for hash table open
-/*
 MenuHt<int>* setup_hashcuckoo_menu()
 {
-    MenuHt<int> *hashcuckoo_menu = new MenuHt<int>(new HashTableCuckoo<int>(hash_modulo));
+    MenuHt<int> *hashcuckoo_menu = new MenuHt<int>(new HashTableCuckoo<int>(hash_modulo, hash_modulo));
     hashcuckoo_menu->add_item_dt("|Włóż element", insert_ht);
     hashcuckoo_menu->add_item_dt("|Usuń element", remove_ht);
     hashcuckoo_menu->add_item_dt("|Wyczyść", clear_ht);
@@ -79,7 +78,7 @@ MenuHt<int>* setup_hashcuckoo_menu()
 
     return hashcuckoo_menu;
 }
-*/
+
 
 // Create and return menu for queue
 MenuDt<int>* setup_queue_menu()
@@ -207,6 +206,7 @@ Menu* setup_structures_menu()
     Menu *structures_menu = new Menu();
     structures_menu->add_item("|Tablica mieszająca łańcuchowa", setup_hashchain_menu());
     structures_menu->add_item("|Tablica mieszająca otwarta", setup_hashopen_menu());
+    structures_menu->add_item("|Tablica mieszająca kukułcza", setup_hashcuckoo_menu());
     structures_menu->add_item("|Kolejka priorytetowa na kopcu", setup_heapq_menu());
     structures_menu->add_item("|Kolejka priorytetowa na tablicy dynamicznej", setup_queue_menu());
     structures_menu->add_item("|Tablica dynamiczna", setup_dynarray_menu());

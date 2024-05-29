@@ -54,13 +54,8 @@ protected:
     // Number of elements in the hash table
     unsigned int size;
 
-    // Pointer to the hashing function
-    std::function<unsigned int(const std::string&, unsigned int)> hash_function_str;
-    std::function<unsigned int(int, unsigned int)> hash_function;
-
 public:
-    IHashTable(std::function<unsigned int(const std::string&, unsigned int)> hash_func) : hash_function_str(hash_func) {}
-    IHashTable(std::function<unsigned int(int, unsigned int)> hash_func) : hash_function(hash_func) {}
+    IHashTable() {}
     ~IHashTable() {}
 
     // Insert value with given key

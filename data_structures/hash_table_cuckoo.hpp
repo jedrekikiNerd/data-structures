@@ -14,18 +14,18 @@ template <typename Type>
 class HashTableCuckoo : public IHashTable<Type>
 {
 private:
-    unsigned int table_size;
+    unsigned int table_size = 16;
     Bucket<Type>* table1;
     Bucket<Type>* table2;
-    std::function<unsigned int(const std::string&, unsigned int)> hash_func1;
-    std::function<unsigned int(const std::string&, unsigned int)> hash_func2;
+    std::function<unsigned int(int, unsigned int)> hash_func1;
+    std::function<unsigned int(int, unsigned int)> hash_func2;
 
-    unsigned int get_index1(const std::string& key)
+    unsigned int get_index1(int key)
     {
         return this->hash_func1(key, table_size);
     }
 
-    unsigned int get_index2(const std::string& key)
+    unsigned int get_index2(int key)
     {
         return this->hash_func2(key, table_size);
     }
@@ -51,7 +51,7 @@ private:
         table_size = new_size;
     }
 
-    void insert_into_new_table(Bucket<Type>* new_table1, Bucket<Type>* new_table2, unsigned int new_size, const std::string& key, Type value)
+    void insert_into_new_table(Bucket<Type>* new_table1, Bucket<Type>* new_table2, unsigned int new_size, int key, Type value)
     {
         unsigned int index1 = this->hash_func1(key, new_size);
         if (!new_table1[index1].taken)
@@ -72,32 +72,17 @@ private:
         }
     }
 
-    void insert_helper(std::string key, Type value)
-{
-    unsigned int index1 = get_index1(key);
-    if (!table1[index1].taken)
+    void insert_helper(int key, Type value)
     {
-        table1[index1] = Bucket<Type>(key, value, true);
-        this->size++;
-        return;
-    }
+        unsigned int index1 = get_index1(key);
+        if (!table1[index1].taken)
+        {
+            table1[index1] = Bucket<Type>(key, value, true);
+            this->size++;
+            return;
+        }
 
-    unsigned int index2 = get_index2(key);
-    if (!table2[index2].taken)
-    {
-        table2[index2] = Bucket<Type>(key, value, true);
-        this->size++;
-        return;
-    }
-
-    for (unsigned int i = 0; i < MAX_ITERATIONS; ++i)
-    {
-        Bucket<Type> temp = table1[index1];
-        table1[index1] = Bucket<Type>(key, value, true);
-        key = std::move(temp.key);
-        value = std::move(temp.value);
-
-        index2 = get_index2(key);
+        unsigned int index2 = get_index2(key);
         if (!table2[index2].taken)
         {
             table2[index2] = Bucket<Type>(key, value, true);
@@ -105,25 +90,40 @@ private:
             return;
         }
 
-        temp = table2[index2];
-        table2[index2] = Bucket<Type>(key, value, true);
-        key = std::move(temp.key);
-        value = std::move(temp.value);
+        for (unsigned int i = 0; i < MAX_ITERATIONS; ++i)
+        {
+            Bucket<Type> temp = table1[index1];
+            table1[index1] = Bucket<Type>(key, value, true);
+            key = std::move(temp.key);
+            value = std::move(temp.value);
 
-        index1 = get_index1(key);
+            index2 = get_index2(key);
+            if (!table2[index2].taken)
+            {
+                table2[index2] = Bucket<Type>(key, value, true);
+                this->size++;
+                return;
+            }
+
+            temp = table2[index2];
+            table2[index2] = Bucket<Type>(key, value, true);
+            key = std::move(temp.key);
+            value = std::move(temp.value);
+
+            index1 = get_index1(key);
+        }
+
+        resize_table();
+        insert(key, value);
     }
-
-    resize_table();
-    insert(key, value);
-}
 
 
 public:
-    HashTableCuckoo(unsigned int size, std::function<unsigned int(const std::string&, unsigned int)> hash_func1, std::function<unsigned int(const std::string&, unsigned int)> hash_func2)
-        : IHashTable<Type>(), table_size(size), hash_func1(hash_func1), hash_func2(hash_func2)
+    HashTableCuckoo(std::function<unsigned int(int, unsigned int)> hash_func1, std::function<unsigned int(int, unsigned int)> hash_func2)
+        : hash_func1(hash_func1), hash_func2(hash_func2)
     {
-        table1 = new Bucket<Type>[size]();
-        table2 = new Bucket<Type>[size]();
+        table1 = new Bucket<Type>[table_size]();
+        table2 = new Bucket<Type>[table_size]();
     }
 
     ~HashTableCuckoo()
@@ -132,12 +132,12 @@ public:
         delete[] table2;
     }
 
-    void insert(const std::string key, Type value) override
+    void insert(int key, Type value) override
     {
     insert_helper(key, value);
     }
 
-    void remove(const std::string key) 
+    void remove(int key) 
     {
         unsigned int index1 = get_index1(key);
         if (table1[index1].key == key && table1[index1].taken)
@@ -164,7 +164,7 @@ public:
         this->size = 0;
     }
 
-    Type value_at(const std::string key) 
+    Type value_at(int key) 
     {
         unsigned int index1 = get_index1(key);
         if (table1[index1].key == key && table1[index1].taken)
@@ -182,7 +182,7 @@ public:
         return sizeof(*this) + sizeof(Bucket<Type>) * 2 * table_size;
     }
 
-    std::string find(Type value) 
+    int find(Type value) 
     {
         for (unsigned int i = 0; i < table_size; ++i)
         {
@@ -191,7 +191,7 @@ public:
             if (table2[i].taken && table2[i].value == value)
                 return table2[i].key;
         }
-        return "-1";
+        return UINT_MAX;
     }
 
     std::string get_as_string() override
@@ -200,14 +200,14 @@ public:
         for (unsigned int i = 0; i < table_size; ++i)
         {
             if (table1[i].taken)
-                output += "Table 1 - Index " + std::to_string(i) + ": " + table1[i].key + " -> " + std::to_string(table1[i].value) + "\n";
+                output += "Table 1 - Index " + std::to_string(i) + ": " + choose_to_string(table1[i]) + "\n";
             if (table2[i].taken)
-                output += "Table 2 - Index " + std::to_string(i) + ": " + table2[i].key + " -> " + std::to_string(table2[i].value) + "\n";
+                output += "Table 2 - Index " + std::to_string(i) + ": " + choose_to_string(table2[i]) + "\n";
         }
         return output;
     }
 
-    bool has_key(const std::string key) override
+    bool has_key(int key) override
     {
         unsigned int index1 = get_index1(key);
         if (table1[index1].key == key && table1[index1].taken)
@@ -227,5 +227,3 @@ public:
 };
 
 #endif
-
-       

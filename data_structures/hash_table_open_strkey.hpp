@@ -17,6 +17,7 @@ private:
     // Table that contains buckets - we set initial value as 16
     unsigned int table_size = 16;
     BucketString<Type>* table;
+    std::function<unsigned int(const std::string&, unsigned int)> hash_function_str;
 
     // Get the index for a given key
     unsigned int get_index(std::string& key)
@@ -64,7 +65,7 @@ void resize_table(unsigned int new_size)
 
 
 public:
-    HashTableOpenAddressingSTR(std::function<unsigned int(const std::string&, unsigned int)> hash_func) : IHashTable<Type>(hash_func)
+    HashTableOpenAddressingSTR(std::function<unsigned int(const std::string&, unsigned int)> hash_func) : hash_function_str(hash_func)
     {
         table = new BucketString<Type>[16];
     }

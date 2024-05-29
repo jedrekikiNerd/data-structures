@@ -3,7 +3,7 @@
 
 #include "I_hash_table.hpp"
 #include "list_double.hpp"
-//#include "default_values.hpp"
+#include "default_values.hpp"
 #include "nodes.hpp"
 
 
@@ -18,6 +18,7 @@ private:
     // Table that contains BucketStrings - we set initial value as 16
     unsigned int table_size = 16;
     DoubleListHT<BucketString<Type>>* table;
+    std::function<unsigned int(const std::string&, unsigned int)> hash_function_str;
 
     // Get the index for a given key
     unsigned int get_index(std::string& key)
@@ -64,7 +65,7 @@ private:
     }
 
 public:
-    HashTableSeperateChainingSTR(std::function<unsigned int(const std::string&, unsigned int)> hash_func) : IHashTable<Type>(hash_func) {table = new DoubleListHT<BucketString<Type>>[16];}
+    HashTableSeperateChainingSTR(std::function<unsigned int(const std::string&, unsigned int)> hash_func) : hash_function_str(hash_func) {table = new DoubleListHT<BucketString<Type>>[16];}
 
     ~HashTableSeperateChaining()
     {

@@ -17,6 +17,7 @@ private:
     // Table that contains buckets - we set initial value as 16
     unsigned int table_size = 16;
     Bucket<Type>* table;
+    std::function<unsigned int(int, unsigned int)> hash_function;
 
     // Get the index for a given key
     unsigned int get_index(int key)
@@ -44,7 +45,10 @@ private:
     void resize_table(unsigned int new_size)
     {
         Bucket<Type>* new_table = new Bucket<Type>[new_size]();
-        for (unsigned int i = 0; i < table_size; ++i)
+        unsigned int old_size = table_size;
+        table_size = new_size;
+
+        for (unsigned int i = 0; i < old_size; ++i)
         {
             if (table[i].taken)
             {
@@ -59,12 +63,11 @@ private:
 
         delete[] table;
         table = new_table;
-        table_size = new_size;
     }
 
 
 public:
-    HashTableOpenAddressing(std::function<unsigned int(int, unsigned int)> hash_func) : IHashTable<Type>(hash_func)
+    HashTableOpenAddressing(std::function<unsigned int(int, unsigned int)> hash_func) : hash_function(hash_func)
     {
         table = new Bucket<Type>[16];
     }

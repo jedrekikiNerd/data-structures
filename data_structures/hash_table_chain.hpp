@@ -18,6 +18,7 @@ private:
     // Table that contains buckets - we set initial value as 16
     unsigned int table_size = 16;
     DoubleListHT<Bucket<Type>>* table;
+    std::function<unsigned int(int, unsigned int)> hash_function;
 
     // Get the index for a given key
     unsigned int get_index(int key)
@@ -65,7 +66,7 @@ private:
     }
 
 public:
-    HashTableSeperateChaining(std::function<unsigned int(int, unsigned int)> hash_func) : IHashTable<Type>(hash_func) {table = new DoubleListHT<Bucket<Type>>[16];}
+    HashTableSeperateChaining(std::function<unsigned int(int, unsigned int)> hash_func) : hash_function(hash_func) {table = new DoubleListHT<Bucket<Type>>[16];}
 
     ~HashTableSeperateChaining()
     {
