@@ -72,50 +72,7 @@ private:
         }
     }
 
-    void insert_helper(int key, Type value)
-    {
-        unsigned int index1 = get_index1(key);
-        if (!table1[index1].taken)
-        {
-            table1[index1] = Bucket<Type>(key, value, true);
-            this->size++;
-            return;
-        }
-
-        unsigned int index2 = get_index2(key);
-        if (!table2[index2].taken)
-        {
-            table2[index2] = Bucket<Type>(key, value, true);
-            this->size++;
-            return;
-        }
-
-        for (unsigned int i = 0; i < MAX_ITERATIONS; ++i)
-        {
-            Bucket<Type> temp = table1[index1];
-            table1[index1] = Bucket<Type>(key, value, true);
-            key = std::move(temp.key);
-            value = std::move(temp.value);
-
-            index2 = get_index2(key);
-            if (!table2[index2].taken)
-            {
-                table2[index2] = Bucket<Type>(key, value, true);
-                this->size++;
-                return;
-            }
-
-            temp = table2[index2];
-            table2[index2] = Bucket<Type>(key, value, true);
-            key = std::move(temp.key);
-            value = std::move(temp.value);
-
-            index1 = get_index1(key);
-        }
-
-        resize_table();
-        insert(key, value);
-    }
+    
 
 
 public:
@@ -132,10 +89,112 @@ public:
         delete[] table2;
     }
 
-    void insert(int key, Type value) override
+//  void insert(int key, Type value)
+// {
+//     resize_table(); // Before inserting new element, check if we need to resize the table
+
+//     unsigned int index = get_index(key);
+//     unsigned int original_index = index;
+//     while (table[index].taken)
+//     {
+//         if (table[index].key == key) {
+//             table[index].value = value; // Update value if key already exists
+//             return;
+//         }
+//         index = (index + 1) % table_size;
+//         if (index == original_index) // If we have traversed the whole table and found no empty slot, resize the table
+//         {
+//             resize_table(table_size * 2);
+//             original_index = get_index(key);
+//             index = original_index;
+//         }
+//     }
+//     table[index].key = key;
+//     table[index].value = value;
+//     table[index].taken = true;
+//     this->size++;
+// }
+
+//     // Przenieś element z table1 do table2 i umieść nowy element w table1
+//     Type displaced_value = table1[index1].value;
+//     int displaced_key = table1[index1].key;
+//     table1[index1] = Bucket<Type>(key, value, true);
+
+//     while (true) {
+//         index2 = get_index2(displaced_key);
+
+//         if (!table2[index2].taken) {
+//             table2[index2] = Bucket<Type>(displaced_key, displaced_value, true);
+//             this->size++;
+//             return;
+//         } else {
+//             // Przenieś element z table2 do table1
+//             unsigned int new_index1 = get_index1(table2[index2].key);
+//             table1[new_index1] = table2[index2];
+
+//             // Ustaw nowe wartości dla displaced_key i displaced_value
+//             displaced_key = table2[index2].key;
+//             displaced_value = table2[index2].value;
+//             // Zaktualizuj index1
+//             index1 = new_index1;
+            
+//             // Oznacz miejsce w table2 jako puste
+//             table2[index2].taken = false;
+//         }
+
+//         // Jeśli cykl się powtórzy, powiększ tablicę
+//         if (index1 == get_index1(key) && index2 == get_index2(key)) {
+//             resize_table();
+//             insert(displaced_key, displaced_value);
+//             return;
+//         }
+//     }
+void insert(int key, Type value)
     {
-    insert_helper(key, value);
+        int original_key = key;
+        Type original_value = value;
+
+        for (unsigned int i = 0; i < MAX_ITERATIONS; ++i)
+        {
+            unsigned int index1 = get_index1(key);
+            if (!table1[index1].taken)
+            {
+                table1[index1] = Bucket<Type>(key, value, true);
+                this->size++;
+                return;
+            }
+
+            // Przemieszczenie elementu z tablicy 1 do zmiennych tymczasowych
+            int temp_key = table1[index1].key;
+            Type temp_value = table1[index1].value;
+            table1[index1] = Bucket<Type>(key, value, true);
+
+            key = temp_key;
+            value = temp_value;
+
+            unsigned int index2 = get_index2(key);
+            if (!table2[index2].taken)
+            {
+                table2[index2] = Bucket<Type>(key, value, true);
+                this->size++;
+                return;
+            }
+
+            // Przemieszczenie elementu z tablicy 2 do zmiennych tymczasowych
+            temp_key = table2[index2].key;
+            temp_value = table2[index2].value;
+            table2[index2] = Bucket<Type>(key, value, true);
+
+            key = temp_key;
+            value = temp_value;
+        }
+
+        // Jeśli pętla się zakończy, oznacza to, że wykryto cykl
+        resize_table();
+        insert(original_key, original_value);
     }
+
+
 
     void remove(int key) 
     {
