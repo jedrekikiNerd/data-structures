@@ -8,8 +8,6 @@
 
 #define MAX_ITERATIONS 1000
 
-
-
 template <typename Type>
 class HashTableCuckoo : public IHashTable<Type>
 {
@@ -28,6 +26,11 @@ private:
     unsigned int get_index2(int key)
     {
         return this->hash_func2(key, table_size);
+    }
+
+    unsigned int hash_func_quadratic(int key, unsigned int table_size, unsigned int i)
+    {
+        return (key + i * i) % table_size;
     }
 
     void resize_table()
@@ -72,9 +75,6 @@ private:
         }
     }
 
-    
-
-
 public:
     HashTableCuckoo(std::function<unsigned int(int, unsigned int)> hash_func1, std::function<unsigned int(int, unsigned int)> hash_func2)
         : hash_func1(hash_func1), hash_func2(hash_func2)
@@ -89,74 +89,14 @@ public:
         delete[] table2;
     }
 
-//  void insert(int key, Type value)
-// {
-//     resize_table(); // Before inserting new element, check if we need to resize the table
-
-//     unsigned int index = get_index(key);
-//     unsigned int original_index = index;
-//     while (table[index].taken)
-//     {
-//         if (table[index].key == key) {
-//             table[index].value = value; // Update value if key already exists
-//             return;
-//         }
-//         index = (index + 1) % table_size;
-//         if (index == original_index) // If we have traversed the whole table and found no empty slot, resize the table
-//         {
-//             resize_table(table_size * 2);
-//             original_index = get_index(key);
-//             index = original_index;
-//         }
-//     }
-//     table[index].key = key;
-//     table[index].value = value;
-//     table[index].taken = true;
-//     this->size++;
-// }
-
-//     // Przenieś element z table1 do table2 i umieść nowy element w table1
-//     Type displaced_value = table1[index1].value;
-//     int displaced_key = table1[index1].key;
-//     table1[index1] = Bucket<Type>(key, value, true);
-
-//     while (true) {
-//         index2 = get_index2(displaced_key);
-
-//         if (!table2[index2].taken) {
-//             table2[index2] = Bucket<Type>(displaced_key, displaced_value, true);
-//             this->size++;
-//             return;
-//         } else {
-//             // Przenieś element z table2 do table1
-//             unsigned int new_index1 = get_index1(table2[index2].key);
-//             table1[new_index1] = table2[index2];
-
-//             // Ustaw nowe wartości dla displaced_key i displaced_value
-//             displaced_key = table2[index2].key;
-//             displaced_value = table2[index2].value;
-//             // Zaktualizuj index1
-//             index1 = new_index1;
-            
-//             // Oznacz miejsce w table2 jako puste
-//             table2[index2].taken = false;
-//         }
-
-//         // Jeśli cykl się powtórzy, powiększ tablicę
-//         if (index1 == get_index1(key) && index2 == get_index2(key)) {
-//             resize_table();
-//             insert(displaced_key, displaced_value);
-//             return;
-//         }
-//     }
-void insert(int key, Type value)
+    void insert(int key, Type value)
     {
         int original_key = key;
         Type original_value = value;
 
         for (unsigned int i = 0; i < MAX_ITERATIONS; ++i)
         {
-            unsigned int index1 = get_index1(key);
+            unsigned int index1 = hash_func_quadratic(key, table_size, i);
             if (!table1[index1].taken)
             {
                 table1[index1] = Bucket<Type>(key, value, true);
@@ -172,7 +112,7 @@ void insert(int key, Type value)
             key = temp_key;
             value = temp_value;
 
-            unsigned int index2 = get_index2(key);
+            unsigned int index2 = hash_func_quadratic(key, table_size, i);
             if (!table2[index2].taken)
             {
                 table2[index2] = Bucket<Type>(key, value, true);
@@ -194,23 +134,28 @@ void insert(int key, Type value)
         insert(original_key, original_value);
     }
 
-
-
-    void remove(int key) 
+    void remove(int key)
     {
-        unsigned int index1 = get_index1(key);
-        if (table1[index1].key == key && table1[index1].taken)
+        // Iterowanie przez całą tablicę 1
+        for (unsigned int i = 0; i < table_size; ++i)
         {
-            table1[index1].taken = false;
-            this->size--;
-            return;
+            if (table1[i].taken && table1[i].key == key)
+            {
+                table1[i].taken = false;
+                this->size--;
+                return;
+            }
         }
 
-        unsigned int index2 = get_index2(key);
-        if (table2[index2].key == key && table2[index2].taken)
+        // Iterowanie przez całą tablicę 2
+        for (unsigned int i = 0; i < table_size; ++i)
         {
-            table2[index2].taken = false;
-            this->size--;
+            if (table2[i].taken && table2[i].key == key)
+            {
+                table2[i].taken = false;
+                this->size--;
+                return;
+            }
         }
     }
 
@@ -223,7 +168,7 @@ void insert(int key, Type value)
         this->size = 0;
     }
 
-    Type value_at(int key) 
+    Type value_at(int key)
     {
         unsigned int index1 = get_index1(key);
         if (table1[index1].key == key && table1[index1].taken)
@@ -236,12 +181,12 @@ void insert(int key, Type value)
         throw std::runtime_error("Key not found");
     }
 
-    unsigned int get_byte_size() 
+    unsigned int get_byte_size()
     {
         return sizeof(*this) + sizeof(Bucket<Type>) * 2 * table_size;
     }
 
-    int find(Type value) 
+    int find(Type value)
     {
         for (unsigned int i = 0; i < table_size; ++i)
         {
@@ -279,7 +224,7 @@ void insert(int key, Type value)
         return false;
     }
 
-    float get_load_factor() 
+    float get_load_factor()
     {
         return static_cast<float>(this->size) / (2 * table_size);
     }
