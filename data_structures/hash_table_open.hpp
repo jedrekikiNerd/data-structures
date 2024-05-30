@@ -78,49 +78,70 @@ public:
     }
 
     // Insert value with given key
-    void insert(int key, Type value) override
-    {
-        resize_table(); // Before inserting new element, check if we need to resize the table
+void insert(int key, Type value)
+{
+    resize_table(); // Before inserting new element, check if we need to resize the table
 
-        unsigned int index = get_index(key);
-        unsigned int original_index = index;
-        while (table[index].taken)
+    unsigned int index = get_index(key);
+    unsigned int original_index = index;
+
+    // Check if the key already exists in the table
+    while (table[index].taken)
+    {
+        if (table[index].key == key)
         {
-            if (table[index].key == key) {
-                table[index].value = value; // Update value if key already exists
-                return;
-            }
-            index = (index + 1) % table_size;
-            if (index == original_index) // If we have traversed the whole table and found no empty slot, resize the table
+            // If key already exists, find the first empty slot after collision
+            while (table[index].taken)
             {
-                resize_table(table_size * 2);
-                original_index = get_index(key);
-                index = original_index;
+                index = (index + 1) % table_size;
             }
+            // Insert the new element at the first empty slot after collision
+            table[index].key = key;
+            table[index].value = value;
+            table[index].taken = true;
+            this->size++;
+            return;
         }
-        table[index] = Bucket<Type>(key, value, true);
-        this->size++;
-    }
-
-    // Remove value with given key
-    void remove(int key) override
-    {
-        unsigned int index = get_index(key);
-        unsigned int original_index = index;
-        while (table[index].taken)
+        index = (index + 1) % table_size;
+        if (index == original_index) // If we have traversed the whole table and found no empty slot, resize the table
         {
-            if (table[index].key == key)
-            {
-                table[index].taken = false;
-                this->size--;
-                resize_table(); // After removing check if we need to resize the table
-                return;
-            }
-            index = (index + 1) % table_size;
-            if (index == original_index) // If we have traversed the whole table and found no entry with the given key, exit
-                return;
+            resize_table(table_size * 2);
+            original_index = get_index(key);
+            index = original_index;
         }
     }
+
+    // If key doesn't exist, find the first empty slot and insert the new element
+    index = get_index(key);
+    while (table[index].taken)
+    {
+        index = (index + 1) % table_size;
+    }
+    table[index].key = key;
+    table[index].value = value;
+    table[index].taken = true;
+    this->size++;
+}
+
+
+void remove(int key) 
+{
+    // Iterate over the table in reverse order
+    for (int i = table_size - 1; i >= 0; --i)
+    {
+        // Check if the current bucket is taken and has the specified key
+        if (table[i].taken && table[i].key == key)
+        {
+            // If the key matches, mark the bucket as not taken
+            table[i].taken = false;
+            this->size--;
+
+            resize_table(); // After removing, check if we need to resize the table
+            return;
+        }
+    }
+}
+
 
     // Clears/removes all values from hash table bringing it to initial state
     void clear() override
