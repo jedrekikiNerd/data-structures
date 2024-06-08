@@ -55,7 +55,7 @@ protected:
     unsigned int size;
 
 public:
-    IHashTable() {}
+    IHashTable() : size(0) {}
     ~IHashTable() {}
 
     // Insert value with given key

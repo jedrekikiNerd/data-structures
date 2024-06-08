@@ -28,51 +28,79 @@ private:
         return this->hash_func2(key, table_size);
     }
 
-    unsigned int hash_func_quadratic(int key, unsigned int table_size, unsigned int i)
-    {
-        return (key + i * i) % table_size;
-    }
-
     void resize_table()
     {
         unsigned int new_size = table_size * 2;
         Bucket<Type>* new_table1 = new Bucket<Type>[new_size]();
         Bucket<Type>* new_table2 = new Bucket<Type>[new_size]();
 
-        for (unsigned int i = 0; i < table_size; ++i)
+        for(int i=0; i<100; i++)
         {
-            if (table1[i].taken)
-                insert_into_new_table(new_table1, new_table2, new_size, table1[i].key, table1[i].value);
-            if (table2[i].taken)
-                insert_into_new_table(new_table1, new_table2, new_size, table2[i].key, table2[i].value);
-        }
+            try
+            {
+                for (unsigned int i = 0; i < table_size; i++)
+                {
+                    if (table1[i].taken)
+                    {
+                        insert_into_new_table(new_table1, new_table2, new_size, table1[i].key, table1[i].value);
+                    }
+                    if (table2[i].taken)
+                    {
+                        insert_into_new_table(new_table1, new_table2, new_size, table2[i].key, table2[i].value);
+                    }
+                }
 
-        delete[] table1;
-        delete[] table2;
-        table1 = new_table1;
-        table2 = new_table2;
-        table_size = new_size;
+                delete[] table1;
+                delete[] table2;
+                table1 = new_table1;
+                table2 = new_table2;
+                table_size = new_size;
+                return;
+            }
+            catch (const std::runtime_error& e)
+            {
+                delete[] new_table1;
+                delete[] new_table2;
+                table_size = new_size;  // Double size and retry
+            }
+        }
+        throw std::runtime_error("Rehashing failed after maximum attempts during table resizing.");
     }
 
     void insert_into_new_table(Bucket<Type>* new_table1, Bucket<Type>* new_table2, unsigned int new_size, int key, Type value)
     {
-        unsigned int index1 = this->hash_func1(key, new_size);
-        if (!new_table1[index1].taken)
+        for (int attempt = 0; attempt < 1000; attempt++)
         {
+            unsigned int index1 = this->hash_func1(key, new_size);
+            if (!new_table1[index1].taken)
+            {
+                new_table1[index1] = Bucket<Type>(key, value, true);
+                return;
+            }
+
+            int temp_key = new_table1[index1].key;
+            Type temp_value = new_table1[index1].value;
             new_table1[index1] = Bucket<Type>(key, value, true);
-        }
-        else
-        {
+
+            key = temp_key;
+            value = temp_value;
+
             unsigned int index2 = this->hash_func2(key, new_size);
             if (!new_table2[index2].taken)
             {
                 new_table2[index2] = Bucket<Type>(key, value, true);
+                return;
             }
-            else
-            {
-                throw std::runtime_error("Rehashing failed during table resizing.");
-            }
+
+            temp_key = new_table2[index2].key;
+            temp_value = new_table2[index2].value;
+            new_table2[index2] = Bucket<Type>(key, value, true);
+
+            key = temp_key;
+            value = temp_value;
         }
+
+        throw std::runtime_error("Rehashing failed after maximum attempts during table resizing.");
     }
 
 public:
@@ -94,10 +122,10 @@ public:
         int original_key = key;
         Type original_value = value;
 
-        for (unsigned int i = 0; i < MAX_ITERATIONS; ++i)
+        for (unsigned int i = 0; i < 1000; i++)
         {
-            unsigned int index1 = hash_func_quadratic(key, table_size, i);
-            if (!table1[index1].taken)
+            unsigned int index1 = get_index1(key);
+            if (!table1[index1].taken || table1[index1].key == key)
             {
                 table1[index1] = Bucket<Type>(key, value, true);
                 this->size++;
@@ -112,8 +140,8 @@ public:
             key = temp_key;
             value = temp_value;
 
-            unsigned int index2 = hash_func_quadratic(key, table_size, i);
-            if (!table2[index2].taken)
+            unsigned int index2 = get_index2(key);
+            if (!table2[index2].taken || table2[index2].key == key)
             {
                 table2[index2] = Bucket<Type>(key, value, true);
                 this->size++;
@@ -136,26 +164,20 @@ public:
 
     void remove(int key)
     {
-        // Iterowanie przez całą tablicę 1
-        for (unsigned int i = 0; i < table_size; ++i)
+        unsigned int index1 = get_index1(key);
+        if (table1[index1].taken && table1[index1].key == key)
         {
-            if (table1[i].taken && table1[i].key == key)
-            {
-                table1[i].taken = false;
-                this->size--;
-                return;
-            }
+            table1[index1].taken = false;
+            this->size--;
+            return;
         }
 
-        // Iterowanie przez całą tablicę 2
-        for (unsigned int i = 0; i < table_size; ++i)
+        unsigned int index2 = get_index2(key);
+        if (table2[index2].taken && table2[index2].key == key)
         {
-            if (table2[i].taken && table2[i].key == key)
-            {
-                table2[i].taken = false;
-                this->size--;
-                return;
-            }
+            table2[index2].taken = false;
+            this->size--;
+            return;
         }
     }
 
@@ -188,7 +210,7 @@ public:
 
     int find(Type value)
     {
-        for (unsigned int i = 0; i < table_size; ++i)
+        for (unsigned int i = 0; i < table_size; i++)
         {
             if (table1[i].taken && table1[i].value == value)
                 return table1[i].key;
@@ -201,7 +223,7 @@ public:
     std::string get_as_string() override
     {
         std::string output;
-        for (unsigned int i = 0; i < table_size; ++i)
+        for (unsigned int i = 0; i < table_size; i++)
         {
             if (table1[i].taken)
                 output += "Table 1 - Index " + std::to_string(i) + ": " + choose_to_string(table1[i]) + "\n";

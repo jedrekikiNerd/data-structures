@@ -10,6 +10,7 @@
 #include "data_structures/I_hash_table.hpp"
 #include "data_structures/hash_table_chain.hpp"
 #include "data_structures/hash_table_open.hpp"
+#include "data_structures/hash_table_cuckoo.hpp"
 #include "data_structures/hash_functions.hpp"
 #include <iostream>
 #include <fstream>
@@ -559,6 +560,7 @@ int run_tests()
     PriorityQueuearray<int> queue_array;
     HashTableSeperateChaining<int> hash_chain(hash_modulo);
     HashTableOpenAddressing<int> hash_open(hash_modulo);
+    HashTableCuckoo<int> hash_cuckoo(hash_modulo, hash_modulo);
 
     removeFilesInFolder2("test_results");
 
@@ -642,8 +644,10 @@ int run_tests()
     else if (what_to_test == 3)
         for(int i=1; i<=file_number; i++)
         {
+            std::cerr << "\n" << i << "\n";
             for(int j=1; j<=data_number; j++)
             {
+                std::cerr << j << " ";
                 int to_add = generate_random_number(random_generator);
                 int to_find = generate_random_number(random_generator);
                 int bytes;
@@ -665,6 +669,13 @@ int run_tests()
                 if(j==1)
                     add_line_to_file(std::to_string(hash_open.get_size()) + ";" + std::to_string(bytes), ("HashOpen_size_growth.txt"));
                 run_all_tests_for_hashtable(&hash_open, to_find, to_add, to_add_key, random_key, hash_open.get_size(), "HashOpen", j, repetition);
+
+                fill_from_file_ht(&hash_cuckoo, i, j);
+                bytes = hash_cuckoo.get_byte_size();
+                // We check (and save) size for only one iteration over data sizes
+                if(j==1)
+                    add_line_to_file(std::to_string(hash_cuckoo.get_size()) + ";" + std::to_string(bytes), ("HashCuckoo_size_growth.txt"));
+                run_all_tests_for_hashtable(&hash_cuckoo, to_find, to_add, to_add_key, random_key, hash_cuckoo.get_size(), "HashCuckoo", j, repetition);
             }
         }
     return 0;

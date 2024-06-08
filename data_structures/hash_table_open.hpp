@@ -65,7 +65,6 @@ private:
         table = new_table;
     }
 
-
 public:
     HashTableOpenAddressing(std::function<unsigned int(int, unsigned int)> hash_func) : hash_function(hash_func)
     {
@@ -78,69 +77,53 @@ public:
     }
 
     // Insert value with given key
-void insert(int key, Type value)
-{
-    resize_table(); // Before inserting new element, check if we need to resize the table
-
-    unsigned int index = get_index(key);
-    unsigned int original_index = index;
-
-    // Check if the key already exists in the table
-    while (table[index].taken)
+    void insert(int key, Type value)
     {
-        if (table[index].key == key)
+        resize_table(); // Before inserting new element, check if we need to resize the table
+
+        unsigned int index = get_index(key);
+        unsigned int original_index = index;
+
+        // Check for empty place
+        while (table[index].taken)
         {
-            // If key already exists, find the first empty slot after collision
-            while (table[index].taken)
+            if (table[index].key == key)
             {
-                index = (index + 1) % table_size;
+                // Key already exists - just update :)
+                table[index].value = value;
+                return;
             }
-            // Insert the new element at the first empty slot after collision
-            table[index].key = key;
-            table[index].value = value;
-            table[index].taken = true;
-            this->size++;
-            return;
+            index = (index + 1) % table_size;
+            if (index == original_index)
+            {
+                throw std::runtime_error("Hashtable is full, even after resizing.");
+            }
         }
-        index = (index + 1) % table_size;
-        if (index == original_index) // If we have traversed the whole table and found no empty slot, resize the table
-        {
-            resize_table(table_size * 2);
-            original_index = get_index(key);
-            index = original_index;
-        }
+
+        // Insert the new element into empty slot
+        table[index] = Bucket<Type>(key, value, true);
+        this->size++;
     }
 
-    // If key doesn't exist, find the first empty slot and insert the new element
-    index = get_index(key);
-    while (table[index].taken)
+
+    void remove(int key) 
     {
-        index = (index + 1) % table_size;
-    }
-    table[index].key = key;
-    table[index].value = value;
-    table[index].taken = true;
-    this->size++;
-}
+        unsigned int index = get_index(key);
 
-
-void remove(int key) 
-{
-    // Iterate over the table in reverse order
-    for (int i = table_size - 1; i >= 0; --i)
-    {
-        // Check if the current bucket is taken and has the specified key
-        if (table[i].taken && table[i].key == key)
+        // Find key - linear search from index returned by hash function
+        while (table[index].taken)
         {
-            // If the key matches, mark the bucket as not taken
-            table[i].taken = false;
-            this->size--;
+            if (table[index].key == key)
+            {
+                table[index].taken = false;
+                this->size--;
 
-            resize_table(); // After removing, check if we need to resize the table
-            return;
+                resize_table(); // After removing check if we need to resize the table
+                return;
+            }
+            index = (index + 1) % table_size;
         }
     }
-}
 
 
     // Clears/removes all values from hash table bringing it to initial state

@@ -7,6 +7,7 @@
 #include <random>
 #include "ui_actions.hpp"
 #include "generator.hpp"
+#include <set>
 
 using namespace std;
 namespace fs = std::filesystem;
@@ -138,11 +139,18 @@ int generator3(int number_samples, int number_of_data, int file_number) {
             return 1;
         }
 
+        std::set<int> unique_keys;
+
         //Generate random numbers 
         for (int i = 0; i < number_samples; i++) 
         {
             int temp = distribution(generator);
-            int key = distribution_priorities(generator);
+            int key;
+            do
+            {
+                key = distribution_priorities(generator);
+            }
+            while (!unique_keys.insert(key).second);
             plik << key << " " << temp << endl;
         }
         plik.close();
