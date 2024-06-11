@@ -284,6 +284,11 @@ double haskey_test_hash(IHashTable<int> *dt, int key)
     return timer.elapsedSeconds();
 }
 
+unsigned int collisions_test_hash(HashTableSeperateChaining<int> *dt)
+{
+    return dt->get_collisons();
+}
+
 double clear_test_hash(IHashTable<int> *dt)
 {
     timer.start();
@@ -562,6 +567,11 @@ int run_tests()
     HashTableOpenAddressing<int> hash_open(hash_modulo);
     HashTableCuckoo<int> hash_cuckoo(hash_modulo, hash_modulo);
 
+    HashTableSeperateChaining<int> hash_func_modulo(hash_modulo);
+    HashTableSeperateChaining<int> hash_func_modulo_knuth(hash_modulo_knuth_version);
+    HashTableSeperateChaining<int> hash_func_multiplication(hash_multiplication);
+    HashTableSeperateChaining<int> hash_func_midsquare(hash_midsquare);
+
     removeFilesInFolder2("test_results");
 
     int file_number = user_input_action("Podaj ilość różnych wielkości danych, które zostały wygenerowane w katalogu generated_data: ");
@@ -676,6 +686,19 @@ int run_tests()
                 if(j==1)
                     add_line_to_file(std::to_string(hash_cuckoo.get_size()) + ";" + std::to_string(bytes), ("HashCuckoo_size_growth.txt"));
                 run_all_tests_for_hashtable(&hash_cuckoo, to_find, to_add, to_add_key, random_key, hash_cuckoo.get_size(), "HashCuckoo", j, repetition);
+
+                // We check (and save) size for only one iteration over data sizes
+                if(j==1)
+                {
+                    fill_from_file_ht(&hash_func_modulo, i, j);
+                    fill_from_file_ht(&hash_func_modulo_knuth, i, j);
+                    fill_from_file_ht(&hash_func_multiplication, i, j);
+                    fill_from_file_ht(&hash_func_midsquare, i, j);
+                    add_line_to_file(std::to_string(hash_func_modulo.get_size()) + ";" + std::to_string(collisions_test_hash(&hash_func_modulo)), ("HashModulo_collisons.txt"));
+                    add_line_to_file(std::to_string(hash_func_modulo_knuth.get_size()) + ";" + std::to_string(collisions_test_hash(&hash_func_modulo_knuth)), ("HashModuloKnuth_collisons.txt"));
+                    add_line_to_file(std::to_string(hash_func_multiplication.get_size()) + ";" + std::to_string(collisions_test_hash(&hash_func_multiplication)), ("HashMulti_collisons.txt"));
+                    add_line_to_file(std::to_string(hash_func_midsquare.get_size()) + ";" + std::to_string(collisions_test_hash(&hash_func_midsquare)), ("HashMidsquare_collisons.txt"));
+                }
             }
         }
     return 0;

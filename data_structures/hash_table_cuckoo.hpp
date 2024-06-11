@@ -119,16 +119,19 @@ public:
 
     void insert(int key, Type value)
     {
-        int original_key = key;
-        Type original_value = value;
-
         for (unsigned int i = 0; i < 1000; i++)
         {
             unsigned int index1 = get_index1(key);
-            if (!table1[index1].taken || table1[index1].key == key)
+            if (!table1[index1].taken)
             {
                 table1[index1] = Bucket<Type>(key, value, true);
                 this->size++;
+                return;
+            }
+
+            if(table1[index1].key == key)
+            {
+                table1[index1] = Bucket<Type>(key, value, true);
                 return;
             }
 
@@ -141,10 +144,17 @@ public:
             value = temp_value;
 
             unsigned int index2 = get_index2(key);
-            if (!table2[index2].taken || table2[index2].key == key)
+
+            if (!table2[index2].taken)
             {
                 table2[index2] = Bucket<Type>(key, value, true);
                 this->size++;
+                return;
+            }
+
+            if(table2[index2].key == key)
+            {
+                table2[index2] = Bucket<Type>(key, value, true);
                 return;
             }
 
@@ -159,7 +169,7 @@ public:
 
         // Jeśli pętla się zakończy, oznacza to, że wykryto cykl
         resize_table();
-        insert(original_key, original_value);
+        insert(key, value);
     }
 
     void remove(int key)

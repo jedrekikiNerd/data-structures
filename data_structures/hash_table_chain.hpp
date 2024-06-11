@@ -200,5 +200,16 @@ public:
         return static_cast<float>(this->size) / table_size;
     }
 
+    // Returns number of collisions
+    unsigned int get_collisons()
+    {
+        unsigned int collisions = 0;
+        for(unsigned int i=0; i<table_size; i++)
+        {
+            collisions += table[i].get_size()-1;
+        }
+        return collisions;
+    }
+
 };
 #endif
