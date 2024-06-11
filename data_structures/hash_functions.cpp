@@ -38,12 +38,41 @@ unsigned int hash_multiplication(int key, unsigned int table_size)
 unsigned int hash_midsquare(int key, unsigned int table_size)
 {
     int square = key*key;
+    int num_bits = (int)log2(table_size);
+
+    // Calculate how many bits key has
+    unsigned int key_bits = 0;
+    int temp_key = key;
+    while (temp_key > 0)
+    {
+        temp_key >>= 1;
+        key_bits++;
+    }
+
+    int shift = (key_bits - num_bits) / 2;
+
+    // Bit mask - out table scales as power of 2 we can mask bits!
+    unsigned int mask = (1 << num_bits) - 1;
+
+    unsigned int middle_bits = (key >> shift) & mask;
+
+
+    std::cerr << key << "\n";
+
+    return key % table_size;
+}
+
+unsigned int hash_midsquare_ten(int key, unsigned int table_size)
+{
+    int square = key*key;
     unsigned int dig_num = get_number_of_digits(square);
+    std::cerr << key << "\n";
 
     for(int i=0; i<(dig_num/2)-1; i++)
         key /= 10;
 
-    int temp = pow(10, get_number_of_digits(table_size));
+    // This works well for table scaling as power of 10
+    //int temp = pow(10, get_number_of_digits(table_size));
 
-    return key % temp;
+    return key % table_size;
 }

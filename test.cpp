@@ -698,6 +698,10 @@ int run_tests()
                     add_line_to_file(std::to_string(hash_func_modulo_knuth.get_size()) + ";" + std::to_string(collisions_test_hash(&hash_func_modulo_knuth)), ("HashModuloKnuth_collisons.txt"));
                     add_line_to_file(std::to_string(hash_func_multiplication.get_size()) + ";" + std::to_string(collisions_test_hash(&hash_func_multiplication)), ("HashMulti_collisons.txt"));
                     add_line_to_file(std::to_string(hash_func_midsquare.get_size()) + ";" + std::to_string(collisions_test_hash(&hash_func_midsquare)), ("HashMidsquare_collisons.txt"));
+                    clear_test_hash(&hash_func_modulo);
+                    clear_test_hash(&hash_func_modulo_knuth);
+                    clear_test_hash(&hash_func_multiplication);
+                    clear_test_hash(&hash_func_midsquare);
                 }
             }
         }
