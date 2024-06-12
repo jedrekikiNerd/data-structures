@@ -57,7 +57,6 @@ unsigned int hash_midsquare(int key, unsigned int table_size)
     unsigned int middle_bits = (key >> shift) & mask;
 
 
-    std::cerr << key << "\n";
 
     return key % table_size;
 }
@@ -66,7 +65,6 @@ unsigned int hash_midsquare_ten(int key, unsigned int table_size)
 {
     int square = key*key;
     unsigned int dig_num = get_number_of_digits(square);
-    std::cerr << key << "\n";
 
     for(int i=0; i<(dig_num/2)-1; i++)
         key /= 10;

@@ -206,7 +206,8 @@ public:
         unsigned int collisions = 0;
         for(unsigned int i=0; i<table_size; i++)
         {
-            collisions += table[i].get_size()-1;
+            if(table[i].get_size())
+                collisions += table[i].get_size()-1;
         }
         return collisions;
     }

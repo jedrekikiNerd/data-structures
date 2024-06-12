@@ -46,8 +46,6 @@ public:
         size++;
     }
 
-
-
     void add_front(Type value)
     {
         if (size >= capacity)

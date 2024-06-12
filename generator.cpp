@@ -168,8 +168,8 @@ int ui_run_generator()
     int number_files = user_input_action("Podaj ile próbek danych chcesz otrzymać: ");
     int first_sample_size = user_input_action("Podaj ilość danych do wylosowania: ");
     int number_of_data = user_input_action("Podaj ile próbek każdej wielkości wygenerować: ");
-    generator(first_sample_size, number_of_data, number_files);
-    generator2(first_sample_size, number_of_data, number_files);
+    //generator(first_sample_size, number_of_data, number_files);
+    //generator2(first_sample_size, number_of_data, number_files);
     generator3(first_sample_size, number_of_data, number_files);
     display_action("Dane zostały wygenerowane!");
     return 0;

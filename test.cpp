@@ -658,10 +658,11 @@ int run_tests()
             for(int j=1; j<=data_number; j++)
             {
                 std::cerr << j << " ";
-                int to_add = generate_random_number(random_generator);
-                int to_find = generate_random_number(random_generator);
-                int bytes;
+                //int to_add = generate_random_number(random_generator);
+                //int to_find = generate_random_number(random_generator);
+                //int bytes;
 
+                /*
                 // Run tests for list
                 fill_from_file_ht(&hash_chain, i, j);
                 int to_add_key = generate_random_number_range(random_generator, -hash_chain.get_size()*2, hash_chain.get_size()*2);
@@ -685,7 +686,7 @@ int run_tests()
                 // We check (and save) size for only one iteration over data sizes
                 if(j==1)
                     add_line_to_file(std::to_string(hash_cuckoo.get_size()) + ";" + std::to_string(bytes), ("HashCuckoo_size_growth.txt"));
-                run_all_tests_for_hashtable(&hash_cuckoo, to_find, to_add, to_add_key, random_key, hash_cuckoo.get_size(), "HashCuckoo", j, repetition);
+                run_all_tests_for_hashtable(&hash_cuckoo, to_find, to_add, to_add_key, random_key, hash_cuckoo.get_size(), "HashCuckoo", j, repetition);*/
 
                 // We check (and save) size for only one iteration over data sizes
                 if(j==1)
